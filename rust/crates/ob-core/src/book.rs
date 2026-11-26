@@ -9,9 +9,8 @@
 //! full, the worst level is dropped. That's correct because venues only promise their
 //! top N levels anyway (Binance 20, Bybit 50), so `CAP` is chosen above that.
 
-use core::marker::PhantomData;
+use core::cmp::Ordering;
 
-use crate::search::{self, Search, StdBinary};
 use crate::{Px, Qty};
 
 /// Which side of the book.
@@ -103,16 +102,15 @@ pub trait BookLevels {
 /// on the side.
 #[derive(Clone, Debug)]
 #[repr(C, align(64))]
-pub struct Ladder<const CAP: usize, const BID: bool, S = StdBinary> {
+pub struct Ladder<const CAP: usize, const BID: bool> {
     /// Prices, raw. Only `px[..len]` is meaningful.
     px: [i64; CAP],
     /// Quantities, raw, parallel to `px`.
     qty: [i64; CAP],
     len: usize,
-    search: PhantomData<S>,
 }
 
-impl<const CAP: usize, const BID: bool, S: Search> Ladder<CAP, BID, S> {
+impl<const CAP: usize, const BID: bool> Ladder<CAP, BID> {
     const SIDE: Side = if BID { Side::Bid } else { Side::Ask };
 
     const fn new() -> Self {
@@ -121,14 +119,13 @@ impl<const CAP: usize, const BID: bool, S: Search> Ladder<CAP, BID, S> {
             px: [0; CAP],
             qty: [0; CAP],
             len: 0,
-            search: PhantomData,
         }
     }
 
     /// `true` if price `a` is better than price `b` on this side.
     #[inline(always)]
     const fn better(a: i64, b: i64) -> bool {
-        search::better::<BID>(a, b)
+        if BID { a > b } else { a < b }
     }
 
     /// Number of levels.
@@ -168,13 +165,20 @@ impl<const CAP: usize, const BID: bool, S: Search> Ladder<CAP, BID, S> {
         Level::new(Px::from_raw(self.px[i]), qty)
     }
 
-    /// Where `px` is (`Ok(index)`), or where it would go (`Err(index)`).
-    ///
-    /// The default strategy, [`StdBinary`], was the fastest for whole updates in the step 4
-    /// benchmarks; the alternatives live in [`crate::search`].
+    /// Where `px` is (`Ok(index)`), or where it would go (`Err(index)`). A binary search:
+    /// on whole updates it beat a linear scan from the best end, a branchless binary
+    /// search and a hybrid of the two (see `docs/DESIGN.md`).
     #[inline]
     fn find(&self, px: i64) -> Result<usize, usize> {
-        S::find::<BID>(&self.px[..self.len], px)
+        self.px[..self.len].binary_search_by(|&p| {
+            if p == px {
+                Ordering::Equal
+            } else if Self::better(px, p) {
+                Ordering::Less // worse than px: sorts before it
+            } else {
+                Ordering::Greater
+            }
+        })
     }
 
     /// Sets the quantity at `px`; zero removes the level.
@@ -251,8 +255,7 @@ impl<const CAP: usize, const BID: bool, S: Search> Ladder<CAP, BID, S> {
 /// An order book for one instrument on one venue.
 ///
 /// `CAP` is the number of levels kept per side (default 64, above Bybit's 50 and
-/// Binance's 20). `S` is the search strategy (see [`crate::search`]); the default,
-/// [`StdBinary`], was the fastest for whole updates in the step 4 benchmarks.
+/// Binance's 20).
 ///
 /// ```
 /// use ob_core::{InstrumentSpec, Level, OrderBook, Side};
@@ -268,12 +271,12 @@ impl<const CAP: usize, const BID: bool, S: Search> Ladder<CAP, BID, S> {
 /// assert_eq!(book.best_bid(), None);
 /// ```
 #[derive(Clone, Debug)]
-pub struct OrderBook<const CAP: usize = 64, S = StdBinary> {
-    bids: Ladder<CAP, true, S>,
-    asks: Ladder<CAP, false, S>,
+pub struct OrderBook<const CAP: usize = 64> {
+    bids: Ladder<CAP, true>,
+    asks: Ladder<CAP, false>,
 }
 
-impl<const CAP: usize, S: Search> BookLevels for OrderBook<CAP, S> {
+impl<const CAP: usize> BookLevels for OrderBook<CAP> {
     #[inline]
     fn bid_levels(&self) -> impl Iterator<Item = Level> + '_ {
         self.bids.iter()
@@ -284,13 +287,13 @@ impl<const CAP: usize, S: Search> BookLevels for OrderBook<CAP, S> {
     }
 }
 
-impl<const CAP: usize, S: Search> Default for OrderBook<CAP, S> {
+impl<const CAP: usize> Default for OrderBook<CAP> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<const CAP: usize, S: Search> OrderBook<CAP, S> {
+impl<const CAP: usize> OrderBook<CAP> {
     /// An empty book.
     pub const fn new() -> Self {
         OrderBook {
@@ -317,8 +320,8 @@ impl<const CAP: usize, S: Search> OrderBook<CAP, S> {
     /// Both sides are validated **before** anything changes, so a bad snapshot leaves
     /// the book exactly as it was.
     pub fn replace(&mut self, bids: &[Level], asks: &[Level]) -> Result<(), SnapshotError> {
-        Ladder::<CAP, true, S>::validate_snapshot(bids)?;
-        Ladder::<CAP, false, S>::validate_snapshot(asks)?;
+        Ladder::<CAP, true>::validate_snapshot(bids)?;
+        Ladder::<CAP, false>::validate_snapshot(asks)?;
         self.bids.load_snapshot(bids);
         self.asks.load_snapshot(asks);
         Ok(())
@@ -345,13 +348,13 @@ impl<const CAP: usize, S: Search> OrderBook<CAP, S> {
 
     /// The bid side, for depth queries.
     #[inline]
-    pub fn bids(&self) -> &Ladder<CAP, true, S> {
+    pub fn bids(&self) -> &Ladder<CAP, true> {
         &self.bids
     }
 
     /// The ask side, for depth queries.
     #[inline]
-    pub fn asks(&self) -> &Ladder<CAP, false, S> {
+    pub fn asks(&self) -> &Ladder<CAP, false> {
         &self.asks
     }
 
@@ -416,7 +419,7 @@ impl Impact {
     }
 }
 
-impl<const CAP: usize, S: Search> OrderBook<CAP, S> {
+impl<const CAP: usize> OrderBook<CAP> {
     /// The market impact of taking `qty` from side `take` (asks to buy, bids to sell):
     /// walks the levels best first until `qty` is filled or the visible book runs out.
     /// No allocation; integer arithmetic only. The Java skeleton's "calculate market
@@ -681,7 +684,7 @@ mod tests {
 
     #[test]
     fn any_insert_order_gives_the_same_book() {
-        // Light check against a sorted reference; step 4 adds full property tests.
+        // A light check against a sorted reference (tests/model.rs has the full one).
         let prices: Vec<i64> = (0..40).map(|i| (i * 37) % 101 + 1000).collect();
         let mut b: OrderBook = OrderBook::new();
         for &p in &prices {

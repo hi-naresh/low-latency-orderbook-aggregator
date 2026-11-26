@@ -44,7 +44,6 @@
 //!
 //! On error, the output buffers hold partial data and must not be used.
 
-use ob_core::search::Search;
 use ob_core::{ErrorClass, InstrumentSpec, Level, LevelChange, OrderBook, Side, SnapshotError};
 
 use crate::json::{Cursor, JsonError, JsonErrorKind};
@@ -145,9 +144,9 @@ impl BookMsg {
     /// Check [`BookMsg::sequence`] first; this method doesn't. After a delta, the caller
     /// should also check `book.is_crossed()`: a crossed single-venue book means our copy
     /// is wrong and needs a snapshot.
-    pub fn apply_to<const CAP: usize, S: Search>(
+    pub fn apply_to<const CAP: usize>(
         &self,
-        book: &mut OrderBook<CAP, S>,
+        book: &mut OrderBook<CAP>,
     ) -> Result<Applied, SnapshotError> {
         if self.is_reset() {
             book.replace(&self.bids, &self.asks)?;

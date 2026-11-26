@@ -9,7 +9,6 @@
 
 use std::collections::BTreeMap;
 
-use ob_core::search::{BranchlessBinary, Hybrid, LinearFromBest, Search, StdBinary};
 use ob_core::{Level, LevelChange, OrderBook, Px, Qty, Side, SnapshotError};
 use proptest::prelude::*;
 
@@ -170,7 +169,7 @@ fn to_levels(v: &[(i64, i64)]) -> Vec<Level> {
         .collect()
 }
 
-fn book_side<const CAP: usize, S: Search>(b: &OrderBook<CAP, S>, side: Side) -> Vec<(i64, i64)> {
+fn book_side<const CAP: usize>(b: &OrderBook<CAP>, side: Side) -> Vec<(i64, i64)> {
     let iter: Box<dyn Iterator<Item = Level>> = match side {
         Side::Bid => Box::new(b.bids().iter()),
         Side::Ask => Box::new(b.asks().iter()),
@@ -178,10 +177,10 @@ fn book_side<const CAP: usize, S: Search>(b: &OrderBook<CAP, S>, side: Side) -> 
     iter.map(|l| (l.px.raw(), l.qty.raw())).collect()
 }
 
-/// Runs `ops` on a book with capacity `CAP` and search `S`, checking it against the
-/// model after every operation.
-fn check<const CAP: usize, S: Search>(ops: &[Op]) -> Result<(), TestCaseError> {
-    let mut book: OrderBook<CAP, S> = OrderBook::new();
+/// Runs `ops` on a book with capacity `CAP`, checking it against the model after every
+/// operation.
+fn check<const CAP: usize>(ops: &[Op]) -> Result<(), TestCaseError> {
+    let mut book: OrderBook<CAP> = OrderBook::new();
     let mut model = Model::new(CAP);
     for (step, op) in ops.iter().enumerate() {
         match op {
@@ -234,52 +233,30 @@ proptest! {
     // drop-the-worst / out-of-depth paths run constantly.
     #[test]
     fn small_book_matches_model(ops in prop::collection::vec(op(), 1..300)) {
-        check::<4, LinearFromBest>(&ops)?;
+        check::<4>(&ops)?;
     }
 
     // Capacity 1: every insert of a better price replaces the only level.
     #[test]
     fn single_level_book_matches_model(ops in prop::collection::vec(op(), 1..100)) {
-        check::<1, LinearFromBest>(&ops)?;
+        check::<1>(&ops)?;
     }
 
     // Production capacity: sides never fill from a 40-price band.
     #[test]
     fn full_size_book_matches_model(ops in prop::collection::vec(op(), 1..300)) {
-        check::<64, LinearFromBest>(&ops)?;
+        check::<64>(&ops)?;
     }
 
-    // The alternative search strategies give exactly the same book.
+    // Arbitrary prices across the whole i64 range (search at the extremes).
     #[test]
-    fn binary_search_books_match_model(ops in prop::collection::vec(op(), 1..300)) {
-        check::<4, BranchlessBinary>(&ops)?;
-        check::<64, BranchlessBinary>(&ops)?;
-        check::<4, StdBinary>(&ops)?;
-        check::<4, Hybrid>(&ops)?;
-        check::<64, Hybrid>(&ops)?;
-    }
-
-    // Search functions agree on arbitrary sorted prices, including i64 extremes.
-    #[test]
-    fn searches_agree_on_arbitrary_prices(
-        set in prop::collection::btree_set(any::<i64>(), 0..80),
-        probe in any::<i64>(),
-        pick in any::<prop::sample::Index>(),
+    fn arbitrary_prices_match_model(
+        ops in prop::collection::vec(
+            (side(), any::<i64>(), 0_i64..=4).prop_map(|(s, p, q)| Op::Apply(s, p, q)),
+            1..200,
+        )
     ) {
-        use ob_core::search::{branchless_binary, hybrid, linear_from_best, std_binary};
-        let bids: Vec<i64> = set.iter().copied().collect();            // ascending
-        let asks: Vec<i64> = set.iter().rev().copied().collect();      // descending
-        // Probe both a random price and one that is definitely present.
-        let present = if bids.is_empty() { probe } else { bids[pick.index(bids.len())] };
-        for px in [probe, present] {
-            let want = linear_from_best::<true>(&bids, px);
-            prop_assert_eq!(branchless_binary::<true>(&bids, px), want);
-            prop_assert_eq!(std_binary::<true>(&bids, px), want);
-            prop_assert_eq!(hybrid::<true>(&bids, px), want);
-            let want = linear_from_best::<false>(&asks, px);
-            prop_assert_eq!(branchless_binary::<false>(&asks, px), want);
-            prop_assert_eq!(std_binary::<false>(&asks, px), want);
-            prop_assert_eq!(hybrid::<false>(&asks, px), want);
-        }
+        check::<4>(&ops)?;
+        check::<64>(&ops)?;
     }
 }

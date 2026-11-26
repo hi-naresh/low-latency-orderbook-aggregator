@@ -2,8 +2,8 @@
 //!
 //! Corpus: 65,536 numbers in exchange formats, half prices and half quantities, stored
 //! back to back in one buffer like the fields of a real JSON message. The corpus is too
-//! large for the branch predictor to memorise (see step 4, trap 3), and every parser is
-//! called through a generic closure so it is inlined (step 4, trap 1).
+//! large for the branch predictor to memorise, and every parser is called through a
+//! generic closure so it is inlined, as it is in the message parser.
 //!
 //! Run: `cargo bench -p ob-parse --bench decimal`
 #![allow(
@@ -69,34 +69,21 @@ fn corpus(mixed: bool) -> Corpus {
         };
         fields.push((start, buf.len(), decimals));
     }
-    buf.extend_from_slice(&[b' '; 16]); // padding: every number has a 16-byte window
     Corpus { buf, fields }
 }
 
-/// One number to parse: its text, the 16-byte window starting at it (for
-/// `swar_padded`), and its decimals. Prepared up front so the timed loop does no slicing.
-type Field<'a> = (&'a [u8], &'a [u8; 16], u8);
+/// One number to parse: its text and its decimals. Prepared up front so the timed loop
+/// does no slicing.
+type Field<'a> = (&'a [u8], u8);
 
 fn fields(c: &Corpus) -> Vec<Field<'_>> {
-    c.fields
-        .iter()
-        .map(|&(s, e, d)| {
-            (
-                &c.buf[s..e],
-                c.buf[s..s + 16].first_chunk::<16>().unwrap(),
-                d,
-            )
-        })
-        .collect()
+    c.fields.iter().map(|&(s, e, d)| (&c.buf[s..e], d)).collect()
 }
 
-fn run<F: Fn(&[u8], &[u8; 16], u8) -> Result<i64, ParseFixedError>>(
-    f: &[Field<'_>],
-    parse: F,
-) -> i64 {
+fn run<F: Fn(&[u8], u8) -> Result<i64, ParseFixedError>>(f: &[Field<'_>], parse: F) -> i64 {
     let mut acc = 0_i64;
-    for &(text, window, d) in black_box(f) {
-        acc = acc.wrapping_add(parse(text, window, d).unwrap());
+    for &(text, d) in black_box(f) {
+        acc = acc.wrapping_add(parse(text, d).unwrap());
     }
     acc
 }
@@ -105,26 +92,19 @@ fn bench_decimal(c: &mut Criterion) {
     for (name, mixed) in [("mixed", true), ("binance", false)] {
         let corpus = corpus(mixed);
         let f = fields(&corpus);
-        let reference = |t: &[u8], _: &[u8; 16], d| ob_core::parse_decimal(t, d);
-        let scalar = |t: &[u8], _: &[u8; 16], d| ob_parse::decimal::scalar(t, d);
-        let swar = |t: &[u8], _: &[u8; 16], d| ob_parse::decimal::swar(t, d);
-        let padded = |t: &[u8], w: &[u8; 16], d| ob_parse::decimal::swar_padded(t, w, d);
-        // All parsers must agree on the whole corpus before we time them.
-        let want = run(&f, reference);
-        assert_eq!(run(&f, scalar), want);
-        assert_eq!(run(&f, swar), want);
-        assert_eq!(run(&f, padded), want);
+        let reference = |t: &[u8], d| ob_core::parse_decimal(t, d);
+        let fast = |t: &[u8], d| ob_parse::decimal::parse(t, d);
+        // Both must agree on the whole corpus before they're timed.
+        assert_eq!(run(&f, fast), run(&f, reference));
 
         let mut group = c.benchmark_group(format!("decimal/{name}"));
         group.throughput(Throughput::Elements(COUNT as u64));
         group.bench_function("reference", |b| b.iter(|| run(&f, reference)));
-        group.bench_function("scalar", |b| b.iter(|| run(&f, scalar)));
-        group.bench_function("swar", |b| b.iter(|| run(&f, swar)));
-        group.bench_function("swar_padded", |b| b.iter(|| run(&f, padded)));
+        group.bench_function("ob_parse", |b| b.iter(|| run(&f, fast)));
         // What a quick implementation often does: parse as f64 (inexact; context only).
         group.bench_function("f64_baseline", |b| {
             b.iter(|| {
-                run(&f, |t, _, _| {
+                run(&f, |t, _| {
                     let x: f64 = std::str::from_utf8(t).unwrap().parse().unwrap();
                     Ok(x.to_bits() as i64)
                 })
@@ -141,7 +121,7 @@ fn bench_decimal(c: &mut Criterion) {
     group.throughput(Throughput::Elements(COUNT as u64));
     group.bench_function("spec_reference", |b| {
         b.iter(|| {
-            run(&f, |t, _, d| {
+            run(&f, |t, d| {
                 if d == 1 {
                     spec.parse_px(t).map(|p| p.raw())
                 } else {
@@ -150,9 +130,9 @@ fn bench_decimal(c: &mut Criterion) {
             })
         });
     });
-    group.bench_function("ob_parse_fast", |b| {
+    group.bench_function("ob_parse", |b| {
         b.iter(|| {
-            run(&f, |t, _, d| {
+            run(&f, |t, d| {
                 if d == 1 {
                     ob_parse::parse_px(&spec, t).map(|p| p.raw())
                 } else {

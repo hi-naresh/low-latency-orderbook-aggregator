@@ -1,5 +1,6 @@
-//! Differential tests: every fast parser must return exactly what the reference parser
-//! (`ob_core::parse_decimal`) returns, for every input and every scale, errors included.
+//! Differential tests: the fast decimal parser must return exactly what the reference
+//! parser (`ob_core::parse_decimal`) returns, for every input and every scale, errors
+//! included.
 //!
 //! Two layers:
 //! 1. **Exhaustive** over every string of up to 6 characters from an alphabet chosen to
@@ -9,33 +10,20 @@
 #![allow(clippy::unwrap_used)]
 
 use ob_core::{InstrumentSpec, ParseFixedError, parse_decimal};
-use ob_parse::decimal::{scalar, swar, swar_padded};
+use ob_parse::decimal::parse;
 use proptest::prelude::*;
-
-/// `swar_padded` with a window whose bytes after the number are junk (quotes, commas,
-/// digits), as they would be inside a JSON message.
-fn padded(text: &[u8], decimals: u8) -> Result<i64, ParseFixedError> {
-    let mut window = *br#"","9"],["0.5"]]}"#;
-    let n = text.len().min(16);
-    window[..n].copy_from_slice(&text[..n]);
-    swar_padded(text, &window, decimals)
-}
 
 fn agree(text: &[u8], decimals: u8) -> Result<(), String> {
     let want = parse_decimal(text, decimals);
-    for (name, got) in [
-        ("scalar", scalar(text, decimals)),
-        ("swar", swar(text, decimals)),
-        ("swar_padded", padded(text, decimals)),
-    ] {
-        if got != want {
-            return Err(format!(
-                "{name} disagrees on {:?} at {decimals} decimals: got {got:?}, reference {want:?}",
-                String::from_utf8_lossy(text)
-            ));
-        }
+    let got = parse(text, decimals);
+    if got == want {
+        Ok(())
+    } else {
+        Err(format!(
+            "disagrees on {:?} at {decimals} decimals: got {got:?}, reference {want:?}",
+            String::from_utf8_lossy(text)
+        ))
     }
-    Ok(())
 }
 
 #[test]
@@ -144,13 +132,13 @@ proptest! {
 fn error_type_is_unchanged() {
     // The fast path must report the same error kinds as the reference.
     assert_eq!(
-        swar(b"105123.45", 1),
+        parse(b"105123.45", 1),
         Err(ParseFixedError::ExceedsPrecision)
     );
-    assert_eq!(swar(b"1e5", 1), Err(ParseFixedError::InvalidChar));
-    assert_eq!(swar(b"5.", 1), Err(ParseFixedError::MissingDigits));
+    assert_eq!(parse(b"1e5", 1), Err(ParseFixedError::InvalidChar));
+    assert_eq!(parse(b"5.", 1), Err(ParseFixedError::MissingDigits));
     assert_eq!(
-        swar(b"99999999999999999999", 1),
+        parse(b"99999999999999999999", 1),
         Err(ParseFixedError::Overflow)
     );
 }

@@ -90,6 +90,7 @@ name = "ob-parse"
 version = "0.1.0"
 dependencies = [
  "ob-core",
+ "ob-simd",
 ]
 
 [[package]]
@@ -102,6 +103,10 @@ dependencies = [
  "serde",
  "serde_json",
 ]
+
+[[package]]
+name = "ob-simd"
+version = "0.1.0"
 
 [[package]]
 name = "proc-macro2"

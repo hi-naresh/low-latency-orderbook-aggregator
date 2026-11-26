@@ -51,7 +51,6 @@
 //!
 //! On error, the output buffers hold partial data and must not be used.
 
-use ob_core::search::Search;
 use ob_core::{ErrorClass, InstrumentSpec, Level, OrderBook, Qty, Side, SnapshotError};
 
 use crate::json::{Cursor, JsonError, JsonErrorKind};
@@ -78,9 +77,9 @@ pub struct DepthUpdate {
 
 impl DepthUpdate {
     /// Replaces `book` with this snapshot (all-or-nothing: on error the book is unchanged).
-    pub fn apply_to<const CAP: usize, S: Search>(
+    pub fn apply_to<const CAP: usize>(
         &self,
-        book: &mut OrderBook<CAP, S>,
+        book: &mut OrderBook<CAP>,
     ) -> Result<(), SnapshotError> {
         book.replace(&self.bids, &self.asks)
     }

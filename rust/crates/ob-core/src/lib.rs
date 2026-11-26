@@ -13,7 +13,6 @@
 mod book;
 mod divisor;
 mod fixed;
-pub mod search;
 mod spec;
 mod tick_book;
 
