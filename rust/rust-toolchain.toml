@@ -1,0 +1,6 @@
+# Pin the exact compiler so every build and benchmark is reproducible:
+# a different rustc/LLVM can change inlining decisions and therefore latency numbers.
+[toolchain]
+channel = "1.100.0"
+components = ["rustfmt", "clippy"]
+profile = "minimal"

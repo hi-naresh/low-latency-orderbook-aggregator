@@ -1,0 +1,104 @@
+# CI for the Rust solution. The original Java skeleton is not built here.
+# Later steps add jobs for Miri (step 8), loom (step 8), fuzz smoke runs (step 6)
+# and the Linux low-latency feature (step 21).
+name: rust-ci
+
+on:
+  push:
+  pull_request:
+
+defaults:
+  run:
+    working-directory: rust
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings      # any compiler warning fails CI
+  RUSTDOCFLAGS: -D warnings
+  # Step 28: an environment RUSTFLAGS *replaces* rust/.cargo/config.toml's rustflags, so
+  # the Linux jobs below repeat its `-C target-cpu=x86-64-v2`. Without it, Linux CI would
+  # compile the SIMD level parser (ob-simd, step 25) out and only test the scalar path.
+  # (macos-latest runners are Apple Silicon: no SSE, so they test the scalar fallback.)
+  # Job-level `env:` can't read the `env` context, so the flags are written out below.
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo fmt --all --check   # toolchain comes from rust/rust-toolchain.toml
+
+  clippy:
+    # Both OSes: ob-os (step 21) has Linux-only and macOS-only code paths.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      RUSTFLAGS: ${{ matrix.os == 'ubuntu-latest' && '-D warnings -C target-cpu=x86-64-v2' || '-D warnings' }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      RUSTFLAGS: ${{ matrix.os == 'ubuntu-latest' && '-D warnings -C target-cpu=x86-64-v2' || '-D warnings' }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo test --workspace
+      - run: cargo test --workspace --release   # optimised code can expose different behaviour
+
+  benches:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: -D warnings -C target-cpu=x86-64-v2
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo bench --workspace --no-run   # benchmarks must always compile
+
+  miri:
+    # Undefined behaviour and data-race detection, with weak-memory emulation.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup toolchain install nightly --profile minimal --component miri,rust-src
+      - run: cargo +nightly miri test -p ob-core --lib
+      - run: MIRIFLAGS="-Zmiri-many-seeds=0..16" cargo +nightly miri test -p ob-sync
+
+  loom:
+    # Exhaustive model checking of the seqlock's memory orderings.
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: --cfg loom
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo test -p ob-sync --release --test loom
+
+  fuzz-smoke:
+    # Short coverage-guided fuzz run per target on every push; long runs happen locally.
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rust/crates/ob-parse
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup toolchain install nightly --profile minimal
+      - run: cargo +nightly install cargo-fuzz --locked
+      - run: ../../scripts/seed_fuzz_corpus.sh
+      - run: cargo +nightly fuzz run binance -- -max_total_time=60
+      - run: cargo +nightly fuzz run bybit -- -max_total_time=60
+      - run: cargo +nightly fuzz run decimal -- -max_total_time=60
+      - run: cargo +nightly fuzz run ws -- -max_total_time=60
+        working-directory: rust/crates/ob-net
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo doc --workspace --no-deps

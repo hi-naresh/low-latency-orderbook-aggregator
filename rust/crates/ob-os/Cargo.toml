@@ -1,0 +1,16 @@
+[package]
+name = "ob-os"
+description = "OS-level tuning for the feed threads: pinning, priority, memory locking, socket options, kernel receive timestamps."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+# Raw OS calls. Already in the build through socket2/ring; this crate is the one place
+# that calls it directly, and every `unsafe` block carries a SAFETY comment.
+libc = "0.2"
+
+[lints]
+workspace = true

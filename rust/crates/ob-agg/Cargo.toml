@@ -1,0 +1,24 @@
+[package]
+name = "ob-agg"
+description = "Cross-venue order book aggregation: best prices, volume, venue health."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+ob-core = { path = "../ob-core" }
+ob-sync = { path = "../ob-sync" }
+
+[dev-dependencies]
+ob-parse = { path = "../ob-parse" }
+proptest = "1.12"
+criterion = { version = "0.8", default-features = false, features = ["cargo_bench_support"] }
+
+[[bench]]
+name = "agg"
+harness = false
+
+[lints]
+workspace = true

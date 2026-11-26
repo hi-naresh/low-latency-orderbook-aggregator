@@ -1,0 +1,171 @@
+== machine
+model:      MacBookPro15,2
+cpu:        Intel(R) Core(TM) i7-8569U CPU @ 2.80GHz
+cores:      4 physical, 8 logical
+memory:     16 GiB
+caches:     L2 256 KiB, L3 8192 KiB (per OS report)
+os:         macOS 15.6
+rustc:      rustc 1.100.0 (0ef1bc386 2026-11-09)
+power:      AC Power
+date:       Thu Nov 26 14:05:32 GMT 2026
+load avg:   { 10.79 13.99 9.81 } (before)
+command:    target/release/tails --rt --cold-mb 32 
+
+ob-bench tails (step 23)
+  arch x86_64 · os macos · 8 hardware threads · real-time priority requested
+  timer: one clock-read pair costs ~8 ns (subtract nothing: it is part of every row)
+  `~` after a value: fewer than 10 samples beyond that percentile (too few to trust)
+
+1. Pipeline, warm: parse → apply → publish, back to back (in process)
+                                           count       p50       p90       p99     p99.9    p99.99       max
+  binance depth20+bookTicker (0.6 s)
+    message (whole handler call)            999000   407 ns    436 ns    897 ns  14.11 µs  33.85 µs  102.27 µs
+    handle (parse + apply)                  998997   299 ns    311 ns    656 ns   9.76 µs  29.17 µs  101.82 µs
+    publish (seqlock)                       998997    72 ns     98 ns    152 ns    224 ns  18.45 µs   90.69 µs
+    read start → published                  998997   375 ns    404 ns    830 ns  13.87 µs  31.57 µs  102.08 µs
+    subscription-start msgs (excluded)        1000    65 ns    261 ns    440 ns   5.27 µs~ 28.27 µs~  28.27 µs
+    feed: 1000000 messages, 998997 applied, 999 gaps, 0 rejected, 0 resyncs, 0 reconnects
+    slowest recorded messages: line 275 (1002 B): mean 1.68 µs (without the worst), max 88.25 µs; line 910 (1002 B): mean 1.66 µs (without the worst), max 22.97 µs; line 4 (1002 B): mean 1.60 µs (without the worst), max 35.89 µs; line 952 (1002 B): mean 1.51 µs (without the worst), max 27.91 µs; line 35 (163 B): mean 553 ns (without the worst), max 65.51 µs
+  bybit orderbook.50+1 (1.2 s)
+    message (whole handler call)            986666   595 ns   1.55 µs   5.45 µs  19.86 µs  61.57 µs    1.39 ms
+    handle (parse + apply)                  986666   442 ns   1.39 µs   5.25 µs  18.69 µs  52.80 µs    1.29 ms
+    publish (seqlock)                       986666   121 ns    242 ns    485 ns    552 ns  20.70 µs    1.39 ms
+    read start → published                  986666   562 ns   1.49 µs   5.37 µs  19.45 µs  60.80 µs    1.39 ms
+    subscription-start msgs (excluded)       13334  2.59 µs   3.31 µs   6.31 µs  28.86 µs  138.88 µs~ 241.92 µs
+    feed: 1000000 messages, 993333 applied, 0 gaps, 0 rejected, 0 resyncs, 0 reconnects
+    slowest recorded messages: line 32 (2274 B): mean 6.46 µs (without the worst), max 124.87 µs; line 122 (1992 B): mean 5.93 µs (without the worst), max 229.75 µs; line 48 (1633 B): mean 4.70 µs (without the worst), max 286.70 µs; line 112 (1624 B): mean 4.46 µs (without the worst), max 124.73 µs; line 0 (2256 B): mean 3.51 µs (without the worst), max 241.91 µs
+  binance full depth (9.1 s)
+    message (whole handler call)           1000000  3.50 µs  13.45 µs  71.10 µs  182.27 µs   1.03 ms   51.54 ms
+    handle (parse + apply)                  989898  2.93 µs  12.57 µs  69.95 µs  175.23 µs   1.00 ms   51.54 ms
+    publish (seqlock)                       989898   454 ns    815 ns   1.03 µs  12.78 µs  78.33 µs    2.59 ms
+    read start → published                  989898  3.46 µs  13.44 µs  70.97 µs  180.86 µs   1.03 ms   51.54 ms
+    feed: 1010102 messages, 1000000 applied, 0 gaps, 0 rejected, 0 resyncs, 0 reconnects, 10101 re-syncs between passes (untimed)
+    slowest recorded messages: line 86 (24875 B): mean 89.76 µs (without the worst), max 6.76 ms; line 99 (15622 B): mean 57.27 µs (without the worst), max 6.48 ms; line 85 (15698 B): mean 52.21 µs (without the worst), max 10.33 ms; line 88 (12554 B): mean 40.95 µs (without the worst), max 9.71 ms; line 92 (11355 B): mean 38.07 µs (without the worst), max 8.70 ms
+
+2. Pipeline, cold: the same, reading 32 MiB between messages to flush the caches
+                                           count       p50       p90       p99     p99.9    p99.99       max
+  binance depth20+bookTicker (20.6 s)
+    message (whole handler call)              9990  2.24 µs   4.10 µs   7.08 µs  77.06 µs  280.83 µs~ 280.83 µs
+    handle (parse + apply)                    9987  1.66 µs   3.08 µs   4.74 µs  65.25 µs  279.81 µs~ 279.81 µs
+    publish (seqlock)                         9987   324 ns    494 ns    780 ns   5.37 µs  99.45 µs~  99.45 µs
+    read start → published                    9987  1.99 µs   3.56 µs   5.80 µs  76.54 µs  280.32 µs~ 280.32 µs
+    subscription-start msgs (excluded)          10   935 ns~  1.96 µs~  2.40 µs~  2.40 µs~  2.40 µs~   2.40 µs
+    feed: 10000 messages, 9987 applied, 9 gaps, 0 rejected, 0 resyncs, 0 reconnects
+    slowest recorded messages: line 192 (164 B): mean 4.44 µs (without the worst), max 37.86 µs; line 275 (1002 B): mean 4.39 µs (without the worst), max 6.30 µs; line 952 (1002 B): mean 4.38 µs (without the worst), max 8.50 µs; line 910 (1002 B): mean 3.88 µs (without the worst), max 4.99 µs; line 4 (1002 B): mean 3.88 µs (without the worst), max 6.14 µs
+  bybit orderbook.50+1 (20.0 s)
+    message (whole handler call)              9866  3.40 µs   5.87 µs  15.38 µs  56.93 µs   6.29 ms~   6.29 ms
+    handle (parse + apply)                    9866  2.54 µs   4.96 µs  13.96 µs  44.22 µs   6.28 ms~   6.28 ms
+    publish (seqlock)                         9866   350 ns    642 ns   1.01 µs   9.15 µs  114.62 µs~ 114.62 µs
+    read start → published                    9866  3.00 µs   5.34 µs  14.50 µs  46.81 µs   6.28 ms~   6.28 ms
+    subscription-start msgs (excluded)         134  2.03 µs   7.12 µs  22.48 µs~ 30.82 µs~ 30.82 µs~  30.82 µs
+    feed: 10000 messages, 9933 applied, 0 gaps, 0 rejected, 0 resyncs, 0 reconnects
+    slowest recorded messages: line 32 (2274 B): mean 13.49 µs (without the worst), max 33.60 µs; line 122 (1992 B): mean 12.41 µs (without the worst), max 18.94 µs; line 48 (1633 B): mean 10.86 µs (without the worst), max 16.04 µs; line 112 (1624 B): mean 10.30 µs (without the worst), max 34.80 µs; line 21 (1215 B): mean 8.84 µs (without the worst), max 28.74 µs
+  binance full depth (19.2 s)
+    message (whole handler call)             10000  9.06 µs  22.03 µs  93.06 µs  124.93 µs  310.53 µs~ 574.46 µs
+    handle (parse + apply)                    9898  7.62 µs  20.53 µs  92.42 µs  126.91 µs  571.39 µs~ 571.39 µs
+    publish (seqlock)                         9898   880 ns   1.17 µs   1.48 µs  14.00 µs  90.24 µs~  90.24 µs
+    read start → published                    9898  8.57 µs  21.55 µs  93.82 µs  128.06 µs  572.93 µs~ 572.93 µs
+    feed: 10102 messages, 10000 applied, 0 gaps, 0 rejected, 0 resyncs, 0 reconnects, 101 re-syncs between passes (untimed)
+    slowest recorded messages: line 86 (24875 B): mean 103.47 µs (without the worst), max 176.24 µs; line 99 (15622 B): mean 68.53 µs (without the worst), max 573.98 µs; line 85 (15698 B): mean 64.59 µs (without the worst), max 104.83 µs; line 88 (12554 B): mean 51.18 µs (without the worst), max 103.88 µs; line 92 (11355 B): mean 47.78 µs (without the worst), max 123.60 µs
+
+3. Wire, open loop, busy: mean gap 50 µs (20,000 msg/s): local TLS server → kernel → read + TLS + WS → parse → apply → publish
+                                           count       p50       p90       p99     p99.9    p99.99       max
+  binance depth20+bookTicker (10.0 s)
+    sent → published (end to end)           199800  9.04 µs  39.23 µs  75.26 µs  312.06 µs   1.18 ms    1.74 ms
+    read (socket + TLS + WS)                199800  3.43 µs   6.68 µs  26.11 µs  58.91 µs  169.09 µs    1.27 ms
+    handle (parse + apply)                  199797   344 ns    701 ns   1.57 µs  18.85 µs  30.94 µs  811.01 µs
+    publish (seqlock)                       199797   100 ns    157 ns    277 ns   2.11 µs  19.60 µs  610.82 µs
+    read start → published                  199797  3.90 µs   7.59 µs  28.91 µs  63.71 µs  196.48 µs    1.28 ms
+    subscription-start msgs (excluded)         200  8.99 µs  43.71 µs  71.30 µs~ 79.30 µs~ 79.30 µs~  79.30 µs
+    feed: 200000 messages, 199797 applied, 199 gaps, 0 rejected, 0 resyncs, 0 reconnects
+    server: 200000 sent, 3281 started > 20 µs late (sender descheduled)
+  bybit orderbook.50+1 (10.0 s)
+    sent → published (end to end)           197332 11.49 µs  47.58 µs   1.70 ms  11.70 ms  68.16 ms   71.30 ms
+    read (socket + TLS + WS)                197332  3.77 µs   9.18 µs  29.10 µs  152.83 µs   1.56 ms    6.50 ms
+    handle (parse + apply)                  197332   656 ns   1.98 µs   8.15 µs  48.03 µs  499.97 µs   54.98 ms
+    publish (seqlock)                       197332   162 ns    347 ns    547 ns   9.91 µs  104.77 µs    9.59 ms
+    read start → published                  197332  4.70 µs  11.83 µs  35.30 µs  267.52 µs   2.34 ms   54.98 ms
+    subscription-start msgs (excluded)        2668 13.54 µs  48.93 µs   1.30 ms   7.98 ms~ 10.88 ms~  10.88 ms
+    feed: 200000 messages, 198666 applied, 0 gaps, 0 rejected, 0 resyncs, 0 reconnects
+    server: 200000 sent, 16860 started > 20 µs late (sender descheduled)
+
+3. Wire, open loop, sparse: mean gap 1 ms (1,000 msg/s): local TLS server → kernel → read + TLS + WS → parse → apply → publish
+                                           count       p50       p90       p99     p99.9    p99.99       max
+  binance depth20+bookTicker (30.1 s)
+    sent → published (end to end)            29970 46.88 µs  79.81 µs   3.00 ms  20.33 ms  42.17 ms~  42.34 ms
+    read (socket + TLS + WS)                 29970  9.23 µs  23.34 µs  161.15 µs   2.30 ms  10.74 ms~  14.16 ms
+    handle (parse + apply)                   29967   940 ns   2.10 µs   9.45 µs  84.99 µs   2.17 ms~   9.92 ms
+    publish (seqlock)                        29967   201 ns    391 ns    632 ns  11.10 µs  270.33 µs~   1.66 ms
+    read start → published                   29967 10.52 µs  26.86 µs  180.61 µs   2.45 ms  10.74 ms~  14.16 ms
+    subscription-start msgs (excluded)          30 45.79 µs  82.17 µs~  4.70 ms~  4.70 ms~  4.70 ms~   4.70 ms
+    feed: 30000 messages, 29967 applied, 29 gaps, 0 rejected, 0 resyncs, 0 reconnects
+    server: 30000 sent, 3153 started > 20 µs late (sender descheduled)
+  bybit orderbook.50+1 (30.1 s)
+    sent → published (end to end)            29600 49.12 µs  74.62 µs   1.87 ms  18.56 ms  48.46 ms~  66.52 ms
+    read (socket + TLS + WS)                 29600  7.21 µs  22.94 µs  79.23 µs   1.32 ms  21.87 ms~  48.43 ms
+    handle (parse + apply)                   29600  1.22 µs   3.10 µs  15.47 µs  77.44 µs   1.54 ms~   6.02 ms
+    publish (seqlock)                        29600   233 ns    482 ns    808 ns  18.50 µs  343.55 µs~   1.55 ms
+    read start → published                   29600  9.34 µs  27.82 µs  92.16 µs   1.75 ms  21.87 ms~  48.43 ms
+    subscription-start msgs (excluded)         400 50.14 µs  75.97 µs  345.09 µs~  1.75 ms~  1.75 ms~   1.75 ms
+    feed: 30000 messages, 29800 applied, 0 gaps, 0 rejected, 0 resyncs, 0 reconnects
+    server: 30000 sent, 1993 started > 20 µs late (sender descheduled)
+
+5. The read stage, taken apart (rustls in memory; recv on loopback)
+                                           count       p50       p90       p99     p99.9    p99.99       max
+  binance depth20+bookTicker (3.6 s, mean record 192 B)
+    recv, data waiting                      200000  3.34 µs   4.58 µs  19.04 µs  60.13 µs  452.10 µs    6.59 ms
+    recv, nothing yet (each idle spin)     1518472   638 ns    757 ns   1.14 µs   2.52 µs  23.02 µs  752.13 µs
+    rustls: take in (read_tls)              200000    16 ns     25 ns    118 ns    183 ns   8.24 µs  574.46 µs
+    rustls: decrypt + Vec (process)         200000   478 ns    675 ns   1.63 µs  11.54 µs  39.52 µs  255.62 µs
+    rustls: copy out (reader.read)          200000    89 ns    120 ns    234 ns    850 ns  11.18 µs   32.02 µs
+    rustls: all three                       200000   585 ns    818 ns   1.99 µs  13.15 µs  40.48 µs  578.05 µs
+    WebSocket decode                        200000    37 ns     71 ns    231 ns    342 ns   9.86 µs  150.78 µs
+    AES-128-GCM alone, in place (floor)     200000   144 ns    163 ns    289 ns    659 ns  12.90 µs    2.25 ms
+    ours: decrypt in place (step 24)        200000   189 ns    227 ns    403 ns   1.56 µs  20.51 µs  211.33 µs
+  bybit orderbook.50+1 (4.3 s, mean record 360 B)
+    recv, data waiting                      200000  3.56 µs   6.41 µs  22.69 µs  84.86 µs  879.62 µs   25.38 ms
+    recv, nothing yet (each idle spin)     1495887   667 ns    823 ns   1.35 µs   6.71 µs  35.97 µs   11.12 ms
+    rustls: take in (read_tls)              200000    23 ns     59 ns    138 ns    312 ns   9.22 µs    1.75 ms
+    rustls: decrypt + Vec (process)         200000   537 ns    981 ns   1.83 µs  14.78 µs  93.69 µs    4.63 ms
+    rustls: copy out (reader.read)          200000   112 ns    182 ns    327 ns   1.62 µs  16.18 µs  795.13 µs
+    rustls: all three                       200000   675 ns   1.22 µs   2.30 µs  17.66 µs  138.11 µs    4.63 ms
+    WebSocket decode                        200000    58 ns    142 ns    269 ns    638 ns  18.09 µs  284.42 µs
+    AES-128-GCM alone, in place (floor)     200000   163 ns    276 ns    537 ns   1.00 µs  18.78 µs    1.03 ms
+    ours: decrypt in place (step 24)        200000   214 ns    371 ns    603 ns   7.55 µs  33.38 µs    1.13 ms
+
+6. Message anatomy: the slowest recorded messages, parse vs the rest (medians)
+                                 bytes  levels      whole      parse    apply+pub  parse/B
+  bybit orderbook.50+1 (parse is 55% of all handling time)
+    line 32                        2274     109    6.40 µs    3.32 µs      3.08 µs   1.46 ns
+    line 122                       1992      95    5.88 µs    2.90 µs      2.99 µs   1.45 ns
+    line 48                        1633      76    4.70 µs    2.44 µs      2.26 µs   1.49 ns
+    line 112                       1624      75    4.39 µs    2.39 µs      2.00 µs   1.47 ns
+    line 21                        1215      54    3.33 µs    1.79 µs      1.54 µs   1.47 ns
+  binance full depth (parse is 56% of all handling time)
+    line 86                       24875    1177   59.83 µs   29.78 µs     30.05 µs   1.20 ns
+    line 99                       15622     736   37.28 µs   18.60 µs     18.67 µs   1.19 ns
+    line 85                       15698     740   34.88 µs   18.84 µs     16.04 µs   1.20 ns
+    line 88                       12554     590   27.17 µs   14.99 µs     12.18 µs   1.19 ns
+    line 92                       11355     533   24.96 µs   13.57 µs     11.39 µs   1.19 ns
+
+4. Reader: aggregator queries on another thread, writer idle
+                                           count       p50       p90       p99     p99.9    p99.99       max
+  (0.6 s, 0 messages published meanwhile)
+  timer floor (empty)                      1000000     8 ns      9 ns     11 ns     11 ns     21 ns    5.63 µs
+  refresh (copy changed books)             1000000    10 ns     11 ns     12 ns     36 ns    132 ns  105.53 µs
+  best bid + best ask                      1000000    44 ns     45 ns     79 ns    120 ns   1.35 µs  234.37 µs
+  best 10 bid levels                       1000000    55 ns     57 ns     86 ns    129 ns   1.57 µs  256.64 µs
+  optimal execution, buy 1 BTC             1000000   344 ns    358 ns    548 ns    759 ns  28.35 µs    1.01 ms
+  arbitrage scan                           1000000    33 ns     35 ns     60 ns    125 ns    672 ns  264.70 µs
+
+4. Reader: aggregator queries on another thread, writer busy: a message every 10 µs
+                                           count       p50       p90       p99     p99.9    p99.99       max
+  (0.5 s, 46104 messages published meanwhile)
+  timer floor (empty)                      1000000     8 ns      9 ns     11 ns     11 ns     16 ns   13.54 µs
+  refresh (copy changed books)             1000000    10 ns     11 ns    217 ns    413 ns   1.04 µs   41.95 µs
+  best bid + best ask                      1000000    43 ns     45 ns     82 ns    180 ns   9.51 µs   63.04 µs
+  best 10 bid levels                       1000000    54 ns     58 ns     87 ns    146 ns  11.16 µs   53.63 µs
+  optimal execution, buy 1 BTC             1000000   146 ns    357 ns    455 ns    788 ns  18.70 µs  105.86 µs
+  arbitrage scan                           1000000    33 ns     35 ns     61 ns    131 ns   7.89 µs   42.24 µs
+
+load avg:   { 5.72 11.02 9.35 } (after)

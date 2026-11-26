@@ -1,0 +1,59 @@
+# Workspace root for the low-latency order book aggregator.
+# Each crate has one job; see docs/steps/01-workspace.md for the reasoning.
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.100"
+license = "MIT"
+publish = false
+
+# ---------------------------------------------------------------------------
+# Lints: inherited by every crate via `[lints] workspace = true`.
+# ---------------------------------------------------------------------------
+[workspace.lints.rust]
+# Inside an `unsafe fn`, each unsafe operation still needs its own `unsafe {}`
+# block, so every unsafe operation is visible and individually justified.
+unsafe_op_in_unsafe_fn = "deny"
+missing_docs = "warn"
+unreachable_pub = "warn"
+# Allow `cfg(loom)` (used from step 8) without "unexpected cfg" warnings.
+unexpected_cfgs = { level = "warn", check-cfg = ["cfg(loom)"] }
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+# Every `unsafe {}` block must carry a `// SAFETY:` comment explaining why it is sound.
+undocumented_unsafe_blocks = "deny"
+# Hot-path hygiene: casts that silently truncate or lose sign are bugs in price maths.
+cast_possible_truncation = "warn"
+cast_sign_loss = "warn"
+cast_possible_wrap = "warn"
+# No accidental debugging output or panics-by-convenience left in library code.
+dbg_macro = "deny"
+print_stdout = "warn"
+todo = "deny"
+unwrap_used = "warn"
+
+# ---------------------------------------------------------------------------
+# Build profiles
+# ---------------------------------------------------------------------------
+[profile.release]
+opt-level = 3
+lto = "fat"              # whole-program optimisation: inlining across crate boundaries
+codegen-units = 1        # one unit = the optimiser sees everything; slower build, faster code
+panic = "abort"          # no unwinding tables/landing pads; a panic in a trading process should kill it
+debug = "line-tables-only" # profilers can map samples to source lines; no runtime cost
+incremental = false
+
+# Benchmarks use the release settings. CPU-specific instructions are opted into via
+# scripts/bench.sh (RUSTFLAGS="-C target-cpu=native"), keeping the default build portable.
+[profile.bench]
+inherits = "release"
+
+# Debug builds of our own code stay debuggable, but dependencies get optimised so
+# tests that replay recorded market data don't crawl.
+[profile.dev.package."*"]
+opt-level = 2

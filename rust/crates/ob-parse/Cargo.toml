@@ -1,0 +1,36 @@
+[package]
+name = "ob-parse"
+description = "Zero-copy, allocation-free parsers for exchange market data."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+ob-core = { path = "../ob-core" }
+# Step 25: a whole price level per SIMD call (SSSE3/SSE4.1); the scalar path remains for
+# anything else. The `unsafe` lives there, so this crate stays free of it.
+ob-simd = { path = "../ob-simd" }
+
+[dev-dependencies]
+proptest = "1.12"
+# Test oracle and benchmark baseline: an independent, widely used JSON implementation.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+criterion = { version = "0.8", default-features = false, features = ["cargo_bench_support"] }
+
+[[bench]]
+name = "decimal"
+harness = false
+
+[[bench]]
+name = "binance"
+harness = false
+
+[[bench]]
+name = "bybit"
+harness = false
+
+[lints]
+workspace = true

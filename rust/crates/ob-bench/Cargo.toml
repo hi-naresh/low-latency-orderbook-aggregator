@@ -1,0 +1,34 @@
+[package]
+name = "ob-bench"
+description = "Tail-latency harness (step 23): p50/p99/p99.9 per message, from encrypted bytes to published book."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "tails"
+path = "src/bin/tails.rs"
+
+[dependencies]
+ob-core = { path = "../ob-core" }
+ob-sync = { path = "../ob-sync" }
+ob-agg = { path = "../ob-agg" }
+ob-feed = { path = "../ob-feed" }
+ob-net = { path = "../ob-net" }
+ob-parse = { path = "../ob-parse" }
+ob-os = { path = "../ob-os" }
+# The same clock and histograms as the production probe (ob-feed): rdtsc on x86, the
+# OS monotonic counter elsewhere; HDR histograms record in constant time, no allocation.
+quanta = "0.12"
+hdrhistogram = { version = "7", default-features = false }
+# The local exchange: a TLS server with a throwaway certificate, as in the tests.
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+rcgen = "0.14"
+# AES-GCM on its own (the read-path breakdown's floor): the same library rustls uses
+# for its crypto here, already in the dependency tree.
+ring = "0.17"
+
+[lints]
+workspace = true

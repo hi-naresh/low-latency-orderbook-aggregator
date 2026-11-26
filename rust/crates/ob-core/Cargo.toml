@@ -1,0 +1,25 @@
+[package]
+name = "ob-core"
+description = "Allocation-free order book core: fixed-point prices and a cache-friendly book."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+# Intentionally empty: the core has no dependencies, so nothing can allocate or
+# do I/O behind our back on the hot path.
+
+[dev-dependencies]
+# Property-based tests: random operation sequences checked against a simple model.
+proptest = "1.12"
+# Statistics-driven benchmarks. Only the features `cargo bench` needs (no plotting/rayon).
+criterion = { version = "0.8", default-features = false, features = ["cargo_bench_support"] }
+
+[[bench]]
+name = "book"
+harness = false   # criterion provides its own main()
+
+[lints]
+workspace = true

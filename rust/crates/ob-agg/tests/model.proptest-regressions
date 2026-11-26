@@ -1,0 +1,7 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc e205e4355a70a77cf1dba439a6b69dd85f29623ad2c9232f8f5305c7f05fb4bf # shrinks to venues = [VenueCase { status: Live, recv_ns: 1267, depth: 1, bids: [], asks: [] }], now = 2267, limit = 85

@@ -1,0 +1,26 @@
+[package]
+name = "ob-app"
+description = "The application: live mode (both venues, aggregated, printed once a second)."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "ob"
+path = "src/main.rs"
+
+[dependencies]
+ob-core = { path = "../ob-core" }
+ob-sync = { path = "../ob-sync" }
+ob-agg = { path = "../ob-agg" }
+ob-feed = { path = "../ob-feed" }
+ob-net = { path = "../ob-net" }
+ob-os = { path = "../ob-os" }
+# Ctrl-C → a clean shutdown (WebSocket close frames, final statistics). std has no
+# portable signal handling; this crate is small and has no dependencies of note.
+ctrlc = "3"
+
+[lints]
+workspace = true

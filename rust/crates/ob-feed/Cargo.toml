@@ -1,0 +1,47 @@
+[package]
+name = "ob-feed"
+description = "Per-venue feeds: subscribe, keep the book in sync, heartbeats, reconnect with backoff."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+ob-core = { path = "../ob-core" }
+ob-parse = { path = "../ob-parse" }
+ob-sync = { path = "../ob-sync" }
+ob-net = { path = "../ob-net" }
+# Reads the CPU time-stamp counter (rdtsc, ~6 ns) with calibration and an OS-clock
+# fallback; the raw intrinsic needs `unsafe`, which this crate forbids.
+quanta = "0.12"
+# Latency histograms (HdrHistogram): constant-time recording, no allocation after
+# creation, accurate high percentiles.
+hdrhistogram = { version = "7", default-features = false }
+
+[dev-dependencies]
+ob-agg = { path = "../ob-agg" }
+# The mock exchange (tests/mock_exchange.rs): a local TLS WebSocket server with a
+# throwaway certificate, as in ob-net's connection tests.
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+rcgen = "0.14"
+criterion = { version = "0.8", default-features = false, features = ["cargo_bench_support"] }
+
+[[bench]]
+name = "log"
+harness = false
+
+[[bench]]
+name = "probe"
+harness = false
+
+[[bench]]
+name = "pipeline"
+harness = false
+
+[[bench]]
+name = "book_apply"
+harness = false
+
+[lints]
+workspace = true

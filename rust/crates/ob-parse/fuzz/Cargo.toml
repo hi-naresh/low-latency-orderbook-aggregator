@@ -1,0 +1,42 @@
+# Coverage-guided fuzzing (libFuzzer) for ob-parse. Needs nightly:
+#   cd rust/crates/ob-parse && cargo +nightly fuzz run binance -- -max_total_time=300
+[package]
+name = "ob-parse-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+ob-core = { path = "../../ob-core" }
+ob-parse = { path = ".." }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Its own workspace: fuzzing builds with nightly-only flags.
+[workspace]
+members = ["."]
+
+[[bin]]
+name = "binance"
+path = "fuzz_targets/binance.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "bybit"
+path = "fuzz_targets/bybit.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "decimal"
+path = "fuzz_targets/decimal.rs"
+test = false
+doc = false
+bench = false

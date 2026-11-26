@@ -1,0 +1,8 @@
+# Step 25: the parser's SIMD kernel (crates/ob-simd) needs SSSE3 and SSE4.1 at compile
+# time. macOS targets have them by default (target CPU "penryn"); Linux's default x86-64
+# target is the 2003 baseline (SSE2 only), which would silently select the scalar path.
+# x86-64-v2 (SSSE3, SSE4.1/4.2, POPCNT) covers every x86 server CPU since ~2009.
+# A RUSTFLAGS environment variable (e.g. scripts/bench.sh's target-cpu=native) replaces
+# this setting.
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["-C", "target-cpu=x86-64-v2"]
