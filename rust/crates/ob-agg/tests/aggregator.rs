@@ -1,7 +1,7 @@
 //! Aggregator behaviour: ordering, ties, venue health, caching, and volume semantics.
 #![allow(clippy::unwrap_used)]
 
-use ob_agg::{Aggregator, Config, Exclusion, VenueConfig, VenueId, VenueState, sum_qty};
+use ob_agg::{Aggregator, Config, Exclusion, VenueConfig, VenueId, VenueState};
 use ob_core::{Level, OrderBook, Px, Qty};
 use ob_sync::{BookMeta, BookPublisher, VenueStatus, book_channel};
 
@@ -124,7 +124,8 @@ fn best_prices_are_ordered_across_venues() {
         .map(|q| (q.px.raw(), q.venue.index()))
         .collect();
     assert_eq!(asks, [(102, 1), (103, 0), (105, 2)]);
-    assert_eq!(agg.best_bids(0).total_qty(), Some(qty(6)));
+    let total: i64 = agg.best_bids(0).iter().map(|q| q.qty.raw()).sum();
+    assert_eq!(total, qty(6).raw());
 }
 
 #[test]
@@ -294,17 +295,6 @@ fn volume_flags_when_more_may_exist_beyond_the_visible_depth() {
     publish(&mut p[0], &full[..5], &[], LIVE, 0);
     agg.refresh();
     assert!(agg.bid_volume_at_or_above(px(900), 0).complete);
-}
-
-#[test]
-fn quantity_sums_are_exact_and_overflow_is_reported() {
-    assert_eq!(sum_qty([qty(1), qty(2), qty(3)]), Some(qty(6)));
-    assert_eq!(sum_qty([Qty::MAX, Qty::ZERO]), Some(Qty::MAX));
-    assert_eq!(sum_qty([Qty::MAX, qty(1)]), None, "reported, never wrapped");
-    // The dangerous case: MAX + MAX + 2 = 2^64 wraps to exactly 0 in i64, a valid-looking
-    // quantity. A wrapping sum would return Some(0) here.
-    assert_eq!(sum_qty([Qty::MAX, Qty::MAX, qty(2)]), None);
-    assert_eq!(sum_qty([Qty::MAX; 64].iter().copied()), None);
 }
 
 #[test]

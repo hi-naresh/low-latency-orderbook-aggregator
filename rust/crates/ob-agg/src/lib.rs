@@ -17,4 +17,4 @@ mod quotes;
 pub use aggregator::{Aggregator, Config, Exclusion, VenueConfig, VenueState};
 pub use arbitrage::{ArbScan, Arbitrage};
 pub use execution::{Action, ChildOrder, ExecutionPlan, PPM};
-pub use quotes::{MAX_VENUES, Quote, Quotes, VenueId, VenueVolume, Volume, sum_qty};
+pub use quotes::{MAX_VENUES, Quote, Quotes, VenueId, VenueVolume, Volume};

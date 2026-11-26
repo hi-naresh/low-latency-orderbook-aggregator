@@ -35,6 +35,27 @@ pub struct Sent {
     pub late: u64,
 }
 
+/// A TLS server configuration with a fresh self-signed certificate for `localhost`, and
+/// a client configuration that trusts only that certificate.
+#[allow(clippy::unwrap_used)] // set-up: a failure here is a broken environment
+pub(crate) fn localhost_tls() -> (Arc<rustls::ServerConfig>, Arc<rustls::ClientConfig>) {
+    let ck = rcgen::generate_simple_self_signed(vec!["localhost".to_string()]).unwrap();
+    let cert = ck.cert.der().clone();
+    let key = rustls::pki_types::PrivatePkcs8KeyDer::from(ck.signing_key.serialize_der());
+    let server = rustls::ServerConfig::builder_with_provider(tls::crypto_provider())
+        .with_safe_default_protocol_versions()
+        .unwrap()
+        .with_no_client_auth()
+        .with_single_cert(vec![cert.clone()], key.into())
+        .unwrap();
+    let mut roots = rustls::RootCertStore::empty();
+    roots.add(cert).unwrap();
+    (
+        Arc::new(server),
+        tls::client_config_with_roots(roots).unwrap(),
+    )
+}
+
 /// Starts the server for `n` messages of `stream`, at mean gap `mean_gap_ns`. Returns
 /// the client's connection settings and the server thread.
 pub fn spawn(
@@ -47,23 +68,11 @@ pub fn spawn(
 ) -> (ConnConfig, JoinHandle<Sent>) {
     #[allow(clippy::unwrap_used)] // set-up: a failure here is a broken environment
     let (cfg, listener, server_cfg) = {
-        let ck = rcgen::generate_simple_self_signed(vec!["localhost".to_string()]).unwrap();
-        let cert = ck.cert.der().clone();
-        let key = rustls::pki_types::PrivatePkcs8KeyDer::from(ck.signing_key.serialize_der());
-        let server_cfg = Arc::new(
-            rustls::ServerConfig::builder_with_provider(tls::crypto_provider())
-                .with_safe_default_protocol_versions()
-                .unwrap()
-                .with_no_client_auth()
-                .with_single_cert(vec![cert.clone()], key.into())
-                .unwrap(),
-        );
+        let (server_cfg, client_tls) = localhost_tls();
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         let mut cfg = ConnConfig::new("localhost", "/ws").unwrap();
         cfg.port = listener.local_addr().unwrap().port();
-        let mut roots = rustls::RootCertStore::empty();
-        roots.add(cert).unwrap();
-        cfg.tls = tls::client_config_with_roots(roots).unwrap();
+        cfg.tls = client_tls;
         (cfg, listener, server_cfg)
     };
     let handle = thread::spawn(move || {

@@ -77,7 +77,10 @@ fn corpus(mixed: bool) -> Corpus {
 type Field<'a> = (&'a [u8], u8);
 
 fn fields(c: &Corpus) -> Vec<Field<'_>> {
-    c.fields.iter().map(|&(s, e, d)| (&c.buf[s..e], d)).collect()
+    c.fields
+        .iter()
+        .map(|&(s, e, d)| (&c.buf[s..e], d))
+        .collect()
 }
 
 fn run<F: Fn(&[u8], u8) -> Result<i64, ParseFixedError>>(f: &[Field<'_>], parse: F) -> i64 {

@@ -84,11 +84,6 @@ impl Quotes {
         }
         self.len += 1;
     }
-
-    /// Total quantity of all quotes (see [`sum_qty`]).
-    pub fn total_qty(&self) -> Option<Qty> {
-        sum_qty(self.iter().map(|q| q.qty))
-    }
 }
 
 impl Deref for Quotes {
@@ -98,17 +93,11 @@ impl Deref for Quotes {
     }
 }
 
-/// Sums quantities exactly. `None` if the total doesn't fit a `Qty` (reported, never
-/// wrapped; impossible for real market data).
-///
-/// Implementation chosen by measurement (step 9 notes): checked `i64` additions that stop
-/// at the first overflow. Accumulating in `i128` and checking once, which step 2 expected
-/// to be faster, measured *slower* (an `i128` add is two dependent instructions and
-/// doesn't vectorise either); a branch-free `u64` overflow flag was no faster. All safe
-/// variants were within ~20% of each other, smaller than code-alignment noise at book
-/// sizes (≤ 64 levels), so the clearest one won.
+/// Sums quantities exactly: checked additions that stop at the first overflow. `None` if
+/// the total doesn't fit a `Qty` (reported, never wrapped; impossible for real market
+/// data).
 #[inline]
-pub fn sum_qty(qtys: impl IntoIterator<Item = Qty>) -> Option<Qty> {
+pub(crate) fn sum_qty(qtys: impl IntoIterator<Item = Qty>) -> Option<Qty> {
     qtys.into_iter().try_fold(Qty::ZERO, Qty::checked_add)
 }
 
@@ -176,5 +165,26 @@ impl Deref for Volume {
     type Target = [VenueVolume];
     fn deref(&self) -> &[VenueVolume] {
         &self.per_venue[..self.len]
+    }
+}
+
+#[cfg(test)]
+#[allow(clippy::unwrap_used)]
+mod tests {
+    use super::*;
+
+    fn qty(raw: i64) -> Qty {
+        Qty::from_raw(raw).unwrap()
+    }
+
+    #[test]
+    fn quantity_sums_are_exact_and_overflow_is_reported() {
+        assert_eq!(sum_qty([qty(1), qty(2), qty(3)]), Some(qty(6)));
+        assert_eq!(sum_qty([Qty::MAX, Qty::ZERO]), Some(Qty::MAX));
+        assert_eq!(sum_qty([Qty::MAX, qty(1)]), None, "reported, never wrapped");
+        // MAX + MAX + 2 = 2^64 wraps to exactly 0 in i64, a valid-looking quantity: a
+        // wrapping sum would return Some(0) here.
+        assert_eq!(sum_qty([Qty::MAX, Qty::MAX, qty(2)]), None);
+        assert_eq!(sum_qty([Qty::MAX; 64].iter().copied()), None);
     }
 }

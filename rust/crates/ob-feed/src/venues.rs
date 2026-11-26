@@ -26,7 +26,7 @@ use ob_sync::{BookMeta, BookPublisher, TopOverlay};
 use crate::venue::{Outcome, Request, ResyncReason, Venue};
 
 /// Leaks a string built once at start-up so parsers can hold `&'static` names.
-fn leak(s: String) -> &'static str {
+pub(crate) fn leak(s: String) -> &'static str {
     Box::leak(s.into_boxed_str())
 }
 
@@ -45,7 +45,7 @@ pub struct Binance {
 }
 
 /// SUBSCRIBE/UNSUBSCRIBE requests for Binance `streams`.
-fn binance_requests(streams: &[String]) -> (Vec<u8>, Vec<u8>) {
+pub(crate) fn binance_requests(streams: &[String]) -> (Vec<u8>, Vec<u8>) {
     let list = streams
         .iter()
         .map(|s| format!("\"{s}\""))

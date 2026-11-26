@@ -5,10 +5,10 @@
 use std::collections::BTreeMap;
 
 use ob_core::{ErrorClass, InstrumentSpec, Level, OrderBook, ParseFixedError, SnapshotError};
+use ob_parse::JsonErrorKind;
 use ob_parse::bybit::{
     Applied, BookMsg, BybitBookParser, ErrorKind, Field, Kind, Message, Op, Sequence,
 };
-use ob_parse::json::JsonErrorKind;
 
 const FIXTURE: &str = include_str!("fixtures/bybit_orderbook50.jsonl");
 

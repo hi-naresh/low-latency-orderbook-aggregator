@@ -2,8 +2,8 @@
 #![allow(clippy::unwrap_used)]
 
 use ob_core::{ErrorClass, InstrumentSpec, Level, OrderBook, ParseFixedError, Side};
+use ob_parse::JsonErrorKind;
 use ob_parse::binance::{BinanceDepthParser, DepthUpdate, ErrorKind, Field, Message};
-use ob_parse::json::JsonErrorKind;
 
 const FIXTURE: &str = include_str!("fixtures/binance_depth20.jsonl");
 
@@ -73,7 +73,7 @@ fn recorded_frames_form_an_unbroken_sequence() {
         let (_, out) = parse(frame).unwrap();
         if let Some(p) = &prev {
             assert!(
-                out.follows(p),
+                out.prev_final_update_id == p.final_update_id,
                 "gap: pu {} != previous u {}",
                 out.prev_final_update_id,
                 p.final_update_id

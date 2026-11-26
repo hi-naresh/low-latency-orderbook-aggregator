@@ -22,16 +22,6 @@ pub enum Side {
     Ask,
 }
 
-impl Side {
-    /// The other side.
-    pub const fn opposite(self) -> Side {
-        match self {
-            Side::Bid => Side::Ask,
-            Side::Ask => Side::Bid,
-        }
-    }
-}
-
 /// One price level: a price and the total quantity resting at it.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Level {

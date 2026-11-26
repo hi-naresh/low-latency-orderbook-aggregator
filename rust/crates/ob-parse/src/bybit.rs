@@ -44,10 +44,10 @@
 //!
 //! On error, the output buffers hold partial data and must not be used.
 
-use ob_core::{ErrorClass, InstrumentSpec, Level, LevelChange, OrderBook, Side, SnapshotError};
+use ob_core::{ErrorClass, InstrumentSpec, LevelChange, OrderBook, Side, SnapshotError};
 
 use crate::json::{Cursor, JsonError, JsonErrorKind};
-use crate::levels::LevelBuf;
+use crate::levels::{LevelBuf, LevelsError, parse_levels};
 
 /// Snapshot or delta.
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
@@ -500,46 +500,9 @@ impl<'a> BybitBookParser<'a> {
         }
     }
 
-    /// `[["price","qty"], ...]` into `out`. Same rules as Binance.
+    /// `[["price","qty"], ...]` into `out`.
     fn levels(&self, c: &mut Cursor<'_>, out: &mut LevelBuf, field: Field) -> Result<(), Error> {
-        let f = Some(field);
-        c.expect(b'[').map_err(|e| json(e, f))?;
-        if !c.has_first(b']').map_err(|e| json(e, f))? {
-            return Ok(());
-        }
-        loop {
-            let at = c.pos();
-            let bad_level = |e: JsonError| match e.kind {
-                JsonErrorKind::Decimal(_) | JsonErrorKind::Truncated => json(e, f),
-                _ => Error {
-                    kind: ErrorKind::BadLevel(field),
-                    offset: e.offset,
-                },
-            };
-            let (pd, qd) = (self.spec.px_decimals(), self.spec.qty_decimals());
-            let (px, qty) = match c.level_fast(pd, qd) {
-                Some(v) => v,
-                None => {
-                    c.expect(b'[').map_err(bad_level)?;
-                    let px = c.decimal(pd).map_err(bad_level)?;
-                    c.expect(b',').map_err(bad_level)?;
-                    let qty = c.decimal(qd).map_err(bad_level)?;
-                    c.expect(b']').map_err(bad_level)?;
-                    (px, qty)
-                }
-            };
-            let px = self.spec.px_from_raw(px).map_err(|e| decimal(e, f, at))?;
-            let qty = self.spec.qty_from_raw(qty).map_err(|e| decimal(e, f, at))?;
-            if !out.push(Level::new(px, qty)) {
-                return Err(Error {
-                    kind: ErrorKind::TooManyLevels(field),
-                    offset: at,
-                });
-            }
-            if !c.next_or_close(b']').map_err(|e| json(e, f))? {
-                return Ok(());
-            }
-        }
+        parse_levels(c, &self.spec, |l| out.push(l)).map_err(|e| levels_error(e, field))
     }
 }
 
@@ -552,6 +515,16 @@ fn see(seen: &mut u32, field: Field, offset: usize) -> Result<(), Error> {
     }
     *seen |= field.bit();
     Ok(())
+}
+
+fn levels_error(e: LevelsError, field: Field) -> Error {
+    let (kind, offset) = match e {
+        LevelsError::Json(e) => return json(e, Some(field)),
+        LevelsError::Spec(e, at) => return decimal(e, Some(field), at),
+        LevelsError::BadLevel(at) => (ErrorKind::BadLevel(field), at),
+        LevelsError::TooMany(at) => (ErrorKind::TooManyLevels(field), at),
+    };
+    Error { kind, offset }
 }
 
 fn json(e: JsonError, field: Option<Field>) -> Error {

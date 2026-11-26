@@ -25,12 +25,10 @@ use crate::seqlock::{Reader, Writer, seqlock};
 
 /// Levels per side that can be published.
 ///
-/// Was 64 (`OrderBook`'s default capacity) until step 19: Binance full-depth mode keeps
-/// ~1,000 levels a side, and the aggregator needs more than 64 of them to price large
-/// orders (64 ticks of 0.1 is ~$6 of book, which sometimes held under 11 BTC; 25 BTC
-/// orders came out partial). Raising it costs memory only: the seqlock holds 8 KiB per
-/// venue, but writers and readers touch just the levels a book actually has, so the
-/// 20- and 50-level venues pay nothing.
+/// Full-depth mode keeps ~1,000 levels a side, and pricing large orders needs well over
+/// 64 of them (64 ticks of 0.1 is ~$6 of book). The cost is memory only: the seqlock
+/// holds 8 KiB per venue, but writers and readers touch just the levels a book actually
+/// has, so the 20- and 50-level venues pay nothing.
 pub const DEPTH: usize = 256;
 
 const HEAD: usize = 0; // n_bids | n_asks << 16 | status << 32
@@ -42,7 +40,7 @@ const UPDATE_ID: usize = 7; // second cache line: not needed for the top of book
 const BIDS: usize = 8; // bid levels 1..DEPTH
 const ASKS: usize = BIDS + 2 * (DEPTH - 1); // ask levels 1..DEPTH
 /// Number of words in the published book (8,224 bytes).
-pub const WORDS: usize = ASKS + 2 * (DEPTH - 1);
+const WORDS: usize = ASKS + 2 * (DEPTH - 1);
 
 /// The feed's view of its venue, published with every book so readers get levels and
 /// health in one consistent read.
@@ -337,7 +335,7 @@ mod tests {
     fn layout_puts_the_top_of_book_in_one_cache_line() {
         // seq (word -1) + words 0..=6 = 8 words = 64 bytes. Checked at compile time.
         const _: () = assert!(HEAD < 7 && ASK0 + 1 < 7 && EXCHANGE_TS < 7 && RECV_NS < 7);
-        assert_eq!(WORDS, 1028); // 8 + 2 sides × 255 levels × 2 words (DEPTH = 256, step 19)
+        assert_eq!(WORDS, 1028); // 8 + 2 sides × 255 levels × 2 words (DEPTH = 256)
         // Every level of both sides has its own pair of words.
         let mut used = std::collections::BTreeSet::new();
         for i in 0..DEPTH {

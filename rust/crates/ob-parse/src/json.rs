@@ -19,7 +19,7 @@ use crate::decimal;
 use ob_core::ParseFixedError;
 
 /// Maximum nesting of arrays/objects (the same limit serde_json uses by default).
-pub const MAX_DEPTH: usize = 128;
+pub(crate) const MAX_DEPTH: usize = 128;
 
 /// What went wrong, without allocating. The byte offset is in [`JsonError::offset`].
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]

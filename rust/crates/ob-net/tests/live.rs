@@ -74,7 +74,7 @@ fn binance_live() {
                 depth += 1;
                 delays.push(wall_ms().saturating_sub(out.event_time));
                 if let Some(p) = &prev {
-                    assert!(out.follows(p), "sequence gap");
+                    assert_eq!(out.prev_final_update_id, p.final_update_id, "sequence gap");
                 }
                 prev = Some(out.clone());
             }

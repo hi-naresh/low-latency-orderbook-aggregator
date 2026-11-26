@@ -20,13 +20,12 @@
 
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
-use std::sync::Arc;
 
 use ob_net::record::{ContentType, Keys, Version};
-use ob_net::tls;
 use ob_net::ws::{MessageReader, Opcode, ReaderConfig, encode_server_frame};
 use ring::aead::{AES_128_GCM, Aad, LessSafeKey, Nonce, UnboundKey};
 
+use crate::server::localhost_tls;
 use crate::stats::Dist;
 use crate::stream::{Kind, Stream};
 
@@ -184,20 +183,7 @@ pub fn read_breakdown(kind: Kind, n: usize, clock: &quanta::Clock) -> ReadBreakd
 /// A rustls client and server with the handshake completed in memory.
 #[allow(clippy::unwrap_used)] // set-up
 fn connected_pair() -> (rustls::ClientConnection, rustls::ServerConnection) {
-    let ck = rcgen::generate_simple_self_signed(vec!["localhost".to_string()]).unwrap();
-    let cert = ck.cert.der().clone();
-    let key = rustls::pki_types::PrivatePkcs8KeyDer::from(ck.signing_key.serialize_der());
-    let server_cfg = Arc::new(
-        rustls::ServerConfig::builder_with_provider(tls::crypto_provider())
-            .with_safe_default_protocol_versions()
-            .unwrap()
-            .with_no_client_auth()
-            .with_single_cert(vec![cert.clone()], key.into())
-            .unwrap(),
-    );
-    let mut roots = rustls::RootCertStore::empty();
-    roots.add(cert).unwrap();
-    let client_cfg = tls::client_config_with_roots(roots).unwrap();
+    let (server_cfg, client_cfg) = localhost_tls();
     let name = rustls::pki_types::ServerName::try_from("localhost").unwrap();
     let mut client = rustls::ClientConnection::new(client_cfg, name).unwrap();
     let mut server = rustls::ServerConnection::new(server_cfg).unwrap();

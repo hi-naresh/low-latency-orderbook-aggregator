@@ -1,5 +1,4 @@
-//! Aggregator benchmarks on the real recordings (Binance 20+20, Bybit 50+50), plus the
-//! quantity-sum strategies deferred from step 2.
+//! Aggregator benchmarks on the real recordings (Binance 20+20, Bybit 50+50).
 //!
 //! Run: `cargo bench -p ob-agg --bench agg`
 #![allow(clippy::unwrap_used, clippy::cast_possible_wrap, missing_docs)]
@@ -7,9 +6,9 @@
 use std::hint::black_box;
 use std::time::Duration;
 
-use criterion::{BenchmarkId, Criterion, Throughput, criterion_group, criterion_main};
-use ob_agg::{Action, Aggregator, Config, VenueConfig, sum_qty};
-use ob_core::{InstrumentSpec, OrderBook, Px, Qty};
+use criterion::{Criterion, criterion_group, criterion_main};
+use ob_agg::{Action, Aggregator, Config, VenueConfig};
+use ob_core::{InstrumentSpec, OrderBook, Px};
 use ob_parse::binance::{BinanceDepthParser, DepthUpdate};
 use ob_parse::bybit::{BookMsg, BybitBookParser, Message};
 use ob_sync::{BookMeta, BookPublisher, VenueStatus, book_channel};
@@ -136,66 +135,12 @@ fn execution(c: &mut Criterion) {
     g.finish();
 }
 
-/// The step 2 question: checked `+` on every element vs `i128` accumulation checked once
-/// vs a branch-free `u64` overflow flag vs short-circuiting checked fold (what `sum_qty`
-/// now uses), against unchecked wrapping (incorrect on overflow; the speed ceiling).
-fn sums(c: &mut Criterion) {
-    let mut g = c.benchmark_group("qty_sum");
-    for n in [50_usize, 1_000_000] {
-        let qtys: Vec<Qty> = (0..n)
-            .map(|i| Qty::from_raw((i % 5000) as i64).unwrap())
-            .collect();
-        g.throughput(Throughput::Elements(n as u64));
-        g.bench_with_input(BenchmarkId::new("checked_add_each", n), &qtys, |b, q| {
-            b.iter(|| black_box(q).iter().fold(Qty::ZERO, |a, &x| a + x));
-        });
-        g.bench_with_input(BenchmarkId::new("i128_check_once", n), &qtys, |b, q| {
-            b.iter(|| {
-                let t: i128 = black_box(q).iter().map(|x| i128::from(x.raw())).sum();
-                i64::try_from(t).ok().and_then(Qty::from_raw)
-            });
-        });
-        g.bench_with_input(
-            BenchmarkId::new("checked_fold_short_circuit (sum_qty)", n),
-            &qtys,
-            |b, q| b.iter(|| sum_qty(black_box(q).iter().copied())),
-        );
-        g.bench_with_input(BenchmarkId::new("u64_overflow_flag", n), &qtys, |b, q| {
-            b.iter(|| {
-                let (mut acc, mut overflow) = (0_u64, false);
-                for x in black_box(q) {
-                    let (s, o) = acc.overflowing_add(x.raw().cast_unsigned());
-                    acc = s;
-                    overflow |= o;
-                }
-                if overflow {
-                    None
-                } else {
-                    Qty::from_raw(acc.cast_signed())
-                }
-            });
-        });
-        g.bench_with_input(
-            BenchmarkId::new("wrapping_i64 (no check)", n),
-            &qtys,
-            |b, q| {
-                b.iter(|| {
-                    black_box(q)
-                        .iter()
-                        .fold(0_i64, |a, x| a.wrapping_add(x.raw()))
-                });
-            },
-        );
-    }
-    g.finish();
-}
-
 criterion_group! {
     name = benches;
     config = Criterion::default()
         .warm_up_time(Duration::from_millis(500))
         .measurement_time(Duration::from_secs(3))
         .sample_size(50);
-    targets = aggregator, execution, sums
+    targets = aggregator, execution
 }
 criterion_main!(benches);

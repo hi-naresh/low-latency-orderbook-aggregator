@@ -51,10 +51,10 @@
 //!
 //! On error, the output buffers hold partial data and must not be used.
 
-use ob_core::{ErrorClass, InstrumentSpec, Level, OrderBook, Qty, Side, SnapshotError};
+use ob_core::{ErrorClass, InstrumentSpec, Level, OrderBook, Side, SnapshotError};
 
 use crate::json::{Cursor, JsonError, JsonErrorKind};
-use crate::levels::LevelBuf;
+use crate::levels::{LevelBuf, LevelsError, parse_levels};
 
 /// One parsed depth message. Reuse a single instance for every message.
 #[derive(Clone, Debug, Default)]
@@ -82,11 +82,6 @@ impl DepthUpdate {
         book: &mut OrderBook<CAP>,
     ) -> Result<(), SnapshotError> {
         book.replace(&self.bids, &self.asks)
-    }
-
-    /// `true` if this message directly follows `previous` (no message missed).
-    pub const fn follows(&self, previous: &DepthUpdate) -> bool {
-        self.prev_final_update_id == previous.final_update_id
     }
 }
 
@@ -451,54 +446,14 @@ impl<'a> BinanceDepthParser<'a> {
         self.levels_with(c, field, |l| out.push(l))
     }
 
-    /// `[["price","qty"], ...]`, each level handed to `push` (which returns `false` when
-    /// it can take no more).
+    /// `[["price","qty"], ...]`, each level handed to `push`.
     fn levels_with(
         &self,
         c: &mut Cursor<'_>,
         field: Field,
-        mut push: impl FnMut(Level) -> bool,
+        push: impl FnMut(Level) -> bool,
     ) -> Result<(), Error> {
-        let f = Some(field);
-        c.expect(b'[').map_err(|e| json(e, f))?;
-        if !c.has_first(b']').map_err(|e| json(e, f))? {
-            return Ok(());
-        }
-        loop {
-            let at = c.pos();
-            let bad_level = |e: JsonError| match e.kind {
-                // Wrong shape (not a 2-element array of strings) is reported as BadLevel;
-                // a bad number keeps its precise Decimal error.
-                JsonErrorKind::Decimal(_) | JsonErrorKind::Truncated => json(e, f),
-                _ => Error {
-                    kind: ErrorKind::BadLevel(field),
-                    offset: e.offset,
-                },
-            };
-            let (pd, qd) = (self.spec.px_decimals(), self.spec.qty_decimals());
-            let (px, qty) = match c.level_fast(pd, qd) {
-                Some(v) => v,
-                None => {
-                    c.expect(b'[').map_err(bad_level)?;
-                    let px = c.decimal(pd).map_err(bad_level)?;
-                    c.expect(b',').map_err(bad_level)?;
-                    let qty = c.decimal(qd).map_err(bad_level)?;
-                    c.expect(b']').map_err(bad_level)?;
-                    (px, qty)
-                }
-            };
-            let px = self.spec.px_from_raw(px).map_err(|e| decimal(e, f, at))?;
-            let qty: Qty = self.spec.qty_from_raw(qty).map_err(|e| decimal(e, f, at))?;
-            if !push(Level::new(px, qty)) {
-                return Err(Error {
-                    kind: ErrorKind::TooManyLevels(field),
-                    offset: at,
-                });
-            }
-            if !c.next_or_close(b']').map_err(|e| json(e, f))? {
-                return Ok(());
-            }
-        }
+        parse_levels(c, &self.spec, push).map_err(|e| levels_error(e, field))
     }
 }
 
@@ -591,6 +546,16 @@ impl BinanceDepthParser<'_> {
         }
         Ok(out)
     }
+}
+
+fn levels_error(e: LevelsError, field: Field) -> Error {
+    let (kind, offset) = match e {
+        LevelsError::Json(e) => return json(e, Some(field)),
+        LevelsError::Spec(e, at) => return decimal(e, Some(field), at),
+        LevelsError::BadLevel(at) => (ErrorKind::BadLevel(field), at),
+        LevelsError::TooMany(at) => (ErrorKind::TooManyLevels(field), at),
+    };
+    Error { kind, offset }
 }
 
 fn json(e: JsonError, field: Option<Field>) -> Error {

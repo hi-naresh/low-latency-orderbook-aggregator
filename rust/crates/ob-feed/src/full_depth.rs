@@ -45,6 +45,7 @@ use ob_parse::binance::{self, BinanceDepthParser, BookTicker, DepthUpdate};
 use ob_sync::{BookMeta, BookPublisher, DEPTH, TopOverlay};
 
 use crate::venue::{Outcome, Request, ResyncReason, Venue};
+use crate::venues::{binance_requests, leak};
 
 /// Levels kept per side.
 pub const FULL_CAP: usize = 1024;
@@ -92,28 +93,13 @@ pub struct BinanceFullDepth {
     unsubscribe: Vec<u8>,
 }
 
-fn requests(streams: &[String]) -> (Vec<u8>, Vec<u8>) {
-    let list = streams
-        .iter()
-        .map(|s| format!("\"{s}\""))
-        .collect::<Vec<_>>()
-        .join(",");
-    (
-        format!(r#"{{"method":"SUBSCRIBE","params":[{list}],"id":1}}"#).into_bytes(),
-        format!(r#"{{"method":"UNSUBSCRIBE","params":[{list}],"id":2}}"#).into_bytes(),
-    )
-}
-
 impl BinanceFullDepth {
     /// `symbol` as Binance writes it (`"BTCUSDT"`).
     pub fn new(spec: InstrumentSpec, symbol: &str) -> Self {
         let stream = symbol.to_ascii_lowercase();
-        let (subscribe, unsubscribe) = requests(&[format!("{stream}@depth@100ms")]);
+        let (subscribe, unsubscribe) = binance_requests(&[format!("{stream}@depth@100ms")]);
         BinanceFullDepth {
-            parser: BinanceDepthParser::new(
-                spec,
-                Box::leak(symbol.to_string().into_boxed_str()).as_bytes(),
-            ),
+            parser: BinanceDepthParser::new(spec, leak(symbol.to_string()).as_bytes()),
             msg: DepthUpdate::default(),
             book: Box::new(TickBook::new(spec.tick())),
             sync: Sync::Idle,
@@ -137,7 +123,7 @@ impl BinanceFullDepth {
     pub fn with_top_of_book(mut self) -> Self {
         let s = &self.stream;
         (self.subscribe, self.unsubscribe) =
-            requests(&[format!("{s}@depth@100ms"), format!("{s}@bookTicker")]);
+            binance_requests(&[format!("{s}@depth@100ms"), format!("{s}@bookTicker")]);
         self.top_enabled = true;
         self
     }
