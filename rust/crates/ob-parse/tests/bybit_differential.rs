@@ -21,7 +21,7 @@ use proptest::prelude::*;
 const FIXTURE: &str = include_str!("fixtures/bybit_orderbook50.jsonl");
 const TOP_FIXTURE: &str = include_str!("fixtures/bybit_orderbook1.jsonl");
 const TOPIC: &str = "orderbook.50.BTCUSDT";
-/// The top-of-book topic (step 18): accepted alongside `TOPIC`.
+/// The top-of-book topic: accepted alongside `TOPIC`.
 const TOP_TOPIC: &str = "orderbook.1.BTCUSDT";
 
 fn fast(msg: &[u8], spec: &InstrumentSpec, topic: &str, symbol: &str) -> OracleResult {
@@ -216,7 +216,7 @@ proptest! {
 }
 
 /// Each generator must produce plenty of accepted *and* rejected input, or the
-/// agreement above proves little (see step 6 notes).
+/// agreement above proves little.
 #[test]
 fn generators_exercise_both_accept_and_reject() {
     use proptest::strategy::ValueTree;

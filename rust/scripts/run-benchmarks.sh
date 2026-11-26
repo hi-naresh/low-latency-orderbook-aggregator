@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Every benchmark in the project, in one command, into one folder (step 29).
+# Every benchmark in the project, in one command, into one folder.
 #
 #   scripts/run-benchmarks.sh             # everything (~25–40 min; needs internet for part 4)
 #   scripts/run-benchmarks.sh --no-live   # skip the live exchange runs (no internet needed)
@@ -8,7 +8,7 @@
 # Output: bench-results/<machine>-<date>/
 #   environment.txt         machine, OS, compiler, commit, load average
 #   tests.txt               the full test suite (a failing suite stops the run)
-#   tails.txt               tail latencies: every stage, p50 … p99.99, max; jitter (step 23+)
+#   tails.txt               tail latencies: every stage, p50 … p99.99, max; jitter
 #   criterion.txt           every criterion benchmark, full output
 #   criterion-summary.txt   one line per benchmark: name and time [low median high]
 #   live.txt                60 s live against Binance + Bybit, stage histograms

@@ -92,7 +92,7 @@ pub struct BookMeta {
 }
 
 /// A fresher best bid and ask than the book's own, from a venue's real-time top-of-book
-/// stream (Binance `bookTicker`, Bybit `orderbook.1`; step 18).
+/// stream (Binance `bookTicker`, Bybit `orderbook.1`).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct TopOverlay {
     /// Best bid.
@@ -119,7 +119,7 @@ impl BookPublisher {
         self.publish_with_top(book, None, meta);
     }
 
-    /// Publishes `book` with a fresher top of book laid over it (step 18).
+    /// Publishes `book` with a fresher top of book laid over it.
     ///
     /// Per side, readers see the overlay's level first, then only the book's levels that
     /// are strictly *worse* (bids below the overlay bid, asks above the overlay ask). The

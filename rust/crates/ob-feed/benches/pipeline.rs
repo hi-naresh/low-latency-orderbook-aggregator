@@ -1,6 +1,6 @@
 //! The whole per-message path, on recorded live data: parse → sequence check → apply →
-//! publish, through the real `Feed` (no network). The yardstick for step 20's tuning:
-//! every change is measured against these numbers, before and after.
+//! publish, through the real `Feed` (no network). The yardstick for tuning: every change is
+//! measured against these numbers, before and after.
 //!
 //! Each batch starts from a fresh, connected feed (set-up excluded from the timing) and
 //! feeds every recorded message once, in order, so delta streams stay valid.

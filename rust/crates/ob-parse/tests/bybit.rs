@@ -472,7 +472,7 @@ fn the_buffer_is_reused_without_leftovers() {
     );
 }
 
-/// Found by the live test in step 12: a Bybit delta can carry more levels than the stream's
+/// Found by the live test: a Bybit delta can carry more levels than the stream's
 /// depth (66 per side seen live), because it lists deletions *and* insertions. Applied in
 /// order to a book with too little capacity, the temporary overflow drops "worst" levels
 /// that the same delta's later deletions would have brought back into the top 50.

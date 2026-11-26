@@ -1,4 +1,4 @@
-//! `ob-os`: operating-system tuning for the latency-critical threads (step 21).
+//! `ob-os`: operating-system tuning for the latency-critical threads.
 //!
 //! Everything here is **opt-in** and **reports what it did**: each call returns
 //! [`Support`] saying whether the OS applied it, only took it as a hint, or doesn't offer
@@ -72,7 +72,7 @@ fn setsockopt_int(
 /// Pins the calling thread to CPU `cpu`.
 ///
 /// Linux: hard affinity; the scheduler won't run the thread anywhere else. Combine with
-/// `isolcpus`/`nohz_full` (see `docs/TUNING.md`) so nothing else runs *there* either.
+/// `isolcpus`/`nohz_full` (see `docs/LINUX.md`) so nothing else runs *there* either.
 /// macOS: there is no hard affinity; threads with the same affinity tag are kept on the
 /// same L2 cache where possible (Intel Macs; ignored on Apple silicon).
 /// Call [`set_realtime_priority`] **first** on macOS: once a thread's policy is set this
@@ -393,8 +393,7 @@ mod macos_order {
     /// set the QoS class first, then the tag (which `ob live` does).
     ///
     /// Apple Silicon refuses the affinity tag altogether (`Unsupported`), so the thread's
-    /// policy never changes and the QoS class is accepted either way (step 29: found by
-    /// reviewing the code for the M-series benchmark run).
+    /// policy never changes and the QoS class is accepted either way.
     #[test]
     fn qos_must_come_before_the_affinity_tag() {
         let (tag, tag_then_qos) = std::thread::spawn(|| {

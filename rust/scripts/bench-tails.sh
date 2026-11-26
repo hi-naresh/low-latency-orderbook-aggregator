@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Tail-latency run (steps 23, 28): p50 / p99 / p99.9 / p99.99 / max for every stage, from
+# Tail-latency run: p50 / p99 / p99.9 / p99.99 / max for every stage, from
 # encrypted bytes to the published book, the aggregator's queries, and OS jitter.
 #
 # Writes one self-describing file: the machine (model, CPU, cores, memory, caches, OS,

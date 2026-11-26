@@ -1,6 +1,6 @@
 [package]
 name = "ob-simd"
-description = "SIMD kernels for the parser (step 25): one price level per call, no per-digit branches."
+description = "SIMD kernels for the parser: one price level per call, no per-digit branches."
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

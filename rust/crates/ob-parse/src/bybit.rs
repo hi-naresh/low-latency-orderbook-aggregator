@@ -65,7 +65,7 @@ pub enum Channel {
     /// The depth topic (e.g. `orderbook.50.BTCUSDT`).
     #[default]
     Depth,
-    /// The top-of-book topic (`orderbook.1.BTCUSDT`, step 18): one level per side, every
+    /// The top-of-book topic (`orderbook.1.BTCUSDT`): one level per side, every
     /// message a snapshot, pushed every 10 ms. Its `seq` is comparable with depth's.
     Top,
 }
@@ -294,7 +294,7 @@ pub struct Error {
 }
 
 impl Error {
-    /// Which policy applies (step 2). Whatever the class, the message is dropped whole,
+    /// Which policy applies. Whatever the class, the message is dropped whole,
     /// and because Bybit sends deltas, the book must then be rebuilt from a snapshot.
     pub const fn class(&self) -> ErrorClass {
         match self.kind {

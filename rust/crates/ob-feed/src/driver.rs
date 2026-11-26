@@ -4,7 +4,7 @@
 //! iteration: read the clock, poll the socket (or connect, when allowed), hand what
 //! happened to the feed, then carry out the feed's commands.
 //!
-//! While connected the loop never sleeps (spin mode, step 12): an idle poll costs one
+//! While connected the loop never sleeps (spin mode): an idle poll costs one
 //! non-blocking `read` and a timer check. While disconnected it sleeps 1 ms between
 //! checks; nothing is time-critical then.
 
@@ -28,7 +28,7 @@ pub enum DriverEvent<'a> {
     ConnectFailed(&'a NetError),
     /// An established connection failed.
     ConnectionLost(&'a NetError),
-    /// A REST snapshot fetch failed (full depth, step 19).
+    /// A REST snapshot fetch failed (full depth).
     SnapshotFailed(&'a NetError),
 }
 

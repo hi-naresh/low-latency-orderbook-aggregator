@@ -327,7 +327,7 @@ fn at_most_eight_venues() {
     );
 }
 
-/// "Best N levels across all venues" (step 22): merged best first, venue-tagged, healthy
+/// "Best N levels across all venues": merged best first, venue-tagged, healthy
 /// venues only, against a direct model (pool every healthy level, sort, take N).
 #[test]
 fn best_levels_merge_venues_best_first() {

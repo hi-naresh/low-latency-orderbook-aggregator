@@ -1,5 +1,5 @@
 //! A minimal HTTPS GET, for one job: fetching a venue's REST order-book snapshot when a
-//! full-depth feed (re)synchronises (step 19).
+//! full-depth feed (re)synchronises.
 //!
 //! **Cold path.** It runs once per sync, blocks, and allocates; none of that matters
 //! there. What does matter is that it can't hang the feed thread or be tricked into
@@ -10,7 +10,7 @@
 //!   are supported; a compressed body (which we never ask for) is refused.
 //!
 //! Why not a crate (`ureq`, `reqwest`)? Each would add a second HTTP/TLS stack and a
-//! large dependency tree for one GET. This reuses our TLS setup (step 12) and is ~150
+//! large dependency tree for one GET. This reuses our TLS setup and is ~150
 //! lines that are fully tested against a local server.
 
 use std::io::{self, Read, Write};

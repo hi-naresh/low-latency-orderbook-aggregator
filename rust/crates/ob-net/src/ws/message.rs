@@ -19,7 +19,7 @@ pub struct ReaderConfig {
     /// Largest message accepted (single frame or reassembled), bytes.
     pub max_message: usize,
     /// Check that text messages are valid UTF-8, as RFC 6455 §8.1 requires. Costs a pass
-    /// over every message (measured in the step 11 notes).
+    /// over every message.
     pub validate_utf8: bool,
 }
 

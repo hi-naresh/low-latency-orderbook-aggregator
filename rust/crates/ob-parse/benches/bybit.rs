@@ -2,7 +2,7 @@
 //! snapshot and 58 small deltas.
 //!
 //! * `serde_typed`: `#[derive(Deserialize)]` borrowing `&str`, levels converted with our
-//!   fast decimal parser (the strongest idiomatic serde baseline, as in step 6).
+//!   fast decimal parser (the strongest idiomatic serde baseline).
 //! * `ob_parse`: this crate's parser into a reused buffer.
 //! * `ob_parse+book`: parse, check the sequence, apply to the book, check for a cross:
 //!   everything the Bybit hot path does per message.

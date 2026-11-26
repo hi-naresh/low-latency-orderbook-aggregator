@@ -1,6 +1,5 @@
-# CI for the Rust solution. The original Java skeleton is not built here.
-# Later steps add jobs for Miri (step 8), loom (step 8), fuzz smoke runs (step 6)
-# and the Linux low-latency feature (step 21).
+# CI: format, lint, tests (Linux and macOS), benchmarks compile, Miri, loom, fuzz smoke
+# runs and documentation.
 name: rust-ci
 
 on:
@@ -15,9 +14,9 @@ env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: -D warnings      # any compiler warning fails CI
   RUSTDOCFLAGS: -D warnings
-  # Step 28: an environment RUSTFLAGS *replaces* rust/.cargo/config.toml's rustflags, so
+  # An environment RUSTFLAGS *replaces* rust/.cargo/config.toml's rustflags, so
   # the Linux jobs below repeat its `-C target-cpu=x86-64-v2`. Without it, Linux CI would
-  # compile the SIMD level parser (ob-simd, step 25) out and only test the scalar path.
+  # compile the SIMD level parser (ob-simd) out and only test the scalar path.
   # (macos-latest runners are Apple Silicon: no SSE, so they test the scalar fallback.)
   # Job-level `env:` can't read the `env` context, so the flags are written out below.
 
@@ -29,7 +28,7 @@ jobs:
       - run: cargo fmt --all --check   # toolchain comes from rust/rust-toolchain.toml
 
   clippy:
-    # Both OSes: ob-os (step 21) has Linux-only and macOS-only code paths.
+    # Both OSes: ob-os has Linux-only and macOS-only code paths.
     strategy:
       fail-fast: false
       matrix:

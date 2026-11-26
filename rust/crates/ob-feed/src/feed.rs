@@ -15,7 +15,7 @@
 //! with a fake clock and recorded messages.
 //!
 //! **Health travels with the book:** every state change publishes the book with the
-//! matching status (`Down`, `Syncing`, `Live`), so the aggregator (step 9) stops using a
+//! matching status (`Down`, `Syncing`, `Live`), so the aggregator stops using a
 //! venue at the moment its feed stops trusting the book, and starts again only after a
 //! fresh snapshot.
 
@@ -104,7 +104,7 @@ pub enum ReconnectReason {
     SubscribeRefused,
     /// Resyncing kept failing (`max_resyncs` within `resync_window`).
     TooManyResyncs,
-    /// A REST snapshot couldn't be fetched (full depth, step 19).
+    /// A REST snapshot couldn't be fetched (full depth).
     SnapshotFailed,
 }
 
@@ -128,7 +128,7 @@ pub enum FeedEvent {
         /// Backoff delay.
         retry_in: Duration,
     },
-    /// Fetching a REST snapshot to (re)build a full-depth book (step 19).
+    /// Fetching a REST snapshot to (re)build a full-depth book.
     FetchingSnapshot,
 }
 
@@ -185,7 +185,7 @@ pub struct FeedStats {
     pub messages: u64,
     /// Book updates applied and published (including top-of-book updates).
     pub applied: u64,
-    /// Of those, updates from the real-time top-of-book stream (step 18).
+    /// Of those, updates from the real-time top-of-book stream.
     pub top_updates: u64,
     /// Gaps repaired by the next snapshot (Binance).
     pub gaps: u64,

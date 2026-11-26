@@ -189,7 +189,6 @@ fn readpath(o: &Opts, clock: &quanta::Clock) {
 }
 
 /// Section 6: where the time goes in the slowest recorded messages.
-#[allow(clippy::cast_precision_loss)] // percentages and per-byte figures for display
 fn anatomy(o: &Opts, clock: &quanta::Clock) {
     println!("\n6. Message anatomy: the slowest recorded messages, parse vs the rest (medians)");
     println!(
@@ -223,7 +222,6 @@ fn anatomy(o: &Opts, clock: &quanta::Clock) {
 }
 
 /// Section 7: how often the OS takes the CPU from a spinning thread.
-#[allow(clippy::cast_precision_loss)] // rates and percentages for display
 fn jitter(o: &Opts, clock: &quanta::Clock) {
     let secs = if o.scale < 1.0 { 2 } else { 10 };
     println!(

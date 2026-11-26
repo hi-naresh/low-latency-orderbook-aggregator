@@ -1,5 +1,5 @@
 //! A WebSocket client codec (RFC 6455), "sans-I/O": it turns bytes into frames and
-//! messages and back, and never touches a socket. Step 12 puts it on top of TLS.
+//! messages and back, and never touches a socket; [`crate::conn`] runs it over TLS.
 //!
 //! * [`frame`]: frame headers, strict validation, masking.
 //! * [`message`]: fragment reassembly, control frames, size and UTF-8 checks.

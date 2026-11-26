@@ -37,10 +37,10 @@ pub enum ResyncReason {
     RemovedAbsent,
     /// A snapshot was refused (unsorted levels, zero quantity).
     BadSnapshot,
-    /// A message couldn't be parsed (step 2's error class).
+    /// A message couldn't be parsed (with its error class).
     Unparseable(ErrorClass),
     /// A full-depth book has too few levels it knows exactly on one side (the market
-    /// moved past the snapshot's range): fetch a new snapshot (step 19).
+    /// moved past the snapshot's range): fetch a new snapshot.
     Depleted,
 }
 
@@ -56,8 +56,8 @@ pub enum Outcome {
         /// At least one message was missed before this one, but this one is a complete
         /// snapshot, so the book is correct again (Binance). Counted, not resynced.
         gap: bool,
-        /// Only the top of book changed (a newer best bid/ask from the real-time stream,
-        /// step 18), not the depth book.
+        /// Only the top of book changed (a newer best bid/ask from the real-time stream),
+        /// not the depth book.
         top: bool,
     },
     /// Nothing to do (a duplicate, a delta before the first snapshot, an unknown reply).
@@ -74,7 +74,7 @@ pub enum Outcome {
         /// `false` if the venue refused.
         ok: bool,
     },
-    /// The venue needs a REST snapshot before it can build a book (full depth, step 19).
+    /// The venue needs a REST snapshot before it can build a book (full depth).
     /// The feed asks the driver to fetch [`Venue::snapshot_endpoint`] and calls
     /// [`Venue::on_snapshot`] with the body.
     NeedSnapshot,

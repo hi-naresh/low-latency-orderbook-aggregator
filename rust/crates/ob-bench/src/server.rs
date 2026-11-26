@@ -37,7 +37,6 @@ pub struct Sent {
 
 /// A TLS server configuration with a fresh self-signed certificate for `localhost`, and
 /// a client configuration that trusts only that certificate.
-#[allow(clippy::unwrap_used)] // set-up: a failure here is a broken environment
 pub(crate) fn localhost_tls() -> (Arc<rustls::ServerConfig>, Arc<rustls::ClientConfig>) {
     let ck = rcgen::generate_simple_self_signed(vec!["localhost".to_string()]).unwrap();
     let cert = ck.cert.der().clone();
@@ -66,7 +65,6 @@ pub fn spawn(
     stamps: Arc<[AtomicU64]>,
     seed: u64,
 ) -> (ConnConfig, JoinHandle<Sent>) {
-    #[allow(clippy::unwrap_used)] // set-up: a failure here is a broken environment
     let (cfg, listener, server_cfg) = {
         let (server_cfg, client_tls) = localhost_tls();
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
@@ -76,7 +74,6 @@ pub fn spawn(
         (cfg, listener, server_cfg)
     };
     let handle = thread::spawn(move || {
-        #[allow(clippy::unwrap_used)]
         let mut s = {
             let (sock, _) = listener.accept().unwrap();
             sock.set_nodelay(true).unwrap();
@@ -132,7 +129,6 @@ pub fn spawn(
 }
 
 /// The server side of the WebSocket upgrade.
-#[allow(clippy::unwrap_used)]
 fn upgrade(s: &mut rustls::StreamOwned<rustls::ServerConnection, std::net::TcpStream>) {
     let mut req = Vec::new();
     let mut b = [0_u8];
@@ -170,7 +166,6 @@ impl SplitMix64 {
     /// An exponentially distributed value with the given mean.
     pub fn exponential(&mut self, mean: f64) -> f64 {
         // Uniform in (0, 1]: never 0, so ln is finite.
-        #[allow(clippy::cast_precision_loss)]
         let u = ((self.next_u64() >> 11) + 1) as f64 / (1_u64 << 53) as f64;
         -mean * u.ln()
     }

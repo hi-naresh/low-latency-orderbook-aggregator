@@ -121,7 +121,7 @@ fn report(label: &str, mut v: Vec<u64>) {
 }
 
 /// Runs `scenario` on a fresh thread, optionally with macOS's user-interactive QoS
-/// class (or Linux SCHED_FIFO, if permitted) set first (step 21).
+/// class (or Linux SCHED_FIFO, if permitted) set first.
 fn on_thread(qos: bool, mode: WaitMode, count: usize, interval: Duration) -> Vec<u64> {
     thread::spawn(move || {
         if qos {

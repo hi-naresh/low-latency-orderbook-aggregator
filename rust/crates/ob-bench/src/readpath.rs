@@ -1,4 +1,4 @@
-//! The read stage, taken apart (step 24).
+//! The read stage, taken apart.
 //!
 //! The wire scenario's "read" row is one number: `poll()` from the socket to a decoded
 //! WebSocket message. Here each part is timed on its own, per recorded message:
@@ -12,7 +12,7 @@
 //! | rustls: copy out | `reader().read` into our buffer | idem |
 //! | WebSocket decode | frame header, length, borrow the payload | `poll_buffered` |
 //! | AES-GCM alone | `ring` decrypting the same record in place: the floor any TLS code pays | – |
-//! | our record layer | `ob_net::record::Keys::open`: the same record decrypted in place (step 24) | `Session::receive` |
+//! | our record layer | `ob_net::record::Keys::open`: the same record decrypted in place | `Session::receive` |
 //!
 //! The rustls rows run over an in-memory connection (a real handshake between a rustls
 //! client and server, no sockets), so the crypto, buffering and allocation are exactly
@@ -48,7 +48,7 @@ pub struct ReadBreakdown {
     pub ws: Dist,
     /// AES-128-GCM decryption of a record of the same size, in place (`ring`).
     pub aead: Dist,
-    /// Our record layer (step 24): the same TLS 1.3 record decrypted in place, ready for
+    /// Our record layer: the same TLS 1.3 record decrypted in place, ready for
     /// the WebSocket decoder: replaces the three rustls rows.
     pub ours: Dist,
     /// Mean record size, bytes.
@@ -64,15 +64,10 @@ pub fn read_breakdown(kind: Kind, n: usize, clock: &quanta::Clock) -> ReadBreakd
     let mut cipher = Vec::with_capacity(64 * 1024);
     let mut plain = vec![0_u8; 1 << 20];
     let mut reader = MessageReader::new(ReaderConfig::default());
-    let key = LessSafeKey::new(
-        #[allow(clippy::unwrap_used)] // a 16-byte key is valid
-        UnboundKey::new(&AES_128_GCM, &[7; 16]).unwrap(),
-    );
+    let key = LessSafeKey::new(UnboundKey::new(&AES_128_GCM, &[7; 16]).unwrap());
     let mut sealed = Vec::with_capacity(64 * 1024);
-    let raw_keys = |seq| {
-        #[allow(clippy::unwrap_used)] // valid constant key material
-        Keys::from_raw(Version::Tls13, &AES_128_GCM, &[7; 16], [1; 12], seq).unwrap()
-    };
+    let raw_keys =
+        |seq| Keys::from_raw(Version::Tls13, &AES_128_GCM, &[7; 16], [1; 12], seq).unwrap();
     let (mut our_tx, mut our_rx) = (raw_keys(0), raw_keys(0));
     let mut record = Vec::with_capacity(64 * 1024);
     let mut bytes_total = 0_u64;
@@ -84,7 +79,6 @@ pub fn read_breakdown(kind: Kind, n: usize, clock: &quanta::Clock) -> ReadBreakd
         encode_server_frame(&mut frame, true, Opcode::Text, stream.next_message());
         // One TLS record from the server (untimed).
         cipher.clear();
-        #[allow(clippy::unwrap_used)] // in-memory I/O can't fail
         {
             server.writer().write_all(&frame).unwrap();
             while server.wants_write() {
@@ -97,17 +91,14 @@ pub fn read_breakdown(kind: Kind, n: usize, clock: &quanta::Clock) -> ReadBreakd
         let t0 = clock.raw();
         let mut src = &cipher[..];
         while !src.is_empty() {
-            #[allow(clippy::unwrap_used)]
             client.read_tls(&mut src).unwrap();
         }
         let t1 = clock.raw();
-        #[allow(clippy::unwrap_used)]
         let state = client.process_new_packets().unwrap();
         let t2 = clock.raw();
         let mut want = state.plaintext_bytes_to_read();
         let mut got = 0;
         while want > 0 {
-            #[allow(clippy::unwrap_used)]
             let k = client.reader().read(&mut plain[got..]).unwrap();
             got += k;
             want -= k;
@@ -131,7 +122,6 @@ pub fn read_breakdown(kind: Kind, n: usize, clock: &quanta::Clock) -> ReadBreakd
             n[4..].copy_from_slice(&(i as u64).to_be_bytes());
             Nonce::assume_unique_for_key(n)
         };
-        #[allow(clippy::unwrap_used)]
         key.seal_in_place_append_tag(nonce(i), Aad::empty(), &mut sealed)
             .unwrap();
         let t5 = clock.raw();
@@ -144,7 +134,6 @@ pub fn read_breakdown(kind: Kind, n: usize, clock: &quanta::Clock) -> ReadBreakd
         // Our record layer: the same frame as one TLS 1.3 record, decrypted where it lies
         // (as `Session::receive` does for the first record after the plaintext).
         record.clear();
-        #[allow(clippy::unwrap_used)]
         our_tx
             .seal(ContentType::ApplicationData, &frame, &mut record)
             .unwrap();
@@ -156,7 +145,6 @@ pub fn read_breakdown(kind: Kind, n: usize, clock: &quanta::Clock) -> ReadBreakd
         r.ours.record(clock.delta_as_nanos(t9, t10));
 
         // The system call, on a real loopback socket: same bytes.
-        #[allow(clippy::unwrap_used)]
         tx.write_all(&cipher).unwrap();
         let mut left = cipher.len();
         while left > 0 {
@@ -171,7 +159,6 @@ pub fn read_breakdown(kind: Kind, n: usize, clock: &quanta::Clock) -> ReadBreakd
                 Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => {
                     r.recv_empty.record(clock.delta_as_nanos(t7, t8));
                 }
-                #[allow(clippy::panic)]
                 Err(e) => panic!("loopback read: {e}"),
             }
         }
@@ -181,7 +168,6 @@ pub fn read_breakdown(kind: Kind, n: usize, clock: &quanta::Clock) -> ReadBreakd
 }
 
 /// A rustls client and server with the handshake completed in memory.
-#[allow(clippy::unwrap_used)] // set-up
 fn connected_pair() -> (rustls::ClientConnection, rustls::ServerConnection) {
     let (server_cfg, client_cfg) = localhost_tls();
     let name = rustls::pki_types::ServerName::try_from("localhost").unwrap();
@@ -213,7 +199,6 @@ fn connected_pair() -> (rustls::ClientConnection, rustls::ServerConnection) {
 }
 
 /// A connected loopback TCP pair; the reading end is non-blocking, as in production.
-#[allow(clippy::unwrap_used)] // set-up
 fn socket_pair() -> (TcpStream, TcpStream) {
     let l = TcpListener::bind("127.0.0.1:0").unwrap();
     let tx = TcpStream::connect(l.local_addr().unwrap()).unwrap();

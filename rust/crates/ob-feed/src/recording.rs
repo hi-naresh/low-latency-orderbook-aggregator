@@ -15,7 +15,7 @@
 //! * `wall_ns`: Unix time when received (for the exchange → us delay on replay).
 //! * `mono_ns`: [`crate::mono_ns`] when received (intervals, and the feed's `now`).
 //! * `kind`: 0 = a text message, 1 = a (re)connection, so replay sees reconnects too,
-//!   2 = a REST snapshot body (full depth, step 19), so replay rebuilds books exactly.
+//!   2 = a REST snapshot body (full depth), so replay rebuilds books exactly.
 
 use std::io::{self, Read, Write};
 

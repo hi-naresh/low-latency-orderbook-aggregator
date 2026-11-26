@@ -273,7 +273,7 @@ impl Client {
         Self::start_with_rest(venue, conn, None, cfg)
     }
 
-    /// With a REST server for snapshots (full depth, step 19).
+    /// With a REST server for snapshots (full depth).
     fn start_with_rest<V: Venue + Send + 'static>(
         venue: V,
         conn: ConnConfig,
@@ -802,7 +802,7 @@ fn one_venue_down_does_not_disturb_the_other() {
 }
 
 // ---------------------------------------------------------------------------
-// Step 19: full depth, with a REST snapshot server.
+// Full depth, with a REST snapshot server.
 
 /// The REST side: reads one HTTP request and answers `status` with `body`. Returns the
 /// request line it got (via the server script's assertion on it).

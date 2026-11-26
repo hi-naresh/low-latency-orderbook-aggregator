@@ -2,8 +2,7 @@
 //!
 //! * **Crypto backend:** `ring`. AES-GCM runs on AES-NI and carry-less-multiply
 //!   instructions on x86-64. (`aws-lc-rs` is the other rustls backend and is often a
-//!   little faster, but needs `cmake` to build, which this machine doesn't have; swapping
-//!   is a one-line change and step 20 can measure it.)
+//!   little faster, but needs `cmake` to build; swapping is a one-line change.)
 //! * **Cipher preference:** AES-128-GCM first. On CPUs with AES-NI it's the cheapest AEAD
 //!   (fewer rounds than AES-256; ChaCha20 wins only without AES hardware). The server
 //!   picks among what we offer, so order expresses preference; the safe defaults remain.
@@ -12,7 +11,7 @@
 //! * **No ALPN, no client certificate, no session resumption tuning:** one long-lived
 //!   connection per venue; the handshake cost is paid once.
 //!
-//! **rustls does the handshake only (step 24).** Both its buffered and "unbuffered" read
+//! **rustls does the handshake only.** Both its buffered and "unbuffered" read
 //! APIs hand each decrypted record over as an owned `Vec` (in-place decryption is a TODO
 //! in 0.23). So secret extraction is enabled, and after the handshake its
 //! `rustls::kernel` API hands the traffic keys to our record layer ([`crate::record`]),
@@ -62,7 +61,7 @@ pub fn client_config_with_roots(roots: RootCertStore) -> Result<Arc<ClientConfig
         .with_safe_default_protocol_versions()?
         .with_root_certificates(roots)
         .with_no_client_auth();
-    // Step 24: after the handshake, rustls hands the traffic keys to our own record layer
+    // After the handshake, rustls hands the traffic keys to our own record layer
     // (rustls::kernel), which decrypts in place. rustls keeps the secrets for key updates.
     config.enable_secret_extraction = true;
     Ok(Arc::new(config))

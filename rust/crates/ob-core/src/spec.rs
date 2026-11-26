@@ -720,7 +720,7 @@ mod tests {
 
     #[test]
     fn display_then_parse_round_trips_at_every_scale() {
-        // Deterministic pseudo-random sweep (xorshift); step 4 adds proper property tests.
+        // Deterministic pseudo-random sweep (xorshift); the property tests cover the rest.
         let mut x: u64 = 0x9E37_79B9_7F4A_7C15;
         for decimals in 0..=MAX_DECIMALS {
             let s = InstrumentSpec::new(decimals, decimals, 1, 1).unwrap();

@@ -221,7 +221,6 @@ fn push_decimal(buf: &mut Vec<u8>, mut v: u64) {
 }
 
 #[cfg(test)]
-#[allow(clippy::unwrap_used)]
 mod tests {
     use super::*;
 

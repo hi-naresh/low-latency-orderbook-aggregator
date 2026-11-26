@@ -1,4 +1,4 @@
-//! The REST GET (step 19) against a local TLS server playing scripted responses, plus a
+//! The REST GET against a local TLS server playing scripted responses, plus a
 //! live check (ignored by default).
 #![allow(clippy::unwrap_used, clippy::print_stdout)]
 

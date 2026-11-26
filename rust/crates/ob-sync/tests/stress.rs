@@ -7,7 +7,7 @@
 //! `k+1`) breaks at least one of these.
 //!
 //! A control runs the same race with the protocol removed, to show that tearing really
-//! happens on this machine; otherwise "zero torn reads" would prove nothing.
+//! happens on the machine running the test; otherwise "zero torn reads" would prove nothing.
 //!
 //! Duration: `STRESS_SECS` (default 3; Miri uses a handful of iterations instead).
 #![cfg(not(loom))]

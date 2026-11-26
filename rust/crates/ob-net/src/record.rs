@@ -1,4 +1,4 @@
-//! TLS record protection after the handshake (step 24): decrypt in place, encrypt into a
+//! TLS record protection after the handshake: decrypt in place, encrypt into a
 //! reused buffer.
 //!
 //! rustls does the handshake: certificates, key exchange, and later key updates and session
@@ -17,7 +17,7 @@
 //!
 //! **Why:** rustls 0.23 decrypts each record and then allocates a `Vec` for the plaintext,
 //! which our connection copied again into its own buffer: ~0.3 µs per record above the
-//! AES-GCM cost, and an allocation in the tail (step 24's measurement). Here the record is
+//! AES-GCM cost, and an allocation in the tail. Here the record is
 //! decrypted where it was received, and the plaintext lands directly after the previous
 //! one, in place, ready for the WebSocket decoder. No allocation, no copy beyond the
 //! decryption itself.

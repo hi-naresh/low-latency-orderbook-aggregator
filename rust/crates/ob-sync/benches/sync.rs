@@ -6,7 +6,7 @@
 //! * `contended/*`: the same reads while another core publishes every ~2 µs (far busier
 //!   than a real feed), which adds the cost of moving cache lines between cores.
 //!
-//! * `queue/*`: the SPSC log queue vs `std::sync::mpsc` (step 15).
+//! * `queue/*`: the SPSC log queue vs `std::sync::mpsc`.
 //!
 //! Run: `cargo bench -p ob-sync --bench sync`
 #![allow(clippy::unwrap_used, clippy::cast_possible_wrap, missing_docs)]
@@ -155,7 +155,7 @@ fn contended(c: &mut Criterion) {
     writer.join().unwrap();
 }
 
-/// The log queue (step 15): the producer's cost per record, which is what a feed thread
+/// The log queue: the producer's cost per record, which is what a feed thread
 /// pays to log. `same_thread`: push then pop, no other core involved. `cross_thread`: a
 /// consumer drains on another core, so each push also pays for moving cache lines.
 fn queues(c: &mut Criterion) {

@@ -4,15 +4,15 @@
 //! ob live [--secs N] [--latency] [--record FILE] [--depth-only] [--binance-full-depth]
 //!     both venues, merged, printed once a second; Ctrl-C to stop.
 //!     --binance-full-depth: Binance's diff stream + REST snapshot (1,024 levels a side,
-//!     256 published) instead of its 20-level stream (step 19).
-//!     OS tuning (step 21; see docs/TUNING.md), each reported as applied / hint /
+//!     256 published) instead of its 20-level stream.
+//!     OS tuning (see docs/LINUX.md), each reported as applied / hint /
 //!     unsupported at start-up:
 //!     --pin A,B           pin the Binance and Bybit feed threads to CPUs A and B
 //!     --rt                real-time priority (Linux SCHED_FIFO; macOS QoS hint)
 //!     --lock-memory       mlockall (Linux)
 //!     --busy-poll US      SO_BUSY_POLL (Linux)     --quickack   TCP_QUICKACK (Linux)
 //!     --kernel-timestamps kernel receive timestamps (Linux), shown with --latency
-//!     Each venue's real-time best bid/ask stream is laid over its depth book (step 18)
+//!     Each venue's real-time best bid/ask stream is laid over its depth book
 //!     unless --depth-only.
 //!     --latency: time every message's stages (rdtsc) and print histograms at exit.
 //!     --record:  save every message with its receive time, for replay.
@@ -29,7 +29,7 @@
 //! | `logger` | pops log records, formats them, writes to stderr | touch a socket or a book |
 //! | `main` | reads the published books through the aggregator once a second, prints to stdout | block a feed |
 //!
-//! Each feed thread spins on its socket (step 12), so expect two cores at 100%: that's
+//! Each feed thread spins on its socket, so expect two cores at 100%: that's
 //! the price of the lowest wake-up latency.
 #![allow(clippy::print_stdout, clippy::print_stderr)] // a binary's job is to print
 #![forbid(unsafe_code)]
@@ -158,7 +158,7 @@ type Recorder = Arc<Mutex<RecordWriter<BufWriter<File>>>>;
 
 /// Starts one venue's feed thread. Returns its book reader, its log reader and the
 /// thread.
-/// Per-thread OS tuning for a feed thread (step 21).
+/// Per-thread OS tuning for a feed thread.
 #[derive(Clone)]
 struct ThreadTuning {
     cpu: Option<usize>,
@@ -562,7 +562,6 @@ fn replay(path: &str) -> Result<(), String> {
     }
     let took = started.elapsed();
     let span = Duration::from_nanos(last_mono.saturating_sub(first_mono.unwrap_or(0)));
-    #[allow(clippy::cast_precision_loss)] // display only
     let rate = records as f64 / took.as_secs_f64();
     println!(
         "replayed {records} records ({:.1} s of market data) in {:.1} ms: {rate:.0} records/s, {:.0}x real time",

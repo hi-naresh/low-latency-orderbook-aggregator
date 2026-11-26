@@ -26,7 +26,7 @@ pub struct Config {
     /// the local receive clock, not the exchange's.
     pub max_age_ns: u64,
     /// Two venues' books are only compared for arbitrage if their exchange timestamps
-    /// are at most this far apart (step 9 found a "fake" cross from books 15 s apart).
+    /// are at most this far apart (books 15 s apart can show a "fake" cross).
     pub max_skew_ms: u64,
 }
 
@@ -55,7 +55,7 @@ pub enum Exclusion {
         /// How long since the last message, ns.
         age_ns: u64,
     },
-    /// Best bid ≥ best ask on this single venue: our copy is wrong (step 3).
+    /// Best bid ≥ best ask on this single venue: our copy is wrong.
     Crossed,
 }
 

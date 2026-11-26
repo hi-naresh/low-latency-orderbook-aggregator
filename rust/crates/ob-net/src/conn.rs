@@ -8,12 +8,12 @@
 //! send_*():   encode (masked) → encrypt → write
 //! ```
 //!
-//! **Buffers (step 24).** One receive buffer per connection: the socket reads ciphertext
+//! **Buffers.** One receive buffer per connection: the socket reads ciphertext
 //! into it, each TLS record is decrypted *in place* directly after the previous
 //! plaintext (our own record layer, [`crate::record`]), and WebSocket messages are
 //! decoded from that plaintext in place. Consuming a message moves no bytes; the unread
-//! tail is moved to the front only when the free space runs low. Before step 24, rustls
-//! decrypted each record into a freshly allocated `Vec`, which was then copied here.
+//! tail is moved to the front only when the free space runs low. (rustls's own reader
+//! would decrypt each record into a freshly allocated `Vec` to be copied here.)
 //!
 //! **Protocol duties handled here:** pings are answered with a pong carrying the same
 //! payload (RFC 6455 §5.5.2), and a close from the server is echoed before the
@@ -54,11 +54,11 @@ pub struct ConnConfig {
     pub reader: ReaderConfig,
     /// TLS settings (production: [`tls::client_config`]).
     pub tls: Arc<ClientConfig>,
-    /// OS socket tuning (step 21; all off by default, all Linux-only in effect).
+    /// OS socket tuning (all off by default, all Linux-only in effect).
     pub tuning: SocketTuning,
 }
 
-/// Opt-in kernel socket tuning (step 21). What each one did is reported by
+/// Opt-in kernel socket tuning. What each one did is reported by
 /// [`WsConnection::tuning_report`].
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct SocketTuning {
@@ -102,7 +102,7 @@ pub enum NetError {
     Closed(Option<u16>),
     /// The connect deadline passed.
     Timeout,
-    /// An HTTP request (REST snapshot, step 19) got a status other than 200.
+    /// An HTTP request (REST snapshot) got a status other than 200.
     HttpStatus(u16),
 }
 
@@ -136,7 +136,7 @@ pub enum WaitMode {
     /// arrived, and the caller spins. Lowest latency, one core at 100%.
     Spin,
     /// Blocking socket: `poll` sleeps in the kernel until data arrives or `timeout`
-    /// passes. Frees the core; pays the wake-up latency (measured in the step 12 notes).
+    /// passes. Frees the core; pays the wake-up latency.
     Block {
         /// Longest single wait.
         timeout: Duration,

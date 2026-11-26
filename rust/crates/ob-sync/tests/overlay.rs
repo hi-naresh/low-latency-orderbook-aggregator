@@ -1,4 +1,4 @@
-//! `publish_with_top`: a fresher best bid/ask laid over an older book (step 18).
+//! `publish_with_top`: a fresher best bid/ask laid over an older book.
 #![allow(clippy::unwrap_used)]
 
 use ob_core::{Level, OrderBook, Px, Qty};

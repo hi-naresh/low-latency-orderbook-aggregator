@@ -1,9 +1,9 @@
-//! `ob-simd`: SIMD kernels for the parser (step 25).
+//! `ob-simd`: SIMD kernels for the parser.
 //!
 //! Exchanges send each price level as `["60200.50","1.234"]`. The scalar parser walks that
 //! byte by byte, and its loops end at a place that depends on each number's length: the
-//! branch predictor misses about once per number (step 5 measured ~11 ns per number,
-//! mostly that). Here one call handles a **whole level** from a 32-byte window:
+//! branch predictor misses about once per number (~11 ns per number, mostly that). Here
+//! one call handles a **whole level** from a 32-byte window:
 //!
 //! ```text
 //! 1. two 16-byte loads; compare all 32 bytes against '"', '.', and the digit range at once
@@ -25,7 +25,7 @@
 //! by default for macOS targets (target CPU "penryn") and on any x86-64 CPU made since
 //! 2008, so no run-time detection is needed. Where they aren't enabled at compile time,
 //! [`level`] always returns `None` (scalar everywhere). An ARM NEON version is future
-//! work: it would be untested on this machine.
+//! work (`docs/LINUX.md`).
 //!
 //! This is one of two crates allowed `unsafe` (with `ob-os`): the loads take raw
 //! pointers. Each `unsafe` block reads only inside the 32-byte array it was given.

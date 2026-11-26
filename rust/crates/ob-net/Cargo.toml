@@ -8,7 +8,7 @@ license.workspace = true
 publish.workspace = true
 
 [dependencies]
-# OS-level socket tuning and kernel receive timestamps (step 21).
+# OS-level socket tuning and kernel receive timestamps.
 ob-os = { path = "../ob-os" }
 # SHA-1 is needed once per connection, to check the server's handshake answer
 # (RFC 6455 §4.2.2). Tiny, dependency-free; never on the hot path.
@@ -17,7 +17,7 @@ sha1_smol = "1"
 # just a C compiler, unlike aws-lc-rs which needs cmake here). No default features: no
 # logging, no unneeded algorithms.
 rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
-# AES-GCM / ChaCha20-Poly1305 for our record layer (step 24): the same implementation
+# AES-GCM / ChaCha20-Poly1305 for our record layer: the same implementation
 # rustls is configured with here, already in the dependency tree.
 ring = "0.17"
 # Mozilla's root certificates, compiled in: no dependency on the OS certificate store.

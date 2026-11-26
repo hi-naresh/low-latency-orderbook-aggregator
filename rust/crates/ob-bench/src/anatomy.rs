@@ -1,4 +1,4 @@
-//! Where a message's handling time goes: parsing vs applying (step 25).
+//! Where a message's handling time goes: parsing vs applying.
 //!
 //! For every recorded message: the parser alone (a pure function: the same bytes give
 //! the same work, so it can be repeated), and the whole handler call on a live feed

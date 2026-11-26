@@ -1,4 +1,4 @@
-//! Binance full-depth mode (step 19): every sync rule, on synthetic messages built to
+//! Binance full-depth mode: every sync rule, on synthetic messages built to
 //! hit it, plus the feed-level fetch/answer cycle.
 #![allow(clippy::unwrap_used)]
 
@@ -290,7 +290,7 @@ fn the_feed_asks_once_goes_live_on_the_answer_and_reconnects_on_failure() {
     ))));
 }
 
-/// Step 26: the price-indexed book also refuses a level more than its window (8,192
+/// The price-indexed book also refuses a level more than its window (8,192
 /// ticks, 819.2 here) from the best, and that refusal bounds the known region exactly
 /// like a full book's.
 #[test]

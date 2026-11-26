@@ -51,7 +51,7 @@ pub enum NetFault {
     Closed(Option<u16>),
     /// Connecting took too long.
     Timeout,
-    /// A REST request got this HTTP status (e.g. 429: rate limited; step 19).
+    /// A REST request got this HTTP status (e.g. 429: rate limited).
     Http(u16),
 }
 
@@ -198,7 +198,7 @@ pub enum LogEvent {
     ConnectionLost(NetFault),
     /// This many records were dropped because the queue was full.
     Dropped(u64),
-    /// A REST snapshot fetch failed (full depth, step 19).
+    /// A REST snapshot fetch failed (full depth).
     SnapshotFailed(NetFault),
 }
 

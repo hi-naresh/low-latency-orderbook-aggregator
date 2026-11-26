@@ -1,4 +1,4 @@
-//! The REST depth snapshot parser (step 19) against a serde_json oracle: the recorded
+//! The REST depth snapshot parser against a serde_json oracle: the recorded
 //! live snapshot (1000 levels a side), mutations of it, and hand-written edge cases.
 #![allow(clippy::unwrap_used)]
 

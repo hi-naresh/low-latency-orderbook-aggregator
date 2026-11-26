@@ -68,7 +68,7 @@ fn binance_live() {
             binance::Message::Response { id, ok } => {
                 println!("binance: subscribe reply id={id} ok={ok}")
             }
-            // Not subscribed here (step 18 adds it to the feed); ignore if it ever arrives.
+            // Not subscribed here (the feed adds it); ignore if it ever arrives.
             binance::Message::BookTicker(_) => {}
             binance::Message::Depth => {
                 depth += 1;
@@ -104,7 +104,7 @@ fn bybit_live() {
         .unwrap();
     let parser = BybitBookParser::new(spec, b"orderbook.50.BTCUSDT", b"BTCUSDT");
     let (mut out, mut last, mut books, mut pong) = (BookMsg::default(), None, 0, false);
-    // Capacity ≥ 2 × depth: a delta can list 50 deletions and 50 insertions (step 12).
+    // Capacity ≥ 2 × depth: a delta can list 50 deletions and 50 insertions.
     let mut book: OrderBook<128> = OrderBook::new();
     let mut widest = 0;
     let mut delays = Vec::new();

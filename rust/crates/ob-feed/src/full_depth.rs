@@ -1,4 +1,4 @@
-//! Binance full-depth mode (step 19): the diff stream (`<symbol>@depth@100ms`) applied
+//! Binance full-depth mode: the diff stream (`<symbol>@depth@100ms`) applied
 //! to a REST snapshot (`GET /fapi/v1/depth?limit=1000`), instead of the 20-level
 //! partial-depth stream.
 //!
@@ -17,7 +17,7 @@
 //! 6. Quantities are absolute; 0 removes the level. Removing a level we don't have "can
 //!    happen and is normal" (so, unlike Bybit, it is **not** a resync).
 //!
-//! **The book (step 26)** is price-indexed ([`TickBook`]): an update, insert or removal is
+//! **The book** is price-indexed ([`TickBook`]): an update, insert or removal is
 //! O(1), where the sorted array spent its time binary-searching ~1,000 prices and
 //! shifting deep inserts. Besides at most [`FULL_CAP`] levels, it holds a side within
 //! 8,192 ticks of the best (819 USD at BTC's 0.1 tick); whatever that rule refuses or
@@ -72,7 +72,7 @@ enum Sync {
 pub struct BinanceFullDepth {
     parser: BinanceDepthParser<'static>,
     msg: DepthUpdate,
-    /// Price-indexed (step 26): at 1,000 levels a sorted array spends its time searching
+    /// Price-indexed: at 1,000 levels a sorted array spends its time searching
     /// and shifting. About 130 KB, so boxed.
     book: Box<TickBook<FULL_CAP>>,
     sync: Sync,
@@ -84,7 +84,7 @@ pub struct BinanceFullDepth {
     bid_floor: Option<Px>,
     ask_ceiling: Option<Px>,
     buffer: Vec<Vec<u8>>,
-    /// Optional bookTicker overlay (step 18): (its `u`, the levels).
+    /// Optional bookTicker overlay: (its `u`, the levels).
     top: Option<(u64, TopOverlay)>,
     top_enabled: bool,
     stream: String,
@@ -117,7 +117,7 @@ impl BinanceFullDepth {
         }
     }
 
-    /// Also subscribes to `bookTicker` and lays it over the book (step 18). The diff
+    /// Also subscribes to `bookTicker` and lays it over the book. The diff
     /// stream's `u` is the same order-book update ID, so the same rule applies.
     #[must_use]
     pub fn with_top_of_book(mut self) -> Self {

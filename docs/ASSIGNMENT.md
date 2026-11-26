@@ -64,3 +64,38 @@ src/
 - Performance considerations
 - Error handling and logging
 - Documentation
+## Appendix: the skeleton's interfaces
+
+The Java skeleton isn't part of this repository; these are the methods it asked for, which
+the Rust code's documentation refers to. `README.md` maps each one to its Rust counterpart.
+
+```java
+public record PriceLevel(BigDecimal price, BigDecimal quantity, Side side, String exchangeId) {}
+
+public class OrderBook implements OrderBookUpdateHandler {
+    public void handleOrder(PriceLevel priceLevel);   // bids highest first, asks lowest first
+    public BigDecimal getBestBidPrice();
+    public BigDecimal getBestAskPrice();
+    public BigDecimal getBestBidSize();
+    public BigDecimal getBestAskSize();
+    public boolean isCrossed();                       // best bid above best ask
+}
+
+public class OrderBookAggregator implements OrderBookUpdateHandler {
+    public record Quote(BigDecimal price, BigDecimal quantity, String exchangeId) {}
+    public record ExecutionPlan(List<Quote> quotes, BigDecimal totalQuantity) {}
+
+    public void handleOrder(PriceLevel priceLevel);
+    public List<Quote> getBestBid();                                  // across exchanges
+    public List<Quote> getBestAsk();
+    public List<Quote> getBidVolumeForPrice(BigDecimal price);        // volume available at price X
+    public List<Quote> getAskVolumeForPrice(BigDecimal price);
+    public List<Quote> getAskPriceForVolume(BigDecimal volumeToExecute); // best price for volume X
+    public List<Quote> getBidPriceForVolume(BigDecimal volumeToExecute);
+    public ExecutionPlan calculateOptimalExecution(Side side, BigDecimal targetQuantity);
+}
+```
+
+`BookApp` was the entry point: it connected the Binance and Bybit WebSocket clients, which
+fed every price level to the aggregator's `handleOrder`, and logged the best bid and ask
+every second.

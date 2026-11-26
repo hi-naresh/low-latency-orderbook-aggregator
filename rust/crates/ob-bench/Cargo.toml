@@ -1,6 +1,6 @@
 [package]
 name = "ob-bench"
-description = "Tail-latency harness (step 23): p50/p99/p99.9 per message, from encrypted bytes to published book."
+description = "Tail-latency harness: p50/p99/p99.9 per message, from encrypted bytes to published book."
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

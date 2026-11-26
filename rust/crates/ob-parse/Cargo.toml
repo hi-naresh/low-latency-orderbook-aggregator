@@ -9,7 +9,7 @@ publish.workspace = true
 
 [dependencies]
 ob-core = { path = "../ob-core" }
-# Step 25: a whole price level per SIMD call (SSSE3/SSE4.1); the scalar path remains for
+# A whole price level per SIMD call (SSSE3/SSE4.1); the scalar path remains for
 # anything else. The `unsafe` lives there, so this crate stays free of it.
 ob-simd = { path = "../ob-simd" }
 

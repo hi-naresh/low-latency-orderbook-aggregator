@@ -6,8 +6,8 @@
 //! | Sequence gap | the next snapshot fixes the book: count it, carry on | the book is wrong: **resync** |
 //! | Unparseable message | drop it; the next snapshot fixes the book | **resync** |
 //! | Heartbeat | server pings, answered by the transport | client must send `{"op":"ping"}` every 20 s |
-//! | Book capacity | 64 (≥ 20) | **128** (≥ 2 × 50: deltas can list 100 levels, step 12) |
-//! | Top of book (optional, step 18) | `bookTicker`, every change (~800/s) | `orderbook.1`, every 10 ms |
+//! | Book capacity | 64 (≥ 20) | **128** (≥ 2 × 50: deltas can list 100 levels) |
+//! | Top of book (optional) | `bookTicker`, every change (~800/s) | `orderbook.1`, every 10 ms |
 //! | Reconciled by | `u` (shared with depth) | `seq` (Bybit's cross sequence) |
 //!
 //! **Top-of-book overlay** (`with_top_of_book()`): the real-time best bid/ask stream is
@@ -177,7 +177,7 @@ impl Venue for Binance {
 pub struct Bybit {
     parser: BybitBookParser<'static>,
     msg: BookMsg,
-    /// Capacity ≥ 2 × depth: a delta can list 50 deletions and 50 insertions (step 12).
+    /// Capacity ≥ 2 × depth: a delta can list 50 deletions and 50 insertions.
     book: OrderBook<128>,
     last_u: Option<u64>,
     /// `seq` of the last applied depth message (comparable with the top topic's `seq`).

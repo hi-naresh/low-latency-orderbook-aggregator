@@ -1,7 +1,7 @@
 //! Which inputs a fast parser and its serde_json oracle must agree on. Dependency-free,
 //! so the fuzz targets can include it too.
 
-/// Inputs where the two implementations legitimately differ, by design (step 6 notes):
+/// Inputs where the two implementations legitimately differ, by design:
 /// backslash escapes (we don't decode them), invalid UTF-8 (we don't validate it), and
 /// nesting near the depth limit (serde_json counts depth slightly differently).
 pub(crate) fn comparable(msg: &[u8]) -> bool {

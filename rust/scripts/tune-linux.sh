@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Low-latency host tuning for running `ob` on Linux (step 21). See docs/TUNING.md for
+# Low-latency host tuning for running `ob` on Linux. See docs/LINUX.md for
 # what each setting does and why.
 #
-# NOT run by this project's tests or CI, and never run on the development Mac. It
+# NOT run by this project's tests or CI. It
 # changes system-wide settings and must be run as root on a machine dedicated to the
 # feed. It prints every change; with --dry-run it changes nothing.
 #

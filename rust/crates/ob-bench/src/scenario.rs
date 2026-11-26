@@ -28,7 +28,6 @@ use crate::stream::{Kind, Stream};
 
 /// The instrument both venues list (tick 0.1, lot 0.001).
 pub fn spec() -> InstrumentSpec {
-    #[allow(clippy::unwrap_used)] // constants
     InstrumentSpec::from_steps("0.1", "0.001").unwrap()
 }
 
@@ -368,9 +367,7 @@ pub fn wire(kind: Kind, n: usize, mean_gap_ns: u64, rt: bool, clock: &quanta::Cl
         };
         (message, seam, read, handle, publish, total, stats, events)
     });
-    #[allow(clippy::unwrap_used)] // a panic in either thread is a harness bug: surface it
     let (message, seam, read, handle, publish, total, stats, events) = client.join().unwrap();
-    #[allow(clippy::unwrap_used)]
     let sent = server.join().unwrap();
     FeedResult {
         message,
@@ -483,7 +480,6 @@ pub fn reader(
     let _ = agg.add_venue(venue("binance", 20, 500), r1);
     let _ = agg.add_venue(venue("bybit", 50, 550), r2);
     agg.refresh();
-    #[allow(clippy::unwrap_used)] // constant
     let one_btc = spec().parse_qty("1").unwrap();
     let mut out = [agg.best_bids(mono_ns())[0]; 10];
     let mut r = ReaderResult {
@@ -517,7 +513,6 @@ pub fn reader(
     }
     stop.store(true, Ordering::Relaxed);
     writer.thread().unpark();
-    #[allow(clippy::unwrap_used)]
     {
         r.published = writer.join().unwrap();
     }

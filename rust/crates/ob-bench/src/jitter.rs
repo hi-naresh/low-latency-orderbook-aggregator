@@ -1,10 +1,10 @@
 //! How often, and for how long, the OS takes the CPU away from a spinning thread
-//! (step 28).
+//!.
 //!
 //! A thread spins reading the clock as fast as it can. Every gap between two consecutive
 //! reads that is longer than the read itself means something else ran on that CPU: an
 //! interrupt, the scheduler tick, another thread. This is what sets p99.9 on a machine
-//! that isn't isolated (step 23, finding 4), and what core isolation on Linux should
+//! that isn't isolated (finding 4), and what core isolation on Linux should
 //! remove (`docs/LINUX.md` §3.1). Run it on a feed core: on a well-isolated core the
 //! largest gap is a few µs.
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Profile-guided optimisation (step 20) for the `ob` binary.
+# Profile-guided optimisation for the `ob` binary.
 #
 # 1. Build `ob` instrumented (it counts how often each branch and function runs).
 # 2. Train it: a live session (covers the network path: TLS, WebSocket, the feed loop)
@@ -8,7 +8,7 @@
 #    inlines along hot paths and moves cold code (errors, resyncs) out of the way.
 #
 # Train and use the profile on the SAME binary: with fat LTO, function identity is
-# per-binary, and a profile from another binary (step 20 tried the benchmark binary)
+# per-binary, and a profile from another binary (the benchmark binary, say)
 # only partly matches and made code slower. Code the training never runs is treated as
 # cold, which is why the live session is part of training.
 #
@@ -23,7 +23,7 @@ profdata="$(find "$(rustc --print sysroot)" -name llvm-profdata -type f | head -
 [ -n "$profdata" ] || { echo "llvm-profdata not found: rustup component add llvm-tools" >&2; exit 1; }
 work="target/pgo"
 # An environment RUSTFLAGS replaces .cargo/config.toml's: keep its Linux CPU level, or the
-# PGO build would silently drop the SIMD level parser (step 25; found in step 28).
+# PGO build would silently drop the SIMD level parser.
 cpu=""
 [ "$(uname -s)-$(uname -m)" = Linux-x86_64 ] && cpu="-C target-cpu=x86-64-v2"
 rm -rf "$work/raw" && mkdir -p "$work/raw"

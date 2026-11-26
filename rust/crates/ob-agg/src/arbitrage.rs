@@ -1,12 +1,12 @@
 //! Cross-venue arbitrage: one venue's bid above another venue's ask, net of fees.
 //!
-//! On a single venue a crossed book means our copy is wrong (step 3). *Across* venues it
+//! On a single venue a crossed book means our copy is wrong. *Across* venues it
 //! can be real: buy on the cheap venue, sell on the dear one. This scan finds it and
 //! measures how much is actually there, walking both books level by level while the trade
 //! is still profitable after both taker fees.
 //!
-//! **Timing guard.** Step 9's real data showed Bybit's bid $8.70 above Binance's ask, but
-//! the two books were recorded 15 s apart. Comparing books from different moments makes
+//! **Timing guard.** Recorded live data once showed Bybit's bid $8.70 above Binance's
+//! ask, but the two books were 15 s apart. Comparing books from different moments makes
 //! fake opportunities. So a pair is only reported as an opportunity if the books' exchange
 //! timestamps are within [`crate::Config::max_skew_ms`]; otherwise it's reported
 //! separately as rejected, so it can be logged but never acted on.

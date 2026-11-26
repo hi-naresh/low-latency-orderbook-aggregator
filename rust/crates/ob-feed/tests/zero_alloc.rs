@@ -152,7 +152,7 @@ fn feed_allocations<V: Venue, P: Probe>(venue: V, probe: P, lines: &[&str]) -> (
 fn parse_apply_publish_allocates_nothing() {
     let bn: Vec<&str> = BINANCE.lines().collect();
     let bb: Vec<&str> = BYBIT.lines().collect();
-    // Step 18: depth and top of book interleaved, as recorded from one connection.
+    // Depth and top of book interleaved, as recorded from one connection.
     let bn_top: Vec<&str> = BINANCE_TOP.lines().collect();
     let bb_top: Vec<&str> = BYBIT_TOP.lines().collect();
     for (name, (allocs, msgs)) in [
@@ -315,7 +315,7 @@ fn aggregator_queries_allocate_nothing() {
             sink += agg.optimal_execution(Action::Buy, qty, now).gross.raw();
             sink += agg.optimal_execution(Action::Sell, qty, now).gross.raw();
             sink += i128::from(agg.scan_arbitrage(now).best.is_some());
-            // Step 22: best N levels across venues, into a caller buffer.
+            // Best N levels across venues, into a caller buffer.
             let mut top = [ob_agg::Quote {
                 venue: first,
                 px,
@@ -436,10 +436,9 @@ fn serve(
 /// message: socket read, TLS decryption, WebSocket decode, parse, apply, publish, and
 /// every idle poll in between.
 ///
-/// Until step 24 this was one allocation per message: rustls handed each decrypted
-/// record over in a new `Vec`. With our own record layer (decrypting in place) it is
-/// zero. Step 24's first version still allocated 25 bytes per record (an error message
-/// built eagerly on the success path); this test is what found it.
+/// rustls's own reader hands each decrypted record over in a new `Vec`; our record layer
+/// decrypts in place, so there is no allocation per record. This also catches subtler
+/// ones, such as an error message built eagerly on the success path.
 #[test]
 fn the_feed_thread_over_real_tls_allocates_nothing() {
     let lines: Vec<&str> = BINANCE.lines().collect();
@@ -496,7 +495,7 @@ fn the_feed_thread_over_real_tls_allocates_nothing() {
     assert_eq!(total, 0, "{per_msg:?}");
 }
 
-/// Full depth (step 19), once synced: diff events touching levels all over a 1000-level
+/// Full depth, once synced: diff events touching levels all over a 1000-level
 /// book (inserts, updates, removals, capacity drops) allocate nothing. (Waiting for a
 /// snapshot buffers events as owned bytes: a cold path, not counted.)
 #[test]
@@ -548,7 +547,7 @@ fn full_depth_steady_state_allocates_nothing() {
     assert_eq!((applied, n), (200, 0));
 }
 
-/// Single-venue market impact (step 22): no allocation either.
+/// Single-venue market impact: no allocation either.
 #[test]
 fn market_impact_allocates_nothing() {
     let mut book: ob_core::OrderBook = ob_core::OrderBook::new();

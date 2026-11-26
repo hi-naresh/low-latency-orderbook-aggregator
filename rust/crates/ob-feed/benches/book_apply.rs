@@ -1,7 +1,7 @@
-//! Step 26: the full-depth book's data structure, A/B on recorded data.
+//! The full-depth book's data structure, A/B on recorded data.
 //!
 //! The recorded Binance REST snapshot (1,000 levels a side), then its 100 diff events,
-//! applied to (a) the sorted-array `OrderBook<1024>` used until step 26 and (b) the
+//! applied to (a) the sorted-array `OrderBook<1024>` and (b) the
 //! price-indexed `TickBook<1024>`. Parsing is done beforehand: this measures applying
 //! only, with the full-depth adapter's rule of ignoring levels beyond the snapshot's
 //! known region.

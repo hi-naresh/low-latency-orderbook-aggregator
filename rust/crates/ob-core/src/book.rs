@@ -76,7 +76,7 @@ impl core::fmt::Display for SnapshotError {
 impl core::error::Error for SnapshotError {}
 
 /// Read access to a book's levels, best first: what publishing needs. Implemented by
-/// [`OrderBook`] (sorted arrays) and [`crate::TickBook`] (price-indexed, step 26), so one
+/// [`OrderBook`] (sorted arrays) and [`crate::TickBook`] (price-indexed), so one
 /// publisher serves both.
 pub trait BookLevels {
     /// Bids from best (highest) to worst.

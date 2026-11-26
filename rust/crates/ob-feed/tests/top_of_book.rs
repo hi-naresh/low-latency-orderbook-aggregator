@@ -1,4 +1,4 @@
-//! The top-of-book overlay (step 18), checked differentially on recorded live data.
+//! The top-of-book overlay, checked differentially on recorded live data.
 //!
 //! Two feeds receive the same interleaved stream (depth + real-time top of book, as
 //! recorded from one connection): one depth-only, one with the overlay. After **every**

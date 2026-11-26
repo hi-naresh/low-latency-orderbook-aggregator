@@ -1,11 +1,11 @@
-//! A price-indexed order book for deep books (step 26).
+//! A price-indexed order book for deep books.
 //!
 //! [`OrderBook`](crate::OrderBook) keeps each side as a sorted array. At 20–64 levels
-//! that is the fastest structure (step 4). At 1,000 levels (Binance full depth, step 19) it
+//! that is the fastest structure. At 1,000 levels (Binance full depth) it
 //! isn't: every update first binary-searches ~10 steps (unpredictable branches), and every
-//! insert or removal shifts the levels better than it. Step 26 measured the 25 KB message
+//! insert or removal shifts the levels better than it. A recorded 25 KB message
 //! (651 updates, 133 inserts, 116 removals; inserts a median 216 levels deep) spending
-//! ~30 µs applying.
+//! takes ~30 µs to apply that way.
 //!
 //! Here each side stores quantities **indexed by price in ticks**:
 //!
@@ -411,7 +411,7 @@ impl<const CAP: usize> TickBook<CAP> {
         &self.asks
     }
 
-    /// Best bid ≥ best ask: impossible on a correct single-venue book (step 3).
+    /// Best bid ≥ best ask: impossible on a correct single-venue book.
     #[inline]
     pub fn is_crossed(&self) -> bool {
         match (self.best_bid(), self.best_ask()) {

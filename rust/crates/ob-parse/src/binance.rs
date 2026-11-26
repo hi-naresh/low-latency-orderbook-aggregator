@@ -12,12 +12,12 @@
 //!
 //! **Every message is a complete top-N snapshot**, not a list of changes: levels that
 //! drop out of the top N are simply absent from the next message. So a message
-//! *replaces* the book ([`DepthUpdate::apply_to`]); applying it as changes (what the Java
-//! skeleton does) leaves stale levels behind.
+//! *replaces* the book ([`DepthUpdate::apply_to`]); applying it as changes leaves stale levels
+//! behind.
 //!
 //! **Sequencing.** `pu` ("previous final update ID") equals the previous message's `u`:
-//! it held for all 58 consecutive pairs in the recorded fixture. [`DepthUpdate::follows`]
-//! checks it, so a gap (a dropped message) is detected even on a snapshot stream.
+//! it held for all 58 consecutive pairs in the recorded fixture. The feed
+//! checks [`DepthUpdate::prev_final_update_id`] against it, so a gap (a dropped message) is detected even on a snapshot stream.
 //!
 //! **Message rules**, implemented identically by this parser and by the serde_json oracle
 //! in `tests/binance_differential.rs`:
@@ -33,7 +33,7 @@
 //!   (`ok` unless an `error` field is present).
 //! * Anything else → [`ErrorKind::UnknownMessage`].
 //!
-//! **bookTicker** (step 18): the best bid and ask, pushed on every change (~800/s on
+//! **bookTicker**: the best bid and ask, pushed on every change (~800/s on
 //! BTCUSDT, against 10/s for depth). Its `u` is the same order-book update ID as depth's
 //! `u` (checked on a live recording: at all 143 depth messages, the latest bookTicker
 //! with `u` ≤ the depth's `u` had the identical top), so the two can be reconciled.
@@ -215,7 +215,7 @@ pub struct Error {
 }
 
 impl Error {
-    /// Which policy applies (step 2): spec mismatches mean the venue changed its tick or
+    /// Which policy applies: spec mismatches mean the venue changed its tick or
     /// lot (reload instrument info); negative quantities are invalid data; everything
     /// else is malformed. In every case the message is dropped whole and the venue resyncs.
     pub const fn class(&self) -> ErrorClass {
@@ -457,7 +457,7 @@ impl<'a> BinanceDepthParser<'a> {
     }
 }
 
-/// The header of a REST order-book snapshot (`GET /fapi/v1/depth`, step 19); the
+/// The header of a REST order-book snapshot (`GET /fapi/v1/depth`); the
 /// levels go to the caller's callback (this crate doesn't allocate).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct SnapshotHeader {

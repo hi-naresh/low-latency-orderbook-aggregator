@@ -222,7 +222,7 @@ pub fn encode_client_frame(
 }
 
 /// Appends a frame as a **server** sends it (unmasked). Used by tests and the mock
-/// exchange in step 14.
+/// exchange.
 pub fn encode_server_frame(out: &mut Vec<u8>, fin: bool, opcode: Opcode, payload: &[u8]) {
     encode(out, fin, opcode, payload, None);
 }

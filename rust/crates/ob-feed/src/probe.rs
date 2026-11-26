@@ -9,7 +9,7 @@
 //! The feed is generic over a [`Probe`]. The default, [`NoProbe`], returns constant
 //! timestamps and records nothing: after inlining it compiles to no code at all, so the
 //! production path pays nothing for the ability to be measured. [`StageProbe`] reads the
-//! CPU's time-stamp counter (~6 ns per stamp; `Instant::now` costs ~39 ns on this Mac)
+//! CPU's time-stamp counter (~6 ns per stamp; `Instant::now` costs ~39 ns on an Intel Mac)
 //! and records into HDR histograms, which never allocate after creation.
 
 use std::fmt::Write as _;
@@ -37,7 +37,7 @@ pub trait Probe {
         None
     }
     /// The data of the read that delivered a message waited this long in the kernel
-    /// (Linux kernel receive timestamps, step 21).
+    /// (Linux kernel receive timestamps).
     fn kernel_wait(&mut self, _ns: u64) {}
 }
 

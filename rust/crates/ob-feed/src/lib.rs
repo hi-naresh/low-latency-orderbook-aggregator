@@ -2,7 +2,7 @@
 //!
 //! * [`venue`]: what differs between exchanges, behind the [`Venue`] trait.
 //! * [`venues`]: the Binance and Bybit adapters (parse → sequence check → apply).
-//! * [`full_depth`]: Binance full depth: diff stream + REST snapshot (step 19).
+//! * [`full_depth`]: Binance full depth: diff stream + REST snapshot.
 //! * [`feed`]: the state machine (subscribe, heartbeats, staleness, resync, reconnect),
 //!   with no I/O and no real clock, so every timing rule is tested deterministically.
 //! * [`driver`]: the I/O loop that runs a feed over a [`ob_net::WsConnection`].

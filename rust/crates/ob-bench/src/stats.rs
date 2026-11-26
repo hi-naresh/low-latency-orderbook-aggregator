@@ -23,7 +23,6 @@ impl Dist {
     /// An empty distribution. Allocates once; recording never allocates.
     pub fn new() -> Dist {
         Dist {
-            #[allow(clippy::unwrap_used)] // constant, valid bounds
             h: Histogram::new_with_bounds(1, 60_000_000_000, 3).unwrap(),
         }
     }
@@ -90,7 +89,6 @@ pub fn row(name: &str, d: &Dist) -> String {
 
 /// `845 ns`, `1.23 µs`, `4.56 ms`.
 pub fn human(ns: u64) -> String {
-    #[allow(clippy::cast_precision_loss)]
     let f = ns as f64;
     if ns < 1_000 {
         format!("{ns} ns")

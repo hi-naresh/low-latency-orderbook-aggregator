@@ -6,7 +6,7 @@
 //! still checking that what it skips is valid JSON (RFC 8259): numbers, strings,
 //! escapes, literals, nesting.
 //!
-//! Deliberate limits, all documented in the step 6 notes:
+//! Deliberate limits:
 //! * Strings are returned as raw bytes. Escapes are validated but not decoded, so an
 //!   escaped key like `"\u0045"` doesn't match `"E"` (venues never escape keys or
 //!   numbers). Invalid UTF-8 inside strings is not checked (the venue's TLS stream is
@@ -34,7 +34,7 @@ pub enum JsonErrorKind {
     NotU64,
     /// A malformed escape sequence, or a raw control character in a string.
     BadString,
-    /// Nesting deeper than [`MAX_DEPTH`].
+    /// Nesting deeper than 128 levels.
     TooDeep,
     /// Bytes after the end of the top-level value.
     TrailingBytes,
@@ -269,7 +269,7 @@ impl<'a> Cursor<'a> {
         }
     }
 
-    /// Fast path for one price level `["price","qty"]` (step 25): parsed by the SIMD
+    /// Fast path for one price level `["price","qty"]`: parsed by the SIMD
     /// kernel when the next 32 bytes hold one in exactly that shape, with the same
     /// scaling as [`Cursor::decimal`]. `None` (nothing consumed) means: parse it the
     /// scalar way, which gives the identical result or the precise error.
@@ -535,7 +535,7 @@ mod tests {
         for bad in ["18446744073709551616", "-1", "1.0", "1e3", "01", "x"] {
             assert!(Cursor::new(bad.as_bytes()).u64().is_err(), "{bad}");
         }
-        // Long runs (step 25 tried, and reverted, an 8-digits-at-a-time path for these):
+        // Long runs:
         // long leading zero, 8 and 16 digits, overflow at 21 digits, a point inside.
         for bad in ["0123456789012", "123456789012345678901", "1234567.89012345"] {
             assert!(Cursor::new(bad.as_bytes()).u64().is_err(), "{bad}");

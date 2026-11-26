@@ -29,7 +29,7 @@ VENUES = {
         {"req_id": "depth", "op": "subscribe", "args": ["orderbook.50.BTCUSDT"]},
         None,
     ),
-    # ...and the real-time top-of-book streams (step 18), alone and interleaved with depth
+    # ...and the real-time top-of-book streams, alone and interleaved with depth
     # on one connection (the interleaved files are longer: bookTicker outnumbers depth
     # ~100:1, so 1000 frames hold only a few depth messages).
     "binance_bookticker.jsonl": (

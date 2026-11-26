@@ -1,5 +1,5 @@
 //! A bounded single-producer single-consumer queue of fixed-size records, `W` 64-bit
-//! words each. Built for the binary logger (step 15): a feed thread hands events to a
+//! words each. Built for the binary logger: a feed thread hands events to a
 //! logger thread **without locks, allocation or system calls, and never waits**. When the
 //! queue is full, the push fails and the producer counts what it dropped.
 //!

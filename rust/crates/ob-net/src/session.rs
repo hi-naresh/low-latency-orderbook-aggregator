@@ -1,4 +1,4 @@
-//! A TLS client session whose records are protected by our own record layer (step 24).
+//! A TLS client session whose records are protected by our own record layer.
 //!
 //! ```text
 //! handshake():  rustls's unbuffered client, driven over the socket until it may send
