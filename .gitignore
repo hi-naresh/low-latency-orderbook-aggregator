@@ -1,46 +1,12 @@
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+# Build output, in the workspace and in each fuzz crate
+target/
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+# Fuzzing working data (rust/scripts/seed_fuzz_corpus.sh regenerates the corpus)
+corpus/
+artifacts/
+coverage/
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-# Rust binaries' sources (rust/crates/*/src/bin/) are code, not build output.
-!rust/crates/*/src/bin/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
+# Local editor and OS files
+.idea/
 .vscode/
-
-### Mac OS ###
 .DS_Store
-### Rust workspace: local IDE settings
-rust/.idea/
