@@ -1,0 +1,14 @@
+model:      Mac14,9 (arm64)
+cpu:        Apple M2 Pro
+cores:      8 performance + 4 efficiency
+caches:     P-cluster L2 16 MiB, E-cluster L2 4 MiB, L1d 128 KiB (per OS report)
+memory:     16 GiB
+os:         macOS 27.2.1
+power:      AC Power
+rustc:      rustc 1.100.0 (0ef1bc386 2026-11-09)
+commit:     7955906 (uncommitted changes)
+date:       Thu Nov 26 21:29:56 GMT 2026
+load avg:   { 4.17 5.96 5.96 } (at start)
+mode:       full
+tests: 294 passed, 0 failed, 7 ignored
+load avg:   { 5.98 4.45 4.91 } (at end)

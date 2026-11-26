@@ -59,12 +59,22 @@ else
 fi
 
 log "3/4 criterion benchmarks (every crate)"
-if [ "$quick" = 1 ]; then
-    cargo bench --workspace --benches -- --noplot --warm-up-time 0.1 --measurement-time 0.2 \
-        > "$dir/criterion.txt" 2>&1
-else
-    cargo bench --workspace --benches -- --noplot > "$dir/criterion.txt" 2>&1
-fi
+{
+    cargo metadata --no-deps --format-version 1 \
+        | python3 -c 'import json, sys
+for package in json.load(sys.stdin)["packages"]:
+    for target in package["targets"]:
+        if "bench" in target["kind"]:
+            print(package["name"], target["name"])'
+} | while read -r package target; do
+    log "   $package/$target"
+    if [ "$quick" = 1 ]; then
+        cargo bench -p "$package" --bench "$target" -- \
+            --noplot --warm-up-time 0.1 --measurement-time 0.2
+    else
+        cargo bench -p "$package" --bench "$target" -- --noplot
+    fi
+done > "$dir/criterion.txt" 2>&1
 # One line per benchmark: its name and time interval. Criterion prints a short name on
 # the same line as "time:", a long one on the line before it.
 awk '

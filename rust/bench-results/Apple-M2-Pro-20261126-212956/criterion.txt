@@ -1,0 +1,805 @@
+== 21:32:31    ob-agg/agg
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.13s
+     Running benches/agg.rs (target/release/build/ob-agg/2c78300302efdc30/out/agg-2c78300302efdc30)
+Benchmarking aggregator/refresh/nothing_changed
+Benchmarking aggregator/refresh/nothing_changed: Warming up for 500.00 ms
+Benchmarking aggregator/refresh/nothing_changed: Collecting 50 samples in estimated 3.0000 s (1.1B iterations)
+Benchmarking aggregator/refresh/nothing_changed: Analyzing
+aggregator/refresh/nothing_changed
+                        time:   [2.7104 ns 2.7356 ns 2.7733 ns]
+                        change: [+2.3457% +5.5617% +10.269%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 6 outliers among 50 measurements (12.00%)
+  1 (2.00%) high mild
+  5 (10.00%) high severe
+Benchmarking aggregator/refresh/both_changed (publish+copy 20x20 & 50x50)
+Benchmarking aggregator/refresh/both_changed (publish+copy 20x20 & 50x50): Warming up for 500.00 ms
+Benchmarking aggregator/refresh/both_changed (publish+copy 20x20 & 50x50): Collecting 50 samples in estimated 3.0001 s (22M iterations)
+Benchmarking aggregator/refresh/both_changed (publish+copy 20x20 & 50x50): Analyzing
+aggregator/refresh/both_changed (publish+copy 20x20 & 50x50)
+                        time:   [137.12 ns 138.87 ns 141.15 ns]
+                        change: [+0.1273% +1.2114% +2.5019%] (p = 0.04 < 0.05)
+                        Change within noise threshold.
+Found 8 outliers among 50 measurements (16.00%)
+  2 (4.00%) high mild
+  6 (12.00%) high severe
+Benchmarking aggregator/best_bids+best_asks
+Benchmarking aggregator/best_bids+best_asks: Warming up for 500.00 ms
+Benchmarking aggregator/best_bids+best_asks: Collecting 50 samples in estimated 3.0000 s (136M iterations)
+Benchmarking aggregator/best_bids+best_asks: Analyzing
+aggregator/best_bids+best_asks
+                        time:   [22.108 ns 22.530 ns 23.076 ns]
+                        change: [−0.5253% +1.0725% +2.8481%] (p = 0.27 > 0.05)
+                        No change in performance detected.
+Found 8 outliers among 50 measurements (16.00%)
+  2 (4.00%) high mild
+  6 (12.00%) high severe
+Benchmarking aggregator/bid_volume (top level only)
+Benchmarking aggregator/bid_volume (top level only): Warming up for 500.00 ms
+Benchmarking aggregator/bid_volume (top level only): Collecting 50 samples in estimated 3.0000 s (182M iterations)
+Benchmarking aggregator/bid_volume (top level only): Analyzing
+aggregator/bid_volume (top level only)
+                        time:   [15.870 ns 16.076 ns 16.423 ns]
+                        change: [−0.0133% +4.2442% +10.726%] (p = 0.17 > 0.05)
+                        No change in performance detected.
+Found 11 outliers among 50 measurements (22.00%)
+  2 (4.00%) low mild
+  1 (2.00%) high mild
+  8 (16.00%) high severe
+Benchmarking aggregator/bid_volume ($10 deep)
+Benchmarking aggregator/bid_volume ($10 deep): Warming up for 500.00 ms
+Benchmarking aggregator/bid_volume ($10 deep): Collecting 50 samples in estimated 3.0000 s (70M iterations)
+Benchmarking aggregator/bid_volume ($10 deep): Analyzing
+aggregator/bid_volume ($10 deep)
+                        time:   [42.371 ns 42.690 ns 43.175 ns]
+                        change: [+2.1373% +4.5972% +7.5461%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) high mild
+  6 (12.00%) high severe
+
+Benchmarking execution/optimal_execution buy 1 BTC
+Benchmarking execution/optimal_execution buy 1 BTC: Warming up for 500.00 ms
+Benchmarking execution/optimal_execution buy 1 BTC: Collecting 50 samples in estimated 3.0000 s (72M iterations)
+Benchmarking execution/optimal_execution buy 1 BTC: Analyzing
+execution/optimal_execution buy 1 BTC
+                        time:   [41.494 ns 42.130 ns 42.993 ns]
+                        change: [+0.2899% +1.8999% +3.8529%] (p = 0.03 < 0.05)
+                        Change within noise threshold.
+Found 7 outliers among 50 measurements (14.00%)
+  7 (14.00%) high severe
+Benchmarking execution/optimal_execution buy 10 BTC
+Benchmarking execution/optimal_execution buy 10 BTC: Warming up for 500.00 ms
+Benchmarking execution/optimal_execution buy 10 BTC: Collecting 50 samples in estimated 3.0002 s (12M iterations)
+Benchmarking execution/optimal_execution buy 10 BTC: Analyzing
+execution/optimal_execution buy 10 BTC
+                        time:   [259.59 ns 264.37 ns 271.01 ns]
+                        change: [+1.1828% +2.4131% +4.0244%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 7 outliers among 50 measurements (14.00%)
+  2 (4.00%) high mild
+  5 (10.00%) high severe
+Benchmarking execution/optimal_execution buy 60 BTC
+Benchmarking execution/optimal_execution buy 60 BTC: Warming up for 500.00 ms
+Benchmarking execution/optimal_execution buy 60 BTC: Collecting 50 samples in estimated 3.0009 s (3.7M iterations)
+Benchmarking execution/optimal_execution buy 60 BTC: Analyzing
+execution/optimal_execution buy 60 BTC
+                        time:   [777.46 ns 784.09 ns 793.46 ns]
+                        change: [+0.9278% +2.2933% +3.8060%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 9 outliers among 50 measurements (18.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  7 (14.00%) high severe
+Benchmarking execution/ask_price_for_volume 1 BTC (no fees)
+Benchmarking execution/ask_price_for_volume 1 BTC (no fees): Warming up for 500.00 ms
+Benchmarking execution/ask_price_for_volume 1 BTC (no fees): Collecting 50 samples in estimated 3.0000 s (68M iterations)
+Benchmarking execution/ask_price_for_volume 1 BTC (no fees): Analyzing
+execution/ask_price_for_volume 1 BTC (no fees)
+                        time:   [41.343 ns 41.907 ns 42.889 ns]
+                        change: [+0.1590% +3.7628% +9.5553%] (p = 0.13 > 0.05)
+                        No change in performance detected.
+Found 9 outliers among 50 measurements (18.00%)
+  2 (4.00%) high mild
+  7 (14.00%) high severe
+Benchmarking execution/scan_arbitrage (2 venues)
+Benchmarking execution/scan_arbitrage (2 venues): Warming up for 500.00 ms
+Benchmarking execution/scan_arbitrage (2 venues): Collecting 50 samples in estimated 3.0000 s (235M iterations)
+Benchmarking execution/scan_arbitrage (2 venues): Analyzing
+execution/scan_arbitrage (2 venues)
+                        time:   [12.793 ns 12.954 ns 13.189 ns]
+                        change: [+0.0085% +1.6605% +3.8856%] (p = 0.10 > 0.05)
+                        No change in performance detected.
+Found 9 outliers among 50 measurements (18.00%)
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+  6 (12.00%) high severe
+
+== 21:33:10    ob-core/book
+   Compiling ob-core v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-core)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 13.04s
+     Running benches/book.rs (target/release/build/ob-core/f976e873f6e92438/out/book-f976e873f6e92438)
+Benchmarking apply/sorted_arrays/top-heavy
+Benchmarking apply/sorted_arrays/top-heavy: Warming up for 500.00 ms
+Benchmarking apply/sorted_arrays/top-heavy: Collecting 50 samples in estimated 2.1106 s (500 iterations)
+Benchmarking apply/sorted_arrays/top-heavy: Analyzing
+apply/sorted_arrays/top-heavy
+                        time:   [4.2740 ms 4.3860 ms 4.5430 ms]
+                        thrpt:  [57.703 Melem/s 59.769 Melem/s 61.335 Melem/s]
+Found 9 outliers among 50 measurements (18.00%)
+  9 (18.00%) high severe
+Benchmarking apply/btreemap/top-heavy
+Benchmarking apply/btreemap/top-heavy: Warming up for 500.00 ms
+Benchmarking apply/btreemap/top-heavy: Collecting 50 samples in estimated 2.0621 s (300 iterations)
+Benchmarking apply/btreemap/top-heavy: Analyzing
+apply/btreemap/top-heavy
+                        time:   [6.7905 ms 6.8575 ms 6.9479 ms]
+                        thrpt:  [37.730 Melem/s 38.227 Melem/s 38.604 Melem/s]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) low mild
+  6 (12.00%) high severe
+Benchmarking apply/sorted_arrays/uniform-40
+Benchmarking apply/sorted_arrays/uniform-40: Warming up for 500.00 ms
+Benchmarking apply/sorted_arrays/uniform-40: Collecting 50 samples in estimated 2.1336 s (450 iterations)
+Benchmarking apply/sorted_arrays/uniform-40: Analyzing
+apply/sorted_arrays/uniform-40
+                        time:   [4.6829 ms 4.7994 ms 4.9494 ms]
+                        thrpt:  [52.965 Melem/s 54.620 Melem/s 55.979 Melem/s]
+Found 8 outliers among 50 measurements (16.00%)
+  1 (2.00%) high mild
+  7 (14.00%) high severe
+Benchmarking apply/btreemap/uniform-40
+Benchmarking apply/btreemap/uniform-40: Warming up for 500.00 ms
+Benchmarking apply/btreemap/uniform-40: Collecting 50 samples in estimated 2.0708 s (250 iterations)
+Benchmarking apply/btreemap/uniform-40: Analyzing
+apply/btreemap/uniform-40
+                        time:   [8.2960 ms 8.3819 ms 8.5165 ms]
+                        thrpt:  [30.781 Melem/s 31.275 Melem/s 31.599 Melem/s]
+Found 9 outliers among 50 measurements (18.00%)
+  3 (6.00%) high mild
+  6 (12.00%) high severe
+
+Benchmarking snapshot/20x20/replace
+Benchmarking snapshot/20x20/replace: Warming up for 500.00 ms
+Benchmarking snapshot/20x20/replace: Collecting 50 samples in estimated 2.0000 s (47M iterations)
+Benchmarking snapshot/20x20/replace: Analyzing
+snapshot/20x20/replace  time:   [41.607 ns 42.281 ns 43.279 ns]
+                        thrpt:  [23.106 Melem/s 23.652 Melem/s 24.035 Melem/s]
+Found 6 outliers among 50 measurements (12.00%)
+  1 (2.00%) high mild
+  5 (10.00%) high severe
+Benchmarking snapshot/20x20/clear+apply_each
+Benchmarking snapshot/20x20/clear+apply_each: Warming up for 500.00 ms
+Benchmarking snapshot/20x20/clear+apply_each: Collecting 50 samples in estimated 2.0006 s (3.1M iterations)
+Benchmarking snapshot/20x20/clear+apply_each: Analyzing
+snapshot/20x20/clear+apply_each
+                        time:   [644.26 ns 670.23 ns 717.59 ns]
+                        thrpt:  [1.3935 Melem/s 1.4920 Melem/s 1.5522 Melem/s]
+Found 13 outliers among 50 measurements (26.00%)
+  4 (8.00%) low mild
+  2 (4.00%) high mild
+  7 (14.00%) high severe
+Benchmarking snapshot/20x20/btreemap_rebuild
+Benchmarking snapshot/20x20/btreemap_rebuild: Warming up for 500.00 ms
+Benchmarking snapshot/20x20/btreemap_rebuild: Collecting 50 samples in estimated 2.0002 s (3.4M iterations)
+Benchmarking snapshot/20x20/btreemap_rebuild: Analyzing
+snapshot/20x20/btreemap_rebuild
+                        time:   [580.82 ns 586.77 ns 597.83 ns]
+                        thrpt:  [1.6727 Melem/s 1.7042 Melem/s 1.7217 Melem/s]
+Found 9 outliers among 50 measurements (18.00%)
+  1 (2.00%) low mild
+  3 (6.00%) high mild
+  5 (10.00%) high severe
+
+== 21:33:44    ob-sync/sync
+   Compiling ob-sync v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-sync)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 13.52s
+     Running benches/sync.rs (target/release/build/ob-sync/8a47d8939a98ee86/out/sync-8a47d8939a98ee86)
+Benchmarking read_top/seqlock
+Benchmarking read_top/seqlock: Warming up for 500.00 ms
+Benchmarking read_top/seqlock: Collecting 50 samples in estimated 3.0000 s (1.6B iterations)
+Benchmarking read_top/seqlock: Analyzing
+read_top/seqlock        time:   [1.7901 ns 1.8139 ns 1.8539 ns]
+Found 8 outliers among 50 measurements (16.00%)
+  8 (16.00%) high severe
+Benchmarking read_top/mutex
+Benchmarking read_top/mutex: Warming up for 500.00 ms
+Benchmarking read_top/mutex: Collecting 50 samples in estimated 3.0000 s (438M iterations)
+Benchmarking read_top/mutex: Analyzing
+read_top/mutex          time:   [6.7058 ns 6.7792 ns 6.9003 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) high mild
+  6 (12.00%) high severe
+Benchmarking read_top/rwlock
+Benchmarking read_top/rwlock: Warming up for 500.00 ms
+Benchmarking read_top/rwlock: Collecting 50 samples in estimated 3.0000 s (230M iterations)
+Benchmarking read_top/rwlock: Analyzing
+read_top/rwlock         time:   [11.904 ns 12.001 ns 12.154 ns]
+Found 8 outliers among 50 measurements (16.00%)
+  2 (4.00%) high mild
+  6 (12.00%) high severe
+
+Benchmarking read_full/20x20/seqlock
+Benchmarking read_full/20x20/seqlock: Warming up for 500.00 ms
+Benchmarking read_full/20x20/seqlock: Collecting 50 samples in estimated 3.0000 s (206M iterations)
+Benchmarking read_full/20x20/seqlock: Analyzing
+read_full/20x20/seqlock time:   [14.646 ns 14.824 ns 15.096 ns]
+Found 6 outliers among 50 measurements (12.00%)
+  6 (12.00%) high severe
+Benchmarking read_full/20x20/mutex
+Benchmarking read_full/20x20/mutex: Warming up for 500.00 ms
+Benchmarking read_full/20x20/mutex: Collecting 50 samples in estimated 3.0000 s (123M iterations)
+Benchmarking read_full/20x20/mutex: Analyzing
+read_full/20x20/mutex   time:   [24.472 ns 24.754 ns 25.156 ns]
+Found 9 outliers among 50 measurements (18.00%)
+  1 (2.00%) low mild
+  3 (6.00%) high mild
+  5 (10.00%) high severe
+
+Benchmarking publish/20x20/seqlock
+Benchmarking publish/20x20/seqlock: Warming up for 500.00 ms
+Benchmarking publish/20x20/seqlock: Collecting 50 samples in estimated 3.0000 s (154M iterations)
+Benchmarking publish/20x20/seqlock: Analyzing
+publish/20x20/seqlock   time:   [19.472 ns 19.864 ns 20.362 ns]
+Found 8 outliers among 50 measurements (16.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  6 (12.00%) high severe
+Benchmarking publish/20x20/mutex
+Benchmarking publish/20x20/mutex: Warming up for 500.00 ms
+Benchmarking publish/20x20/mutex: Collecting 50 samples in estimated 3.0000 s (85M iterations)
+Benchmarking publish/20x20/mutex: Analyzing
+publish/20x20/mutex     time:   [31.533 ns 31.813 ns 32.270 ns]
+Found 11 outliers among 50 measurements (22.00%)
+  2 (4.00%) high mild
+  9 (18.00%) high severe
+
+Benchmarking read_full/50x50/seqlock
+Benchmarking read_full/50x50/seqlock: Warming up for 500.00 ms
+Benchmarking read_full/50x50/seqlock: Collecting 50 samples in estimated 3.0000 s (73M iterations)
+Benchmarking read_full/50x50/seqlock: Analyzing
+read_full/50x50/seqlock time:   [40.197 ns 40.671 ns 41.410 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  2 (4.00%) high mild
+  5 (10.00%) high severe
+Benchmarking read_full/50x50/mutex
+Benchmarking read_full/50x50/mutex: Warming up for 500.00 ms
+Benchmarking read_full/50x50/mutex: Collecting 50 samples in estimated 3.0000 s (54M iterations)
+Benchmarking read_full/50x50/mutex: Analyzing
+read_full/50x50/mutex   time:   [55.295 ns 56.566 ns 58.263 ns]
+Found 11 outliers among 50 measurements (22.00%)
+  1 (2.00%) low severe
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  8 (16.00%) high severe
+
+Benchmarking publish/50x50/seqlock
+Benchmarking publish/50x50/seqlock: Warming up for 500.00 ms
+Benchmarking publish/50x50/seqlock: Collecting 50 samples in estimated 3.0000 s (67M iterations)
+Benchmarking publish/50x50/seqlock: Analyzing
+publish/50x50/seqlock   time:   [44.593 ns 45.489 ns 46.596 ns]
+Found 9 outliers among 50 measurements (18.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  7 (14.00%) high severe
+Benchmarking publish/50x50/mutex
+Benchmarking publish/50x50/mutex: Warming up for 500.00 ms
+Benchmarking publish/50x50/mutex: Collecting 50 samples in estimated 3.0000 s (90M iterations)
+Benchmarking publish/50x50/mutex: Analyzing
+publish/50x50/mutex     time:   [31.599 ns 31.897 ns 32.363 ns]
+Found 8 outliers among 50 measurements (16.00%)
+  3 (6.00%) high mild
+  5 (10.00%) high severe
+
+Benchmarking contended/read_top/seqlock
+Benchmarking contended/read_top/seqlock: Warming up for 500.00 ms
+Benchmarking contended/read_top/seqlock: Collecting 50 samples in estimated 3.0000 s (1.7B iterations)
+Benchmarking contended/read_top/seqlock: Analyzing
+contended/read_top/seqlock
+                        time:   [1.7710 ns 1.7939 ns 1.8293 ns]
+Found 9 outliers among 50 measurements (18.00%)
+  2 (4.00%) high mild
+  7 (14.00%) high severe
+Benchmarking contended/read_top/mutex
+Benchmarking contended/read_top/mutex: Warming up for 500.00 ms
+Benchmarking contended/read_top/mutex: Collecting 50 samples in estimated 3.0000 s (180M iterations)
+Benchmarking contended/read_top/mutex: Analyzing
+contended/read_top/mutex
+                        time:   [15.996 ns 16.810 ns 17.415 ns]
+Found 6 outliers among 50 measurements (12.00%)
+  3 (6.00%) low severe
+  3 (6.00%) low mild
+Benchmarking contended/read_full_20x20/seqlock
+Benchmarking contended/read_full_20x20/seqlock: Warming up for 500.00 ms
+Benchmarking contended/read_full_20x20/seqlock: Collecting 50 samples in estimated 3.0000 s (191M iterations)
+Benchmarking contended/read_full_20x20/seqlock: Analyzing
+contended/read_full_20x20/seqlock
+                        time:   [15.822 ns 16.174 ns 16.597 ns]
+Found 4 outliers among 50 measurements (8.00%)
+  1 (2.00%) high mild
+  3 (6.00%) high severe
+Benchmarking contended/read_full_20x20/mutex
+Benchmarking contended/read_full_20x20/mutex: Warming up for 500.00 ms
+Benchmarking contended/read_full_20x20/mutex: Collecting 50 samples in estimated 3.0000 s (70M iterations)
+Benchmarking contended/read_full_20x20/mutex: Analyzing
+contended/read_full_20x20/mutex
+                        time:   [45.250 ns 46.156 ns 48.049 ns]
+Found 16 outliers among 50 measurements (32.00%)
+  8 (16.00%) low severe
+  1 (2.00%) high mild
+  7 (14.00%) high severe
+
+Benchmarking queue/same_thread/spsc
+Benchmarking queue/same_thread/spsc: Warming up for 500.00 ms
+Benchmarking queue/same_thread/spsc: Collecting 50 samples in estimated 3.0000 s (400M iterations)
+Benchmarking queue/same_thread/spsc: Analyzing
+queue/same_thread/spsc  time:   [7.2530 ns 7.2853 ns 7.3458 ns]
+Found 9 outliers among 50 measurements (18.00%)
+  2 (4.00%) low mild
+  7 (14.00%) high severe
+Benchmarking queue/same_thread/std_mpsc_sync_channel
+Benchmarking queue/same_thread/std_mpsc_sync_channel: Warming up for 500.00 ms
+Benchmarking queue/same_thread/std_mpsc_sync_channel: Collecting 50 samples in estimated 3.0000 s (165M iterations)
+Benchmarking queue/same_thread/std_mpsc_sync_channel: Analyzing
+queue/same_thread/std_mpsc_sync_channel
+                        time:   [18.203 ns 18.352 ns 18.584 ns]
+Found 7 outliers among 50 measurements (14.00%)
+  3 (6.00%) high mild
+  4 (8.00%) high severe
+
+Benchmarking queue/cross_thread_push/spsc
+Benchmarking queue/cross_thread_push/spsc: Warming up for 500.00 ms
+Benchmarking queue/cross_thread_push/spsc: Collecting 50 samples in estimated 3.0000 s (98M iterations)
+Benchmarking queue/cross_thread_push/spsc: Analyzing
+queue/cross_thread_push/spsc
+                        time:   [26.070 ns 27.623 ns 29.133 ns]
+Found 3 outliers among 50 measurements (6.00%)
+  2 (4.00%) high mild
+  1 (2.00%) high severe
+Benchmarking queue/cross_thread_push/std_mpsc_sync_channel
+Benchmarking queue/cross_thread_push/std_mpsc_sync_channel: Warming up for 500.00 ms
+Benchmarking queue/cross_thread_push/std_mpsc_sync_channel: Collecting 50 samples in estimated 3.0000 s (234M iterations)
+Benchmarking queue/cross_thread_push/std_mpsc_sync_channel: Analyzing
+queue/cross_thread_push/std_mpsc_sync_channel
+                        time:   [17.207 ns 20.102 ns 22.861 ns]
+
+== 21:35:12    ob-parse/binance
+   Compiling ob-parse v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-parse)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 12.90s
+     Running benches/binance.rs (target/release/build/ob-parse/d2a787fd4d84c473/out/binance-d2a787fd4d84c473)
+59 frames, 59062 bytes, 1001 bytes/frame
+Benchmarking binance_depth20/serde_value
+Benchmarking binance_depth20/serde_value: Warming up for 500.00 ms
+Benchmarking binance_depth20/serde_value: Collecting 50 samples in estimated 3.2313 s (7650 iterations)
+Benchmarking binance_depth20/serde_value: Analyzing
+binance_depth20/serde_value
+                        time:   [396.66 µs 398.78 µs 401.94 µs]
+                        thrpt:  [146.79 Kelem/s 147.95 Kelem/s 148.74 Kelem/s]
+Found 7 outliers among 50 measurements (14.00%)
+  3 (6.00%) high mild
+  4 (8.00%) high severe
+Benchmarking binance_depth20/serde_typed
+Benchmarking binance_depth20/serde_typed: Warming up for 500.00 ms
+Benchmarking binance_depth20/serde_typed: Collecting 50 samples in estimated 3.1019 s (19k iterations)
+Benchmarking binance_depth20/serde_typed: Analyzing
+binance_depth20/serde_typed
+                        time:   [157.57 µs 161.56 µs 169.51 µs]
+                        thrpt:  [348.06 Kelem/s 365.20 Kelem/s 374.44 Kelem/s]
+Found 5 outliers among 50 measurements (10.00%)
+  3 (6.00%) high mild
+  2 (4.00%) high severe
+Benchmarking binance_depth20/ob_parse
+Benchmarking binance_depth20/ob_parse: Warming up for 500.00 ms
+Benchmarking binance_depth20/ob_parse: Collecting 50 samples in estimated 3.0281 s (55k iterations)
+Benchmarking binance_depth20/ob_parse: Analyzing
+binance_depth20/ob_parse
+                        time:   [55.472 µs 56.540 µs 58.108 µs]
+                        thrpt:  [1.0154 Melem/s 1.0435 Melem/s 1.0636 Melem/s]
+Found 6 outliers among 50 measurements (12.00%)
+  1 (2.00%) high mild
+  5 (10.00%) high severe
+Benchmarking binance_depth20/ob_parse+book
+Benchmarking binance_depth20/ob_parse+book: Warming up for 500.00 ms
+Benchmarking binance_depth20/ob_parse+book: Collecting 50 samples in estimated 3.0701 s (54k iterations)
+Benchmarking binance_depth20/ob_parse+book: Analyzing
+binance_depth20/ob_parse+book
+                        time:   [57.129 µs 57.948 µs 58.925 µs]
+                        thrpt:  [1.0013 Melem/s 1.0182 Melem/s 1.0328 Melem/s]
+Found 8 outliers among 50 measurements (16.00%)
+  1 (2.00%) high mild
+  7 (14.00%) high severe
+
+== 21:35:42    ob-parse/bybit
+   Compiling ob-parse v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-parse)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 13.22s
+     Running benches/bybit.rs (target/release/build/ob-parse/6250b1aa7b7535c2/out/bybit-6250b1aa7b7535c2)
+snapshot 2256 bytes; 58 deltas, 247 bytes each on average
+Benchmarking bybit/snapshot_50x50/serde_typed
+Benchmarking bybit/snapshot_50x50/serde_typed: Warming up for 500.00 ms
+Benchmarking bybit/snapshot_50x50/serde_typed: Collecting 50 samples in estimated 3.0066 s (564k iterations)
+Benchmarking bybit/snapshot_50x50/serde_typed: Analyzing
+bybit/snapshot_50x50/serde_typed
+                        time:   [5.3931 µs 5.4337 µs 5.4925 µs]
+                        thrpt:  [182.07 Kelem/s 184.04 Kelem/s 185.42 Kelem/s]
+Found 9 outliers among 50 measurements (18.00%)
+  4 (8.00%) high mild
+  5 (10.00%) high severe
+Benchmarking bybit/snapshot_50x50/ob_parse
+Benchmarking bybit/snapshot_50x50/ob_parse: Warming up for 500.00 ms
+Benchmarking bybit/snapshot_50x50/ob_parse: Collecting 50 samples in estimated 3.0011 s (1.4M iterations)
+Benchmarking bybit/snapshot_50x50/ob_parse: Analyzing
+bybit/snapshot_50x50/ob_parse
+                        time:   [2.1039 µs 2.1500 µs 2.2207 µs]
+                        thrpt:  [450.31 Kelem/s 465.12 Kelem/s 475.31 Kelem/s]
+Found 7 outliers among 50 measurements (14.00%)
+  7 (14.00%) high severe
+
+Benchmarking bybit/deltas/serde_typed
+Benchmarking bybit/deltas/serde_typed: Warming up for 500.00 ms
+Benchmarking bybit/deltas/serde_typed: Collecting 50 samples in estimated 3.0381 s (84k iterations)
+Benchmarking bybit/deltas/serde_typed: Analyzing
+bybit/deltas/serde_typed
+                        time:   [36.717 µs 37.134 µs 37.629 µs]
+                        thrpt:  [1.5414 Melem/s 1.5619 Melem/s 1.5797 Melem/s]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high severe
+Benchmarking bybit/deltas/ob_parse
+Benchmarking bybit/deltas/ob_parse: Warming up for 500.00 ms
+Benchmarking bybit/deltas/ob_parse: Collecting 50 samples in estimated 3.0166 s (204k iterations)
+Benchmarking bybit/deltas/ob_parse: Analyzing
+bybit/deltas/ob_parse   time:   [14.066 µs 14.216 µs 14.456 µs]
+                        thrpt:  [4.0121 Melem/s 4.0799 Melem/s 4.1235 Melem/s]
+Found 9 outliers among 50 measurements (18.00%)
+  3 (6.00%) high mild
+  6 (12.00%) high severe
+
+Benchmarking bybit/full_path/ob_parse+sequence+book
+Benchmarking bybit/full_path/ob_parse+sequence+book: Warming up for 500.00 ms
+Benchmarking bybit/full_path/ob_parse+sequence+book: Collecting 50 samples in estimated 3.0027 s (148k iterations)
+Benchmarking bybit/full_path/ob_parse+sequence+book: Analyzing
+bybit/full_path/ob_parse+sequence+book
+                        time:   [20.306 µs 20.561 µs 20.965 µs]
+                        thrpt:  [2.8143 Melem/s 2.8695 Melem/s 2.9055 Melem/s]
+Found 11 outliers among 50 measurements (22.00%)
+  1 (2.00%) low severe
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+  7 (14.00%) high severe
+
+== 21:36:15    ob-parse/decimal
+   Compiling ob-parse v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-parse)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 12.50s
+     Running benches/decimal.rs (target/release/build/ob-parse/1eb40f6f0c0ad833/out/decimal-1eb40f6f0c0ad833)
+Benchmarking decimal/mixed/reference
+Benchmarking decimal/mixed/reference: Warming up for 500.00 ms
+Benchmarking decimal/mixed/reference: Collecting 50 samples in estimated 3.4190 s (5100 iterations)
+Benchmarking decimal/mixed/reference: Analyzing
+decimal/mixed/reference time:   [673.47 µs 679.69 µs 689.27 µs]
+                        thrpt:  [95.081 Melem/s 96.420 Melem/s 97.312 Melem/s]
+Found 11 outliers among 50 measurements (22.00%)
+  2 (4.00%) high mild
+  9 (18.00%) high severe
+Benchmarking decimal/mixed/ob_parse
+Benchmarking decimal/mixed/ob_parse: Warming up for 500.00 ms
+Benchmarking decimal/mixed/ob_parse: Collecting 50 samples in estimated 3.2332 s (6375 iterations)
+Benchmarking decimal/mixed/ob_parse: Analyzing
+decimal/mixed/ob_parse  time:   [510.14 µs 517.18 µs 527.06 µs]
+                        thrpt:  [124.34 Melem/s 126.72 Melem/s 128.47 Melem/s]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) low mild
+  6 (12.00%) high severe
+Benchmarking decimal/mixed/f64_baseline
+Benchmarking decimal/mixed/f64_baseline: Warming up for 500.00 ms
+Benchmarking decimal/mixed/f64_baseline: Collecting 50 samples in estimated 3.7839 s (3825 iterations)
+Benchmarking decimal/mixed/f64_baseline: Analyzing
+decimal/mixed/f64_baseline
+                        time:   [994.59 µs 1.0115 ms 1.0362 ms]
+                        thrpt:  [63.246 Melem/s 64.793 Melem/s 65.892 Melem/s]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) low mild
+  6 (12.00%) high severe
+
+Benchmarking decimal/binance/reference
+Benchmarking decimal/binance/reference: Warming up for 500.00 ms
+Benchmarking decimal/binance/reference: Collecting 50 samples in estimated 3.0479 s (5100 iterations)
+Benchmarking decimal/binance/reference: Analyzing
+decimal/binance/reference
+                        time:   [599.78 µs 605.21 µs 613.62 µs]
+                        thrpt:  [106.80 Melem/s 108.29 Melem/s 109.27 Melem/s]
+Found 10 outliers among 50 measurements (20.00%)
+  1 (2.00%) low severe
+  1 (2.00%) low mild
+  2 (4.00%) high mild
+  6 (12.00%) high severe
+Benchmarking decimal/binance/ob_parse
+Benchmarking decimal/binance/ob_parse: Warming up for 500.00 ms
+Benchmarking decimal/binance/ob_parse: Collecting 50 samples in estimated 3.5248 s (7650 iterations)
+Benchmarking decimal/binance/ob_parse: Analyzing
+decimal/binance/ob_parse
+                        time:   [449.70 µs 453.56 µs 459.60 µs]
+                        thrpt:  [142.59 Melem/s 144.49 Melem/s 145.73 Melem/s]
+Found 9 outliers among 50 measurements (18.00%)
+  9 (18.00%) high severe
+Benchmarking decimal/binance/f64_baseline
+Benchmarking decimal/binance/f64_baseline: Warming up for 500.00 ms
+Benchmarking decimal/binance/f64_baseline: Collecting 50 samples in estimated 3.9845 s (3825 iterations)
+Benchmarking decimal/binance/f64_baseline: Analyzing
+decimal/binance/f64_baseline
+                        time:   [966.16 µs 984.19 µs 1.0145 ms]
+                        thrpt:  [64.599 Melem/s 66.589 Melem/s 67.832 Melem/s]
+Found 5 outliers among 50 measurements (10.00%)
+  5 (10.00%) high severe
+
+Benchmarking validated/spec_reference
+Benchmarking validated/spec_reference: Warming up for 500.00 ms
+Benchmarking validated/spec_reference: Collecting 50 samples in estimated 3.6108 s (6375 iterations)
+Benchmarking validated/spec_reference: Analyzing
+validated/spec_reference
+                        time:   [564.00 µs 567.83 µs 574.25 µs]
+                        thrpt:  [114.13 Melem/s 115.41 Melem/s 116.20 Melem/s]
+Found 4 outliers among 50 measurements (8.00%)
+  4 (8.00%) high severe
+Benchmarking validated/ob_parse
+Benchmarking validated/ob_parse: Warming up for 500.00 ms
+Benchmarking validated/ob_parse: Collecting 50 samples in estimated 3.4452 s (7650 iterations)
+Benchmarking validated/ob_parse: Analyzing
+validated/ob_parse      time:   [448.82 µs 451.62 µs 455.87 µs]
+                        thrpt:  [143.76 Melem/s 145.11 Melem/s 146.02 Melem/s]
+Found 7 outliers among 50 measurements (14.00%)
+  7 (14.00%) high severe
+
+== 21:37:02    ob-feed/book_apply
+   Compiling getrandom v0.2.17
+   Compiling regex-syntax v0.8.12
+   Compiling socket2 v0.6.5
+   Compiling ob-os v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-os)
+   Compiling quanta v0.12.6
+   Compiling ring v0.17.14
+   Compiling regex-automata v0.4.19
+   Compiling rustls-webpki v0.103.17
+   Compiling rcgen v0.14.10
+   Compiling rustls v0.23.46
+   Compiling regex v1.13.2
+   Compiling criterion v0.8.2
+   Compiling ob-net v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-net)
+   Compiling ob-feed v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-feed)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 20.78s
+     Running benches/book_apply.rs (target/release/build/ob-feed/3c7cf5f4666b0b46/out/book_apply-3c7cf5f4666b0b46)
+Benchmarking full_depth_apply/sorted arrays (OrderBook<1024>)
+Benchmarking full_depth_apply/sorted arrays (OrderBook<1024>): Warming up for 500.00 ms
+Benchmarking full_depth_apply/sorted arrays (OrderBook<1024>): Collecting 50 samples in estimated 3.1187 s (19k iterations)
+Benchmarking full_depth_apply/sorted arrays (OrderBook<1024>): Analyzing
+full_depth_apply/sorted arrays (OrderBook<1024>)
+                        time:   [158.84 µs 161.08 µs 164.58 µs]
+                        thrpt:  [62.663 Melem/s 64.023 Melem/s 64.929 Melem/s]
+Found 9 outliers among 50 measurements (18.00%)
+  1 (2.00%) high mild
+  8 (16.00%) high severe
+Benchmarking full_depth_apply/price-indexed (TickBook<1024>)
+Benchmarking full_depth_apply/price-indexed (TickBook<1024>): Warming up for 500.00 ms
+Benchmarking full_depth_apply/price-indexed (TickBook<1024>): Collecting 50 samples in estimated 3.0308 s (71k iterations)
+Benchmarking full_depth_apply/price-indexed (TickBook<1024>): Analyzing
+full_depth_apply/price-indexed (TickBook<1024>)
+                        time:   [32.252 µs 32.981 µs 34.241 µs]
+                        thrpt:  [301.19 Melem/s 312.70 Melem/s 319.76 Melem/s]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high severe
+
+== 21:37:31    ob-feed/log
+   Compiling ob-feed v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-feed)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 12.28s
+     Running benches/log.rs (target/release/build/ob-feed/fe89a0f04505e70b/out/log-fe89a0f04505e70b)
+Benchmarking log_one_event/binary_record
+Benchmarking log_one_event/binary_record: Warming up for 500.00 ms
+Benchmarking log_one_event/binary_record: Collecting 50 samples in estimated 3.0000 s (546M iterations)
+Benchmarking log_one_event/binary_record: Analyzing
+log_one_event/binary_record
+                        time:   [11.739 ns 14.115 ns 15.977 ns]
+Benchmarking log_one_event/format_only
+Benchmarking log_one_event/format_only: Warming up for 500.00 ms
+Benchmarking log_one_event/format_only: Collecting 50 samples in estimated 3.0001 s (22M iterations)
+Benchmarking log_one_event/format_only: Analyzing
+log_one_event/format_only
+                        time:   [135.54 ns 137.44 ns 139.90 ns]
+Found 9 outliers among 50 measurements (18.00%)
+  2 (4.00%) low severe
+  1 (2.00%) high mild
+  6 (12.00%) high severe
+Benchmarking log_one_event/format_and_write
+Benchmarking log_one_event/format_and_write: Warming up for 500.00 ms
+Benchmarking log_one_event/format_and_write: Collecting 50 samples in estimated 3.0009 s (3.0M iterations)
+Benchmarking log_one_event/format_and_write: Analyzing
+log_one_event/format_and_write
+                        time:   [1.0071 µs 1.0303 µs 1.0577 µs]
+Found 8 outliers among 50 measurements (16.00%)
+  1 (2.00%) high mild
+  7 (14.00%) high severe
+
+== 21:37:58    ob-feed/pipeline
+   Compiling ob-feed v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-feed)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 13.03s
+     Running benches/pipeline.rs (target/release/build/ob-feed/5e77e03b569ae3b8/out/pipeline-5e77e03b569ae3b8)
+Benchmarking pipeline/binance_depth20
+Benchmarking pipeline/binance_depth20: Warming up for 500.00 ms
+Benchmarking pipeline/binance_depth20: Collecting 50 samples in estimated 3.0416 s (47k iterations)
+Benchmarking pipeline/binance_depth20: Analyzing
+pipeline/binance_depth20
+                        time:   [59.740 µs 60.482 µs 61.578 µs]
+                        thrpt:  [974.37 Kelem/s 992.04 Kelem/s 1.0044 Melem/s]
+Found 8 outliers among 50 measurements (16.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  6 (12.00%) high severe
+
+Benchmarking pipeline/bybit_orderbook50
+Benchmarking pipeline/bybit_orderbook50: Warming up for 500.00 ms
+Benchmarking pipeline/bybit_orderbook50: Collecting 50 samples in estimated 3.0136 s (107k iterations)
+Benchmarking pipeline/bybit_orderbook50: Analyzing
+pipeline/bybit_orderbook50
+                        time:   [23.473 µs 23.622 µs 23.828 µs]
+                        thrpt:  [2.5181 Melem/s 2.5400 Melem/s 2.5562 Melem/s]
+Found 8 outliers among 50 measurements (16.00%)
+  8 (16.00%) high severe
+
+Benchmarking pipeline/binance_depth20+bookTicker
+Benchmarking pipeline/binance_depth20+bookTicker: Warming up for 500.00 ms
+Benchmarking pipeline/binance_depth20+bookTicker: Collecting 50 samples in estimated 3.1039 s (14k iterations)
+Benchmarking pipeline/binance_depth20+bookTicker: Analyzing
+pipeline/binance_depth20+bookTicker
+                        time:   [217.19 µs 219.85 µs 224.02 µs]
+                        thrpt:  [4.4638 Melem/s 4.5485 Melem/s 4.6043 Melem/s]
+Found 10 outliers among 50 measurements (20.00%)
+  1 (2.00%) high mild
+  9 (18.00%) high severe
+
+Benchmarking pipeline/bybit_orderbook50+1
+Benchmarking pipeline/bybit_orderbook50+1: Warming up for 500.00 ms
+Benchmarking pipeline/bybit_orderbook50+1: Collecting 50 samples in estimated 3.0669 s (34k iterations)
+Benchmarking pipeline/bybit_orderbook50+1: Analyzing
+pipeline/bybit_orderbook50+1
+                        time:   [82.054 µs 82.540 µs 83.490 µs]
+                        thrpt:  [1.7966 Melem/s 1.8173 Melem/s 1.8281 Melem/s]
+Found 6 outliers among 50 measurements (12.00%)
+  6 (12.00%) high severe
+
+Benchmarking pipeline/binance_full_depth
+Benchmarking pipeline/binance_full_depth: Warming up for 500.00 ms
+Benchmarking pipeline/binance_full_depth: Collecting 50 samples in estimated 3.2629 s (6375 iterations)
+Benchmarking pipeline/binance_full_depth: Analyzing
+pipeline/binance_full_depth
+                        time:   [451.48 µs 460.38 µs 476.13 µs]
+                        thrpt:  [210.02 Kelem/s 217.21 Kelem/s 221.49 Kelem/s]
+Found 10 outliers among 50 measurements (20.00%)
+  3 (6.00%) high mild
+  7 (14.00%) high severe
+
+== 21:38:32    ob-feed/probe
+   Compiling ob-feed v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-feed)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 12.49s
+     Running benches/probe.rs (target/release/build/ob-feed/e8f805feddf96977/out/probe-e8f805feddf96977)
+Benchmarking feed_on_text_binance/no_probe
+Benchmarking feed_on_text_binance/no_probe: Warming up for 500.00 ms
+Benchmarking feed_on_text_binance/no_probe: Collecting 50 samples in estimated 3.0517 s (50k iterations)
+Benchmarking feed_on_text_binance/no_probe: Analyzing
+feed_on_text_binance/no_probe
+                        time:   [58.643 µs 59.217 µs 60.361 µs]
+                        thrpt:  [977.45 Kelem/s 996.33 Kelem/s 1.0061 Melem/s]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) low mild
+  6 (12.00%) high severe
+
+Benchmarking feed_on_text_binance/stage_probe_fixed_wall_clock
+Benchmarking feed_on_text_binance/stage_probe_fixed_wall_clock: Warming up for 500.00 ms
+Benchmarking feed_on_text_binance/stage_probe_fixed_wall_clock: Collecting 50 samples in estimated 3.0586 s (50k iterations)
+Benchmarking feed_on_text_binance/stage_probe_fixed_wall_clock: Analyzing
+feed_on_text_binance/stage_probe_fixed_wall_clock
+                        time:   [60.011 µs 60.542 µs 61.385 µs]
+                        thrpt:  [961.14 Kelem/s 974.53 Kelem/s 983.16 Kelem/s]
+Found 9 outliers among 50 measurements (18.00%)
+  2 (4.00%) high mild
+  7 (14.00%) high severe
+
+Benchmarking feed_on_text_binance/stage_probe_system_wall_clock
+Benchmarking feed_on_text_binance/stage_probe_system_wall_clock: Warming up for 500.00 ms
+Benchmarking feed_on_text_binance/stage_probe_system_wall_clock: Collecting 50 samples in estimated 3.0462 s (50k iterations)
+Benchmarking feed_on_text_binance/stage_probe_system_wall_clock: Analyzing
+feed_on_text_binance/stage_probe_system_wall_clock
+                        time:   [61.408 µs 62.186 µs 63.417 µs]
+                        thrpt:  [930.35 Kelem/s 948.76 Kelem/s 960.79 Kelem/s]
+Found 8 outliers among 50 measurements (16.00%)
+  1 (2.00%) low mild
+  7 (14.00%) high severe
+
+== 21:38:56    ob-net/ws
+   Compiling rand v0.10.4
+   Compiling rustls v0.23.46
+   Compiling criterion v0.8.2
+   Compiling tungstenite v0.30.0
+   Compiling proptest v1.12.0
+   Compiling ob-net v0.1.0 (/Users/naresh/Documents/ll;l/low-latency-orderbook-aggregator/rust/crates/ob-net)
+    Finished `bench` profile [optimized + debuginfo] target(s) in 19.54s
+     Running benches/ws.rs (target/release/build/ob-net/c9534bb4a39aaea7/out/ws-c9534bb4a39aaea7)
+Benchmarking ws_decode/binance/ob_net (no utf8 check)
+Benchmarking ws_decode/binance/ob_net (no utf8 check): Warming up for 500.00 ms
+Benchmarking ws_decode/binance/ob_net (no utf8 check): Collecting 50 samples in estimated 3.0006 s (6.4M iterations)
+Benchmarking ws_decode/binance/ob_net (no utf8 check): Analyzing
+ws_decode/binance/ob_net (no utf8 check)
+                        time:   [458.23 ns 461.51 ns 463.79 ns]
+                        thrpt:  [127.21 Melem/s 127.84 Melem/s 128.75 Melem/s]
+Found 12 outliers among 50 measurements (24.00%)
+  3 (6.00%) low severe
+  1 (2.00%) low mild
+  8 (16.00%) high severe
+Benchmarking ws_decode/binance/ob_net (utf8 checked)
+Benchmarking ws_decode/binance/ob_net (utf8 checked): Warming up for 500.00 ms
+Benchmarking ws_decode/binance/ob_net (utf8 checked): Collecting 50 samples in estimated 3.0022 s (1.6M iterations)
+Benchmarking ws_decode/binance/ob_net (utf8 checked): Analyzing
+ws_decode/binance/ob_net (utf8 checked)
+                        time:   [1.8459 µs 1.8840 µs 1.9359 µs]
+                        thrpt:  [30.476 Melem/s 31.316 Melem/s 31.963 Melem/s]
+Found 10 outliers among 50 measurements (20.00%)
+  1 (2.00%) low mild
+  9 (18.00%) high severe
+Benchmarking ws_decode/binance/(harness: stream clone only)
+Benchmarking ws_decode/binance/(harness: stream clone only): Warming up for 500.00 ms
+Benchmarking ws_decode/binance/(harness: stream clone only): Collecting 50 samples in estimated 3.0003 s (2.4M iterations)
+Benchmarking ws_decode/binance/(harness: stream clone only): Analyzing
+ws_decode/binance/(harness: stream clone only)
+                        time:   [1.1298 µs 1.1482 µs 1.1741 µs]
+                        thrpt:  [50.249 Melem/s 51.385 Melem/s 52.222 Melem/s]
+Found 6 outliers among 50 measurements (12.00%)
+  5 (10.00%) high mild
+  1 (2.00%) high severe
+Benchmarking ws_decode/binance/tungstenite
+Benchmarking ws_decode/binance/tungstenite: Warming up for 500.00 ms
+Benchmarking ws_decode/binance/tungstenite: Collecting 50 samples in estimated 3.0004 s (332k iterations)
+Benchmarking ws_decode/binance/tungstenite: Analyzing
+ws_decode/binance/tungstenite
+                        time:   [9.1447 µs 9.2451 µs 9.3795 µs]
+                        thrpt:  [6.2903 Melem/s 6.3818 Melem/s 6.4518 Melem/s]
+Found 12 outliers among 50 measurements (24.00%)
+  3 (6.00%) low mild
+  2 (4.00%) high mild
+  7 (14.00%) high severe
+
+Benchmarking ws_decode/bybit/ob_net (no utf8 check)
+Benchmarking ws_decode/bybit/ob_net (no utf8 check): Warming up for 500.00 ms
+Benchmarking ws_decode/bybit/ob_net (no utf8 check): Collecting 50 samples in estimated 3.0006 s (6.5M iterations)
+Benchmarking ws_decode/bybit/ob_net (no utf8 check): Analyzing
+ws_decode/bybit/ob_net (no utf8 check)
+                        time:   [456.04 ns 462.49 ns 467.97 ns]
+                        thrpt:  [126.08 Melem/s 127.57 Melem/s 129.38 Melem/s]
+Found 16 outliers among 50 measurements (32.00%)
+  4 (8.00%) low severe
+  2 (4.00%) low mild
+  2 (4.00%) high mild
+  8 (16.00%) high severe
+Benchmarking ws_decode/bybit/ob_net (utf8 checked)
+Benchmarking ws_decode/bybit/ob_net (utf8 checked): Warming up for 500.00 ms
+Benchmarking ws_decode/bybit/ob_net (utf8 checked): Collecting 50 samples in estimated 3.0009 s (2.8M iterations)
+Benchmarking ws_decode/bybit/ob_net (utf8 checked): Analyzing
+ws_decode/bybit/ob_net (utf8 checked)
+                        time:   [1.0819 µs 1.1059 µs 1.1403 µs]
+                        thrpt:  [51.740 Melem/s 53.349 Melem/s 54.534 Melem/s]
+Found 7 outliers among 50 measurements (14.00%)
+  1 (2.00%) low mild
+  1 (2.00%) high mild
+  5 (10.00%) high severe
+Benchmarking ws_decode/bybit/(harness: stream clone only)
+Benchmarking ws_decode/bybit/(harness: stream clone only): Warming up for 500.00 ms
+Benchmarking ws_decode/bybit/(harness: stream clone only): Collecting 50 samples in estimated 3.0005 s (7.9M iterations)
+Benchmarking ws_decode/bybit/(harness: stream clone only): Analyzing
+ws_decode/bybit/(harness: stream clone only)
+                        time:   [443.43 ns 493.70 ns 545.85 ns]
+                        thrpt:  [108.09 Melem/s 119.50 Melem/s 133.05 Melem/s]
+Benchmarking ws_decode/bybit/tungstenite
+Benchmarking ws_decode/bybit/tungstenite: Warming up for 500.00 ms
+Benchmarking ws_decode/bybit/tungstenite: Collecting 50 samples in estimated 3.0010 s (796k iterations)
+Benchmarking ws_decode/bybit/tungstenite: Analyzing
+ws_decode/bybit/tungstenite
+                        time:   [3.6755 µs 3.8268 µs 3.9992 µs]
+                        thrpt:  [14.753 Melem/s 15.418 Melem/s 16.052 Melem/s]
+Found 5 outliers among 50 measurements (10.00%)
+  4 (8.00%) high mild
+  1 (2.00%) high severe
+

@@ -1,0 +1,609 @@
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.08s
+     Running unittests src/lib.rs (target/release/build/ob-agg/fa19b2cc5f182dc1/out/ob_agg-fa19b2cc5f182dc1)
+
+running 1 test
+test quotes::tests::quantity_sums_are_exact_and_overflow_is_reported ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/aggregator.rs (target/release/build/ob-agg/94830d07ba4e3b14/out/aggregator-94830d07ba4e3b14)
+
+running 14 tests
+test bid_volume_counts_levels_at_or_above_the_limit ... ok
+test ask_volume_counts_levels_at_or_below_the_limit ... ok
+test at_most_eight_venues ... ok
+test empty_aggregator_has_no_quotes ... ok
+test best_prices_are_ordered_across_venues ... ok
+test best_levels_merge_venues_best_first ... ok
+test never_published_venues_are_down ... ok
+test one_venue_one_quote ... ok
+test queries_see_the_view_as_of_the_last_refresh ... ok
+test refresh_copies_only_changed_venues ... ok
+test staleness_boundary_is_inclusive ... ok
+test ties_prefer_size_then_venue_order ... ok
+test unhealthy_venues_are_excluded_with_a_reason ... ok
+test volume_flags_when_more_may_exist_beyond_the_visible_depth ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/concurrent.rs (target/release/build/ob-agg/eb8468ac28717f2b/out/concurrent-eb8468ac28717f2b)
+
+running 1 test
+test views_stay_consistent_while_two_feeds_publish ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.00s
+
+     Running tests/execution.rs (target/release/build/ob-agg/59043709eba555eb/out/execution-59043709eba555eb)
+
+running 14 tests
+test a_level_can_be_partly_used ... ok
+test books_too_far_apart_in_time_are_rejected_not_reported ... ok
+test a_cross_between_venues_is_measured_level_by_level ... ok
+test buying_takes_the_cheapest_levels_across_venues ... ok
+test empty_cases ... ok
+test equal_prices_go_to_the_lower_venue_first ... ok
+test fees_can_change_where_to_trade ... ok
+test fees_are_exact_and_rounded_against_us ... ok
+test no_cross_no_signal_and_never_within_one_venue ... ok
+test not_enough_liquidity_is_a_partial_plan ... ok
+test partial_plans_flag_venues_that_may_hold_more_than_they_show ... ok
+test fees_shrink_or_remove_the_opportunity ... ok
+test selling_takes_the_highest_bids_and_rounds_down ... ok
+test unhealthy_venues_are_not_routed_to ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/model.rs (target/release/build/ob-agg/9993aacca3f6ffd4/out/model-9993aacca3f6ffd4)
+
+running 1 test
+test aggregator_matches_a_naive_reference ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/optimality.rs (target/release/build/ob-agg/b3f11ee76d066f0b/out/optimality-b3f11ee76d066f0b)
+
+running 2 tests
+test no_split_of_the_order_is_cheaper_than_the_plan ... ok
+test planner_matches_a_sort_based_reference ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/real_data.rs (target/release/build/ob-agg/3a8c1d962b98261c/out/real_data-3a8c1d962b98261c)
+
+running 1 test
+test binance_and_bybit_aggregate_correctly ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/real_execution.rs (target/release/build/ob-agg/6ef6804f1d6fd0a2/out/real_execution-6ef6804f1d6fd0a2)
+
+running 2 tests
+test routing_a_buy_across_the_real_books ... ok
+test the_recorded_cross_is_neither_profitable_nor_simultaneous ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/release/build/ob-app/e0d57919a1b70db1/out/ob-e0d57919a1b70db1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/release/build/ob-bench/7b19ba8f16361e7d/out/ob_bench-7b19ba8f16361e7d)
+
+running 10 tests
+test stats::tests::units_and_rows ... ok
+test server::tests::exponential_gaps_have_the_requested_mean ... ok
+test stream::tests::binance_diff_continuity_holds_across_passes ... ok
+test stream::tests::the_first_pass_is_the_recording_unchanged ... ok
+test stream::tests::seams_are_the_acks_and_the_bybit_book_snapshot ... ok
+test stream::tests::ids_and_times_keep_increasing_and_only_digits_change ... ok
+test anatomy::tests::every_line_is_measured_and_parsing_is_part_of_the_whole ... ok
+test readpath::tests::every_part_is_measured_once_per_message ... ok
+test scenario::tests::every_stream_loops_without_resyncs ... ok
+test jitter::tests::records_every_gap_and_accounts_for_lost_time ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+
+     Running unittests src/bin/tails.rs (target/release/build/ob-bench/886b5d1699477aed/out/tails-886b5d1699477aed)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/release/build/ob-core/0a501cdf0411101c/out/ob_core-0a501cdf0411101c)
+
+running 45 tests
+test book::tests::a_bad_snapshot_is_refused_and_changes_nothing ... ok
+test book::tests::a_full_side_keeps_the_best_levels ... ok
+test book::tests::any_insert_order_gives_the_same_book ... ok
+test book::tests::bids_sort_high_to_low_and_asks_low_to_high ... ok
+test book::tests::clear_empties_both_sides ... ok
+test book::tests::crossed_and_locked_books_are_detected ... ok
+test book::tests::empty_book_has_no_best_and_is_not_crossed ... ok
+test book::tests::layout_is_compact_and_cache_aligned ... ok
+test book::tests::market_impact_walks_levels_best_first ... ok
+test book::tests::repeated_updates_at_one_price_keep_the_last_quantity ... ok
+test book::tests::snapshot_deeper_than_capacity_keeps_the_best ... ok
+test book::tests::snapshot_replaces_everything ... ok
+test book::tests::zero_quantity_removes_the_level ... ok
+test divisor::tests::exact_quotient_matches_division_for_multiples ... ok
+test divisor::tests::inverse_is_correct ... ok
+test fixed::tests::notional_is_exact_at_the_extremes ... ok
+test fixed::tests::ordering_matches_numeric_order ... ok
+test fixed::tests::notional_add_overflow_panics_in_every_build - should panic ... ok
+test fixed::tests::qty_add_overflow_panics_in_every_build - should panic ... ok
+test fixed::tests::quantities_cannot_be_negative ... ok
+test fixed::tests::qty_sub_below_zero_panics_in_every_build - should panic ... ok
+test spec::tests::a_per_instrument_scale_fits_values_a_global_one_cannot ... ok
+test spec::tests::display_is_plain_and_trims_trailing_zeros ... ok
+test spec::tests::equal_values_with_different_scales_are_equal ... ok
+test spec::tests::error_is_one_byte_and_results_stay_small ... ok
+test spec::tests::errors_are_classified_for_policy ... ok
+test spec::tests::headroom_check_refuses_a_scale_that_is_too_small ... ok
+test spec::tests::invalid_specs_are_refused ... ok
+test spec::tests::notional_uses_combined_decimals ... ok
+test spec::tests::negative_quantities_are_rejected ... ok
+test spec::tests::off_tick_and_off_lot_values_are_rejected ... ok
+test spec::tests::overflow_is_detected_at_the_exact_boundary ... ok
+test spec::tests::parses_exchange_values_exactly ... ok
+test spec::tests::precision_beyond_the_scale_is_rejected_not_rounded ... ok
+test spec::tests::rejects_malformed_input ... ok
+test spec::tests::steps_define_the_scale ... ok
+test spec::tests::venues_with_different_ticks_share_one_scale ... ok
+test tick_book::tests::basic_operations_and_neighbours ... ok
+test tick_book::tests::neighbours_across_the_circular_wrap ... ok
+test tick_book::tests::scans_stop_before_wrapping_onto_themselves ... ok
+test tick_book::tests::the_window_refuses_or_drops_and_reports ... ok
+test divisor::tests::matches_the_remainder_operator ... ok
+test spec::tests::display_then_parse_round_trips_at_every_scale ... ok
+test tick_book::tests::matches_the_sorted_book ... ok
+test tick_book::tests::wide_prices_keep_the_best_that_fit ... ok
+
+test result: ok. 45 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+
+     Running tests/model.rs (target/release/build/ob-core/9776bdb25d4b7cf7/out/model-9776bdb25d4b7cf7)
+
+running 4 tests
+test single_level_book_matches_model ... ok
+test arbitrary_prices_match_model ... ok
+test small_book_matches_model ... ok
+test full_size_book_matches_model ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s
+
+     Running unittests src/lib.rs (target/release/build/ob-feed/0d280d0ba781a5d7/out/ob_feed-0d280d0ba781a5d7)
+
+running 8 tests
+test backoff::tests::different_seeds_spread_out ... ok
+test backoff::tests::grows_exponentially_with_bounded_jitter_and_caps ... ok
+test backoff::tests::the_clock_is_monotonic ... ok
+test log::tests::zeroed_or_unknown_records_are_rejected ... ok
+test log::tests::every_event_round_trips ... ok
+test log::tests::a_full_queue_drops_and_then_reports_the_count ... ok
+test probe::tests::an_exchange_clock_ahead_of_ours_is_counted_not_recorded ... ok
+test probe::tests::records_each_stage_and_the_total_from_the_read ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests/feed.rs (target/release/build/ob-feed/58a0c45e0edd9585/out/feed-58a0c45e0edd9585)
+
+running 14 tests
+test a_loss_reported_twice_counts_once_but_failed_connects_keep_backing_off ... ok
+test a_refused_subscription_reconnects ... ok
+test a_resync_that_never_gets_a_snapshot_times_out ... ok
+test binance_needs_no_heartbeat_but_goes_stale_without_data ... ok
+test binance_bad_message_is_dropped_and_the_book_kept ... ok
+test binance_connects_subscribes_and_goes_live ... ok
+test binance_gap_is_counted_but_the_next_snapshot_repairs_it ... ok
+test bybit_gap_resyncs_and_the_aggregator_stops_using_it_until_a_fresh_snapshot ... ok
+test bybit_unparseable_or_crossed_data_resyncs ... ok
+test bybit_snapshot_then_deltas ... ok
+test disconnects_back_off_exponentially_and_reset_once_healthy ... ok
+test no_book_after_subscribing_times_out ... ok
+test too_many_resyncs_escalate_to_a_reconnect ... ok
+test bybit_heartbeat_every_20s_and_reconnect_if_unanswered ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/full_depth.rs (target/release/build/ob-feed/99c22360ef6d6676/out/full_depth-99c22360ef6d6676)
+
+running 11 tests
+test a_bad_snapshot_or_a_bad_event_resyncs ... ok
+test a_snapshot_older_than_every_event_is_a_gap ... ok
+test removing_an_absent_level_is_normal_here ... ok
+test sync_buffers_drops_stale_requires_a_straddle_then_continuity ... ok
+test a_level_beyond_the_price_window_bounds_the_region ... ok
+test the_overlay_works_on_full_depth_too ... ok
+test the_feed_asks_once_goes_live_on_the_answer_and_reconnects_on_failure ... ok
+test a_truncated_snapshot_bounds_the_known_region ... ok
+test a_jump_beyond_the_window_drops_the_far_levels_then_resyncs ... ok
+test a_full_book_moves_its_boundary_when_it_drops_or_refuses_a_level ... ok
+test a_side_that_runs_short_of_known_levels_asks_for_a_new_snapshot ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/live.rs (target/release/build/ob-feed/85f3bc1243869728/out/live-85f3bc1243869728)
+
+running 1 test
+test both_feeds_live_with_the_aggregator ... ignored, needs the internet
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/live_full_depth.rs (target/release/build/ob-feed/6e1c654b05f93ac8/out/live_full_depth-6e1c654b05f93ac8)
+
+running 1 test
+test full_depth_agrees_with_binance_depth20_at_every_snapshot ... ignored, needs the internet
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/mock_exchange.rs (target/release/build/ob-feed/334d65704ffa2469/out/mock_exchange-334d65704ffa2469)
+
+running 10 tests
+test bybit_gap_resyncs_over_the_same_connection ... ok
+test full_depth_syncs_from_a_rest_snapshot_over_real_connections ... ok
+test malformed_messages_are_dropped_and_broken_frames_kill_the_connection ... ok
+test an_abrupt_disconnect_takes_the_venue_out_at_once_then_it_reconnects ... ok
+test a_failed_snapshot_fetch_reconnects_and_retries ... ok
+test binance_server_pings_are_answered ... ok
+test one_venue_down_does_not_disturb_the_other ... ok
+test a_silent_connection_goes_stale_and_is_replaced ... ok
+test bybit_heartbeats_and_an_unanswered_ping_forces_a_reconnect ... ok
+test a_venue_that_is_down_is_retried_with_growing_delays ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.88s
+
+     Running tests/recording.rs (target/release/build/ob-feed/e6ef8e4dfeef98f7/out/recording-e6ef8e4dfeef98f7)
+
+running 3 tests
+test the_format_round_trips ... ok
+test damage_is_detected_not_misread ... ok
+test replay_rebuilds_exactly_the_directly_built_books_every_time ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests/top_of_book.rs (target/release/build/ob-feed/0ba99747e88fd1f1/out/top_of_book-0ba99747e88fd1f1)
+
+running 5 tests
+test binance_newest_sequence_wins_in_both_directions ... ok
+test a_reset_drops_the_overlay ... ok
+test bybit_newest_seq_wins_in_both_directions ... ok
+test bybit_overlay_matches_the_model_after_every_message ... ok
+test binance_overlay_matches_the_model_after_every_message ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/zero_alloc.rs (target/release/build/ob-feed/93ea4989c69ae27f/out/zero_alloc-93ea4989c69ae27f)
+
+running 8 tests
+test errors_resyncs_and_reconnects_allocate_nothing ... ok
+test market_impact_allocates_nothing ... ok
+test logging_and_replay_reading_allocate_nothing ... ok
+test the_counter_counts ... ok
+test aggregator_queries_allocate_nothing ... ok
+test full_depth_steady_state_allocates_nothing ... ok
+test the_feed_thread_over_real_tls_allocates_nothing ... ok
+test parse_apply_publish_allocates_nothing ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running unittests src/lib.rs (target/release/build/ob-net/1b234668660e72ae/out/ob_net-1b234668660e72ae)
+
+running 31 tests
+test http::tests::status_lines ... ok
+test http::tests::chunked_bodies_decode_or_ask_for_more ... ok
+test record::tests::oversized_records_are_rejected ... ok
+test record::tests::tls13_padding_is_stripped ... ok
+test record::tests::content_types_survive ... ok
+test record::tests::tampering_and_reordering_are_rejected ... ok
+test record::tests::round_trip_in_place_every_suite_and_size ... ok
+test ws::frame::tests::close_codes_for_errors ... ok
+test ws::frame::tests::masking_is_its_own_inverse ... ok
+test ws::frame::tests::rfc_6455_examples ... ok
+test ws::frame::tests::length_forms_and_incomplete_input ... ok
+test ws::frame::tests::strictness ... ok
+test ws::handshake::tests::a_valid_response_and_frames_in_the_same_read ... ok
+test ws::handshake::tests::accept_key_rfc_6455_example ... ok
+test ws::handshake::tests::base64_rfc_4648_vectors ... ok
+test ws::handshake::tests::header_names_and_tokens_are_case_insensitive ... ok
+test ws::handshake::tests::incomplete_then_complete ... ok
+test ws::handshake::tests::request_has_every_required_header ... ok
+test ws::handshake::tests::refusals ... ok
+test ws::message::tests::a_single_frame_text_message_is_zero_copy ... ok
+test ws::message::tests::close_frames ... ok
+test ws::message::tests::fragmentation_errors ... ok
+test ws::message::tests::fragments_are_reassembled_with_control_frames_in_between ... ok
+test ws::message::tests::utf8_validation_is_optional ... ok
+test session::tests::session_tickets_enable_resumption ... ok
+test session::tests::key_updates_in_both_directions ... ok
+test session::tests::a_record_after_close_notify_is_an_error ... ok
+test session::tests::close_notify_then_nothing_more ... ok
+test session::tests::the_server_reads_what_we_send ... ok
+test session::tests::every_suite_and_split_gives_exactly_the_servers_plaintext ... ok
+test session::tests::a_changed_bit_is_an_error ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/conn.rs (target/release/build/ob-net/4fcb632ae10f725c/out/conn-4fcb632ae10f725c)
+
+running 9 tests
+test a_refused_upgrade_is_reported_with_its_status ... ok
+test a_dropped_connection_is_an_error_not_a_hang ... ok
+test an_untrusted_certificate_is_refused ... ok
+test client_messages_are_masked_text_frames ... ok
+test all_recorded_messages_arrive_intact_across_record_boundaries_spinning ... ok
+test all_recorded_messages_arrive_intact_across_record_boundaries_blocking ... ok
+test frames_sent_with_the_handshake_response_are_not_lost ... ok
+test pings_are_answered_and_closes_echoed ... ok
+test a_silent_server_hits_the_connect_deadline ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.02s
+
+     Running tests/http.rs (target/release/build/ob-net/faa7a962e3072f24/out/http-faa7a962e3072f24)
+
+running 5 tests
+test binance_rest_snapshot_live ... ignored, needs the internet
+test errors_are_errors ... ok
+test a_content_length_body_arriving_in_pieces ... ok
+test a_chunked_body ... ok
+test a_server_that_never_answers_times_out ... ok
+
+test result: ok. 4 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.81s
+
+     Running tests/latency.rs (target/release/build/ob-net/1b741a4669452e78/out/latency-1b741a4669452e78)
+
+running 2 tests
+test qos_vs_default_wakeup_latency ... ignored, measurement, ~30 s; run with --ignored --nocapture
+test spin_vs_block_wakeup_latency ... ignored, measurement, ~7 s; run with --ignored --nocapture
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/live.rs (target/release/build/ob-net/ef8564c8edbb655f/out/live-ef8564c8edbb655f)
+
+running 2 tests
+test binance_live ... ignored, needs the internet
+test bybit_live ... ignored, needs the internet
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/stream.rs (target/release/build/ob-net/322f615d8a3cc9d7/out/stream-322f615d8a3cc9d7)
+
+running 5 tests
+test recorded_exchange_messages_decode_zero_copy ... ok
+test chunking_never_changes_the_outcome ... ok
+test headers_agree_with_tungstenite ... ok
+test plausible_headers_agree_with_tungstenite ... ok
+test messages_round_trip_in_any_chunking ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running unittests src/lib.rs (target/release/build/ob-os/116ae7344460ca57/out/ob_os-116ae7344460ca57)
+
+running 4 tests
+test macos_order::qos_must_come_before_the_affinity_tag ... ok
+test tests::thread_tuning_reports_what_it_did ... ok
+test tests::socket_options_apply_or_say_why_not ... ok
+test tests::kernel_receive_timestamps_arrive_with_the_data ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/release/build/ob-parse/241b28f394e54051/out/ob_parse-241b28f394e54051)
+
+running 10 tests
+test decimal::tests::errors_match_the_reference ... ok
+test decimal::tests::exchange_formats ... ok
+test decimal::tests::spec_level_parsers_match_the_spec ... ok
+test json::tests::rejects_invalid_json ... ok
+test json::tests::booleans ... ok
+test json::tests::quoted_decimals_match_the_reference ... ok
+test json::tests::skips_every_kind_of_value ... ok
+test json::tests::unsigned_integers ... ok
+test json::tests::depth_limit_is_enforced_without_recursion ... ok
+test json::tests::u64_matches_std ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/binance.rs (target/release/build/ob-parse/b5d8900c0649d3ad/out/binance-b5d8900c0649d3ad)
+
+running 16 tests
+test duplicate_known_fields_are_rejected ... ok
+test bad_numbers_are_classified_for_the_policy ... ok
+test first_snapshot_values_are_exact ... ok
+test missing_fields_are_reported ... ok
+test field_order_whitespace_and_unknown_fields_dont_matter ... ok
+test level_shapes_are_strict ... ok
+test not_json_or_wrong_types ... ok
+test every_recorded_frame_parses ... ok
+test responses_and_unknown_messages ... ok
+test the_buffer_is_reused_without_leftovers ... ok
+test wrong_event_or_symbol_is_rejected ... ok
+test too_many_levels_is_rejected ... ok
+test recorded_frames_form_an_unbroken_sequence ... ok
+test every_truncation_of_a_real_frame_is_an_error_not_a_panic ... ok
+test replaying_snapshots_keeps_the_book_exact ... ok
+test treating_snapshots_as_updates_leaves_stale_levels ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/binance_differential.rs (target/release/build/ob-parse/0d5d07758b310ba1/out/binance_differential-0d5d07758b310ba1)
+
+running 5 tests
+test recorded_frames_agree ... ok
+test arbitrary_bytes_never_panic ... ok
+test generators_exercise_both_accept_and_reject ... ok
+test mutated_real_frames_agree ... ok
+test generated_messages_agree ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+
+     Running tests/binance_rest.rs (target/release/build/ob-parse/d077822ebde0f32c/out/binance_rest-d077822ebde0f32c)
+
+running 3 tests
+test edge_cases_agree ... ok
+test the_recorded_snapshot ... ok
+test mutated_snapshots_agree ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.60s
+
+     Running tests/bybit.rs (target/release/build/ob-parse/9e4035184afabc2e/out/bybit-9e4035184afabc2e)
+
+running 19 tests
+test a_big_delta_needs_capacity_for_twice_the_depth ... ok
+test a_snapshot_with_a_zero_quantity_is_refused ... ok
+test cts_is_optional_everything_else_required ... ok
+test deltas_report_suspicious_deletes ... ok
+test duplicates_are_rejected_at_both_levels ... ok
+test bad_numbers_are_classified_for_the_policy ... ok
+test field_order_whitespace_and_unknown_fields_dont_matter ... ok
+test every_recorded_frame_parses ... ok
+test responses ... ok
+test sequence_classification ... ok
+test the_buffer_is_reused_without_leftovers ... ok
+test wrong_topic_type_or_symbol ... ok
+test too_many_levels_is_rejected ... ok
+test a_restart_delta_replaces_the_book ... ok
+test recorded_deltas_are_strictly_sequential ... ok
+test snapshot_and_delta_values_are_exact ... ok
+test ignoring_the_snapshot_type_leaves_stale_levels ... ok
+test replaying_recorded_messages_matches_a_model ... ok
+test every_truncation_of_a_real_frame_is_an_error_not_a_panic ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bybit_differential.rs (target/release/build/ob-parse/6c8a22260a9c57f9/out/bybit_differential-6c8a22260a9c57f9)
+
+running 5 tests
+test recorded_frames_agree ... ok
+test arbitrary_bytes_never_panic ... ok
+test generators_exercise_both_accept_and_reject ... ok
+test mutated_real_frames_agree ... ok
+test generated_messages_agree ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.30s
+
+     Running tests/differential.rs (target/release/build/ob-parse/cd39a41d3eaa0169/out/differential-cd39a41d3eaa0169)
+
+running 7 tests
+test error_type_is_unchanged ... ok
+test every_length_from_1_to_20_with_and_without_a_point ... ok
+test exhaustive_short_strings ... ok
+test fast_parsers_match_reference_on_arbitrary_bytes ... ok
+test fast_parsers_match_reference_on_near_misses ... ok
+test fast_parsers_match_reference_on_well_formed ... ok
+test spec_level_calls_match ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/lib.rs (target/release/build/ob-simd/57825e921faa2c5b/out/ob_simd-57825e921faa2c5b)
+
+running 3 tests
+test tests::real_levels ... ok
+test tests::arbitrary_bytes ... ok
+test tests::kernel_matches_model ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+     Running unittests src/lib.rs (target/release/build/ob-sync/838c59380fcbde20/out/ob_sync-838c59380fcbde20)
+
+running 10 tests
+test book::tests::an_unpublished_book_reads_as_down ... ok
+test book::tests::empty_sides_read_as_none ... ok
+test book::tests::a_full_book_publishes_every_level ... ok
+test book::tests::publish_then_read_round_trips ... ok
+test book::tests::torn_values_are_clamped_not_trusted ... ok
+test seqlock::tests::the_shared_state_is_cache_line_isolated ... ok
+test book::tests::layout_puts_the_top_of_book_in_one_cache_line ... ok
+test seqlock::tests::writes_are_seen_and_versions_grow_by_two ... ok
+test spsc::tests::fifo_and_full ... ok
+test spsc::tests::wraps_around_many_times ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/loom.rs (target/release/build/ob-sync/59c815478704d3fb/out/loom-59c815478704d3fb)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/overlay.rs (target/release/build/ob-sync/182b4002611c8b01/out/overlay-182b4002611c8b01)
+
+running 4 tests
+test an_overlay_on_an_empty_book_is_the_whole_book ... ok
+test without_an_overlay_it_is_the_plain_book ... ok
+test the_overlay_replaces_stale_better_levels_and_keeps_deeper_ones ... ok
+test matches_the_model ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/spsc_stress.rs (target/release/build/ob-sync/4fd50e2570f4e665/out/spsc_stress-4fd50e2570f4e665)
+
+running 1 test
+test millions_of_records_cross_threads_intact ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/stress.rs (target/release/build/ob-sync/e08362cc0991772c/out/stress-e08362cc0991772c)
+
+running 2 tests
+test without_the_protocol_reads_do_tear ... ok
+test readers_never_see_a_torn_book ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.00s
+
+   Doc-tests ob_agg
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ob_bench
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ob_core
+
+running 2 tests
+test crates/ob-core/src/book.rs - book::OrderBook (line 250) ... ok
+test crates/ob-core/src/spec.rs - spec (line 6) ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 1.45s; merged doctests compilation took 1.29s
+   Doc-tests ob_feed
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ob_net
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ob_os
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ob_parse
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ob_simd
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ob_sync
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

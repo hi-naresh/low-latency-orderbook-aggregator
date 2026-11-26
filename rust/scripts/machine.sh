@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 # Machine description for benchmark results (sourced by bench-tails.sh and
 # run-benchmarks.sh). POSIX sh; Linux (the target) and macOS (Intel or Apple Silicon).
 
@@ -26,7 +27,10 @@ largest_cache() {
         # (perflevel0 = performance cores).
         for key in hw.l3cachesize hw.l2cachesize hw.perflevel0.l2cachesize; do
             v="$(sysctl -n "$key" 2>/dev/null || echo 0)"
-            [ "$v" -gt "$largest" ] && largest="$v"
+            case "$v" in
+                ''|\?*) v=0 ;;
+            esac
+            [ "$v" -gt "$largest" ] 2>/dev/null && largest="$v"
         done
     fi
     echo "$largest"
