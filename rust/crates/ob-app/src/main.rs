@@ -43,7 +43,7 @@ use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 
 use ob_agg::{Action, Aggregator, Config, Quote, VenueConfig, VenueState};
-use ob_core::InstrumentSpec;
+use ob_core::{InstrumentSpec, Qty};
 use ob_feed::driver::{self, Tapped};
 use ob_feed::log::{LogReader, log_channel};
 use ob_feed::probe::{NoProbe, Probe, StageProbe, WallClock};
@@ -332,15 +332,7 @@ fn live(opts: LiveOpts) -> Result<(), String> {
             .map_err(|e| e.to_string())?;
     }
 
-    let recorder: Option<Recorder> = match &opts.record {
-        None => None,
-        Some(path) => {
-            let file = File::create(path).map_err(|e| format!("{path}: {e}"))?;
-            let w = RecordWriter::new(BufWriter::with_capacity(1 << 20, file))
-                .map_err(|e| format!("{path}: {e}"))?;
-            Some(Arc::new(Mutex::new(w)))
-        }
-    };
+    let recorder = opts.record.as_deref().map(open_recorder).transpose()?;
     // The probe's type is chosen here, at compile time per branch: without `--latency`
     // the feeds are built with `NoProbe` and the timing code vanishes.
     if opts.lock_memory {
@@ -357,28 +349,8 @@ fn live(opts: LiveOpts) -> Result<(), String> {
     for line in reports {
         println!("{line}"); // ends once both feed threads have reported
     }
-    let s = opts.socket;
-    if s != ob_net::SocketTuning::default() {
-        // Socket options are applied per connection inside the feeds; show here what
-        // this OS supports, on a throwaway local socket.
-        let probe_sock = std::net::TcpListener::bind("127.0.0.1:0")
-            .and_then(|l| std::net::TcpStream::connect(l.local_addr()?))
-            .map_err(|e| e.to_string())?;
-        if let Some(us) = s.busy_poll_us {
-            println!(
-                "busy poll {us} µs: {:?}",
-                ob_os::set_busy_poll(&probe_sock, us)
-            );
-        }
-        if s.quickack {
-            println!("quickack: {:?}", ob_os::set_quickack(&probe_sock));
-        }
-        if s.kernel_timestamps {
-            println!(
-                "kernel timestamps: {:?}",
-                ob_os::enable_rx_timestamps(&probe_sock)
-            );
-        }
+    if opts.socket != ob_net::SocketTuning::default() {
+        print_socket_support(opts.socket)?;
     }
     let logger_done = Arc::new(AtomicBool::new(false));
     let logger = spawn_logger(
@@ -387,27 +359,8 @@ fn live(opts: LiveOpts) -> Result<(), String> {
         Arc::clone(&logger_done),
     )?;
 
-    let mut agg = Aggregator::new(Config::default());
-    // Taker fees: Binance USDⓈ-M 0.05%, Bybit linear 0.055% (base tier).
-    for (name, depth, fee, books) in [
-        (
-            "binance",
-            if opts.full_depth { ob_sync::DEPTH } else { 20 },
-            500,
-            &bn_books,
-        ),
-        ("bybit", 50, 550, &bb_books),
-    ] {
-        agg.add_venue(
-            VenueConfig {
-                name,
-                depth,
-                taker_fee_ppm: fee,
-            },
-            books.clone(),
-        )
-        .ok_or("too many venues")?;
-    }
+    let binance_depth = if opts.full_depth { ob_sync::DEPTH } else { 20 };
+    let mut agg = aggregator(binance_depth, &bn_books, &bb_books)?;
 
     let started = Instant::now();
     let mut versions = [bn_books.version(), bb_books.version()];
@@ -438,6 +391,86 @@ fn live(opts: LiveOpts) -> Result<(), String> {
     let exits = [bn, bb].map(|t| t.join().map_err(|_| "a feed thread panicked".to_string()));
     logger_done.store(true, Ordering::Release);
     logger.join().map_err(|_| "the logger panicked")?;
+    print_exits(exits)?;
+    if let Some(rec) = recorder {
+        let n = finish_recorder(rec)?;
+        println!(
+            "recorded {n} records to {}",
+            opts.record.unwrap_or_default()
+        );
+    }
+    Ok(())
+}
+
+fn open_recorder(path: &str) -> Result<Recorder, String> {
+    let file = File::create(path).map_err(|e| format!("{path}: {e}"))?;
+    let w = RecordWriter::new(BufWriter::with_capacity(1 << 20, file))
+        .map_err(|e| format!("{path}: {e}"))?;
+    Ok(Arc::new(Mutex::new(w)))
+}
+
+/// Flushes the recording once the feeds have stopped; returns the records written.
+fn finish_recorder(rec: Recorder) -> Result<u64, String> {
+    let w = Arc::try_unwrap(rec)
+        .map_err(|_| "recorder still shared")?
+        .into_inner()
+        .map_err(|_| "recorder poisoned")?;
+    let n = w.records();
+    w.finish().map_err(|e| e.to_string())?;
+    Ok(n)
+}
+
+/// Socket options are applied per connection inside the feeds; this shows what the OS
+/// supports, on a throwaway local socket.
+fn print_socket_support(s: ob_net::SocketTuning) -> Result<(), String> {
+    let probe_sock = std::net::TcpListener::bind("127.0.0.1:0")
+        .and_then(|l| std::net::TcpStream::connect(l.local_addr()?))
+        .map_err(|e| e.to_string())?;
+    if let Some(us) = s.busy_poll_us {
+        println!(
+            "busy poll {us} µs: {:?}",
+            ob_os::set_busy_poll(&probe_sock, us)
+        );
+    }
+    if s.quickack {
+        println!("quickack: {:?}", ob_os::set_quickack(&probe_sock));
+    }
+    if s.kernel_timestamps {
+        println!(
+            "kernel timestamps: {:?}",
+            ob_os::enable_rx_timestamps(&probe_sock)
+        );
+    }
+    Ok(())
+}
+
+/// The aggregator over both venues, with their base-tier taker fees (Binance USDⓈ-M
+/// 0.05%, Bybit linear 0.055%).
+fn aggregator(
+    binance_depth: usize,
+    binance: &BookReader,
+    bybit: &BookReader,
+) -> Result<Aggregator, String> {
+    let mut agg = Aggregator::new(Config::default());
+    for (name, depth, taker_fee_ppm, books) in [
+        ("binance", binance_depth, 500, binance),
+        ("bybit", 50, 550, bybit),
+    ] {
+        agg.add_venue(
+            VenueConfig {
+                name,
+                depth,
+                taker_fee_ppm,
+            },
+            books.clone(),
+        )
+        .ok_or("too many venues")?;
+    }
+    Ok(agg)
+}
+
+/// Each feed's counters, then the latency tables (when `--latency` was given).
+fn print_exits(exits: [Result<FeedExit, String>; 2]) -> Result<(), String> {
     let mut latency = String::new();
     for (name, exit) in ["binance", "bybit"].iter().zip(exits) {
         let exit = exit?;
@@ -465,18 +498,6 @@ fn live(opts: LiveOpts) -> Result<(), String> {
         );
     }
     print!("{latency}");
-    if let Some(rec) = recorder {
-        let w = Arc::try_unwrap(rec)
-            .map_err(|_| "recorder still shared")?
-            .into_inner()
-            .map_err(|_| "recorder poisoned")?;
-        let n = w.records();
-        w.finish().map_err(|e| e.to_string())?;
-        println!(
-            "recorded {n} records to {}",
-            opts.record.unwrap_or_default()
-        );
-    }
     Ok(())
 }
 
@@ -637,41 +658,13 @@ fn print_summary(
         quote(bid),
         quote(ask)
     );
-    // 1 BTC, and 25 BTC: a size the 20-level streams often can't fully see (step 19).
+    // 1 BTC, and 25 BTC: a size the 20-level streams often can't fully see.
     for size in ["1", "25"] {
         let Ok(qty) = spec.parse_qty(size) else {
             continue;
         };
         for action in [Action::Buy, Action::Sell] {
-            let plan = agg.optimal_execution(action, qty, now);
-            let route: Vec<String> = plan
-                .children()
-                .iter()
-                .map(|c| {
-                    format!(
-                        "{} {}",
-                        agg.venue(c.venue).map_or("?", |v| v.name),
-                        spec.fmt_qty(c.qty)
-                    )
-                })
-                .collect();
-            let _ = writeln!(
-                out,
-                "{:<4} {size:>2} BTC: avg {}, incl. fees {}  via {}{}",
-                if action == Action::Buy { "buy" } else { "sell" },
-                plan.vwap()
-                    .map_or("-".into(), |p| spec.fmt_px(p).to_string()),
-                plan.vwap_including_fees()
-                    .map_or("-".into(), |p| spec.fmt_px(p).to_string()),
-                route.join(" + "),
-                if plan.filled.is_zero() {
-                    "(no live venue)"
-                } else if plan.partial {
-                    "  (PARTIAL: not enough visible depth)"
-                } else {
-                    ""
-                }
-            );
+            execution_line(&mut out, agg, spec, action, size, qty, now);
         }
     }
     let arb = agg.scan_arbitrage(now);
@@ -681,4 +674,46 @@ fn print_summary(
         arb.best.map_or("none".to_string(), |a| format!("{a:?}"))
     );
     print!("{out}");
+}
+
+/// One line of the summary: the fee-aware plan to fill `qty` across the venues.
+fn execution_line(
+    out: &mut String,
+    agg: &Aggregator,
+    spec: &InstrumentSpec,
+    action: Action,
+    size: &str,
+    qty: Qty,
+    now: u64,
+) {
+    use std::fmt::Write as _;
+    let plan = agg.optimal_execution(action, qty, now);
+    let route: Vec<String> = plan
+        .children()
+        .iter()
+        .map(|c| {
+            format!(
+                "{} {}",
+                agg.venue(c.venue).map_or("?", |v| v.name),
+                spec.fmt_qty(c.qty)
+            )
+        })
+        .collect();
+    let _ = writeln!(
+        out,
+        "{:<4} {size:>2} BTC: avg {}, incl. fees {}  via {}{}",
+        if action == Action::Buy { "buy" } else { "sell" },
+        plan.vwap()
+            .map_or("-".into(), |p| spec.fmt_px(p).to_string()),
+        plan.vwap_including_fees()
+            .map_or("-".into(), |p| spec.fmt_px(p).to_string()),
+        route.join(" + "),
+        if plan.filled.is_zero() {
+            "(no live venue)"
+        } else if plan.partial {
+            "  (PARTIAL: not enough visible depth)"
+        } else {
+            ""
+        }
+    );
 }

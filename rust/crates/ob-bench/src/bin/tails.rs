@@ -61,11 +61,39 @@ fn main() {
         }
     };
     let clock = quanta::Clock::new();
-    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-    let n = |base: usize| ((base as f64 * o.scale) as usize).max(1000);
+    header(&o, &clock);
+    scenario::tune_thread(o.rt);
     let run = |name: &str| o.only.as_deref().is_none_or(|x| x == name);
+    if run("pipeline") {
+        pipeline(&o, &clock);
+    }
+    if run("wire") {
+        wire(&o, &clock);
+    }
+    if run("readpath") {
+        readpath(&o, &clock);
+    }
+    if run("anatomy") {
+        anatomy(&o, &clock);
+    }
+    if run("jitter") {
+        jitter(&o, &clock);
+    }
+    if run("reader") {
+        reader(&o, &clock);
+    }
+}
 
-    println!("ob-bench tails (step 23)");
+impl Opts {
+    /// `base` samples, scaled by `--quick`, at least 1,000.
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    fn n(&self, base: usize) -> usize {
+        ((base as f64 * self.scale) as usize).max(1000)
+    }
+}
+
+fn header(o: &Opts, clock: &quanta::Clock) {
+    println!("ob-bench tails");
     println!(
         "  arch {} · os {} · {} hardware threads · real-time priority {}",
         std::env::consts::ARCH,
@@ -83,145 +111,149 @@ fn main() {
     );
     println!(
         "  timer: one clock-read pair costs ~{} ns (subtract nothing: it is part of every row)",
-        timer_floor(&clock)
+        timer_floor(clock)
     );
     println!(
         "  `~` after a value: fewer than 10 samples beyond that percentile (too few to trust)"
     );
-    scenario::tune_thread(o.rt);
+}
 
-    let kinds = [Kind::BinanceTop, Kind::BybitTop, Kind::BinanceFull];
-    if run("pipeline") {
-        section("1. Pipeline, warm: parse → apply → publish, back to back (in process)");
-        for kind in kinds {
-            let t = Instant::now();
-            let r = scenario::pipeline(kind, n(1_000_000), None, &clock);
-            feed_report(kind, &r, t);
-        }
+const PIPELINE_KINDS: [Kind; 3] = [Kind::BinanceTop, Kind::BybitTop, Kind::BinanceFull];
+const WIRE_KINDS: [Kind; 2] = [Kind::BinanceTop, Kind::BybitTop];
+
+/// Sections 1 and 2: the in-process pipeline, with warm and with flushed caches.
+fn pipeline(o: &Opts, clock: &quanta::Clock) {
+    section("1. Pipeline, warm: parse → apply → publish, back to back (in process)");
+    for kind in PIPELINE_KINDS {
+        let t = Instant::now();
+        let r = scenario::pipeline(kind, o.n(1_000_000), None, clock);
+        feed_report(kind, &r, t);
+    }
+    section(&format!(
+        "2. Pipeline, cold: the same, reading {} MiB between messages to flush the caches",
+        o.cold_bytes >> 20
+    ));
+    let cold = Cold {
+        bytes: o.cold_bytes,
+    };
+    for kind in PIPELINE_KINDS {
+        let t = Instant::now();
+        let r = scenario::pipeline(kind, o.n(10_000), Some(cold), clock);
+        feed_report(kind, &r, t);
+    }
+}
+
+/// Section 3: a local TLS server sending open loop, busy and sparse.
+fn wire(o: &Opts, clock: &quanta::Clock) {
+    for (label, gap_ns, count) in [
+        ("busy: mean gap 50 µs (20,000 msg/s)", 50_000, 200_000),
+        ("sparse: mean gap 1 ms (1,000 msg/s)", 1_000_000, 30_000),
+    ] {
         section(&format!(
-            "2. Pipeline, cold: the same, reading {} MiB between messages to flush the caches",
-            o.cold_bytes >> 20
+            "3. Wire, open loop, {label}: local TLS server → kernel → read + TLS + WS → parse → apply → publish"
         ));
-        for kind in kinds {
+        for kind in WIRE_KINDS {
             let t = Instant::now();
-            let r = scenario::pipeline(
-                kind,
-                n(10_000),
-                Some(Cold {
-                    bytes: o.cold_bytes,
-                }),
-                &clock,
-            );
+            let r = scenario::wire(kind, o.n(count), gap_ns, o.rt, clock);
             feed_report(kind, &r, t);
         }
     }
-    if run("wire") {
-        for (label, gap_ns, count) in [
-            ("busy: mean gap 50 µs (20,000 msg/s)", 50_000, 200_000),
-            ("sparse: mean gap 1 ms (1,000 msg/s)", 1_000_000, 30_000),
+}
+
+/// Section 5: the read stage split into `recv`, TLS and WebSocket decoding.
+fn readpath(o: &Opts, clock: &quanta::Clock) {
+    section("5. The read stage, taken apart (rustls in memory; recv on loopback)");
+    for kind in WIRE_KINDS {
+        let t = Instant::now();
+        let r = ob_bench::readpath::read_breakdown(kind, o.n(200_000), clock);
+        println!(
+            "  {} ({:.1} s, mean record {} B)",
+            kind.name(),
+            t.elapsed().as_secs_f64(),
+            r.mean_bytes
+        );
+        for (name, d) in [
+            ("recv, data waiting", &r.recv_data),
+            ("recv, nothing yet (each idle spin)", &r.recv_empty),
+            ("rustls: take in (read_tls)", &r.tls_take),
+            ("rustls: decrypt + Vec (process)", &r.tls_decrypt),
+            ("rustls: copy out (reader.read)", &r.tls_copy),
+            ("rustls: all three", &r.tls_total),
+            ("WebSocket decode", &r.ws),
+            ("AES-128-GCM alone, in place (floor)", &r.aead),
+            ("ours: decrypt in place", &r.ours),
         ] {
-            section(&format!(
-                "3. Wire, open loop, {label}: local TLS server → kernel → read + TLS + WS → parse → apply → publish"
-            ));
-            for kind in [Kind::BinanceTop, Kind::BybitTop] {
-                let t = Instant::now();
-                let r = scenario::wire(kind, n(count), gap_ns, o.rt, &clock);
-                feed_report(kind, &r, t);
-            }
+            println!("{}", row(&format!("  {name}"), d));
         }
     }
-    if run("readpath") {
-        section("5. The read stage, taken apart (rustls in memory; recv on loopback)");
-        for kind in [Kind::BinanceTop, Kind::BybitTop] {
-            let t = Instant::now();
-            let r = ob_bench::readpath::read_breakdown(kind, n(200_000), &clock);
+}
+
+/// Section 6: where the time goes in the slowest recorded messages.
+#[allow(clippy::cast_precision_loss)] // percentages and per-byte figures for display
+fn anatomy(o: &Opts, clock: &quanta::Clock) {
+    println!("\n6. Message anatomy: the slowest recorded messages, parse vs the rest (medians)");
+    println!(
+        "  {:<28} {:>7} {:>7} {:>10} {:>10} {:>12} {:>8}",
+        "", "bytes", "levels", "whole", "parse", "apply+pub", "parse/B"
+    );
+    for kind in [Kind::BybitTop, Kind::BinanceFull] {
+        let all = ob_bench::anatomy::anatomy(kind, o.n(2_000).min(2_000), clock);
+        let (p, w): (u64, u64) = all
+            .iter()
+            .fold((0, 0), |(p, w), a| (p + a.parse_ns, w + a.whole_ns));
+        let share = 100.0 * p as f64 / w.max(1) as f64;
+        println!(
+            "  {} (parse is {share:.0}% of all handling time)",
+            kind.name()
+        );
+        for a in all.iter().take(5) {
+            let per_byte = a.parse_ns as f64 / a.bytes.max(1) as f64;
             println!(
-                "  {} ({:.1} s, mean record {} B)",
-                kind.name(),
-                t.elapsed().as_secs_f64(),
-                r.mean_bytes
+                "    line {:<22} {:>7} {:>7} {:>10} {:>10} {:>12} {:>6.2} ns",
+                a.line,
+                a.bytes,
+                a.levels,
+                human(a.whole_ns),
+                human(a.parse_ns),
+                human(a.rest_ns()),
+                per_byte
             );
-            for (name, d) in [
-                ("recv, data waiting", &r.recv_data),
-                ("recv, nothing yet (each idle spin)", &r.recv_empty),
-                ("rustls: take in (read_tls)", &r.tls_take),
-                ("rustls: decrypt + Vec (process)", &r.tls_decrypt),
-                ("rustls: copy out (reader.read)", &r.tls_copy),
-                ("rustls: all three", &r.tls_total),
-                ("WebSocket decode", &r.ws),
-                ("AES-128-GCM alone, in place (floor)", &r.aead),
-                ("ours: decrypt in place (step 24)", &r.ours),
-            ] {
-                println!("{}", row(&format!("  {name}"), d));
-            }
         }
     }
-    if run("anatomy") {
-        println!(
-            "\n6. Message anatomy: the slowest recorded messages, parse vs the rest (medians)"
-        );
-        println!(
-            "  {:<28} {:>7} {:>7} {:>10} {:>10} {:>12} {:>8}",
-            "", "bytes", "levels", "whole", "parse", "apply+pub", "parse/B"
-        );
-        for kind in [Kind::BybitTop, Kind::BinanceFull] {
-            let all = ob_bench::anatomy::anatomy(kind, n(2_000).min(2_000), &clock);
-            let (p, w): (u64, u64) = all
-                .iter()
-                .fold((0, 0), |(p, w), a| (p + a.parse_ns, w + a.whole_ns));
-            #[allow(clippy::cast_precision_loss)]
-            let share = 100.0 * p as f64 / w.max(1) as f64;
-            println!(
-                "  {} (parse is {share:.0}% of all handling time)",
-                kind.name()
-            );
-            for a in all.iter().take(5) {
-                #[allow(clippy::cast_precision_loss)]
-                let per_byte = a.parse_ns as f64 / a.bytes.max(1) as f64;
-                println!(
-                    "    line {:<22} {:>7} {:>7} {:>10} {:>10} {:>12} {:>6.2} ns",
-                    a.line,
-                    a.bytes,
-                    a.levels,
-                    human(a.whole_ns),
-                    human(a.parse_ns),
-                    human(a.rest_ns()),
-                    per_byte
-                );
-            }
-        }
-    }
-    if run("jitter") {
-        let secs = if o.scale < 1.0 { 2 } else { 10 };
-        println!(
-            "\n7. Jitter: a thread spinning on the clock for {secs} s; every gap is the OS taking the CPU"
-        );
-        let j = ob_bench::jitter::jitter(std::time::Duration::from_secs(secs), &clock);
-        println!("  {:<40} {HEADER}", "");
-        println!("{}", row("gap between consecutive clock reads", &j.gaps));
-        #[allow(clippy::cast_precision_loss)]
-        let lost = 100.0 * j.lost_ns as f64 / j.elapsed_ns.max(1) as f64;
-        #[allow(clippy::cast_precision_loss)]
-        let per_s = |n: u64| n as f64 * 1e9 / j.elapsed_ns.max(1) as f64;
-        println!(
-            "    interruptions per second: {:.0} over 1 µs, {:.0} over 10 µs, {:.1} over 100 µs; CPU time lost: {lost:.3}%",
-            per_s(j.over_1us),
-            per_s(j.over_10us),
-            per_s(j.over_100us)
-        );
-    }
-    if run("reader") {
-        for (label, busy) in [
-            ("writer idle", false),
-            ("writer busy: a message every 10 µs", true),
-        ] {
-            section(&format!(
-                "4. Reader: aggregator queries on another thread, {label}"
-            ));
-            let t = Instant::now();
-            let r = scenario::reader(n(1_000_000), busy, 10_000, o.rt, &clock);
-            reader_report(&r, t);
-        }
+}
+
+/// Section 7: how often the OS takes the CPU from a spinning thread.
+#[allow(clippy::cast_precision_loss)] // rates and percentages for display
+fn jitter(o: &Opts, clock: &quanta::Clock) {
+    let secs = if o.scale < 1.0 { 2 } else { 10 };
+    println!(
+        "\n7. Jitter: a thread spinning on the clock for {secs} s; every gap is the OS taking the CPU"
+    );
+    let j = ob_bench::jitter::jitter(std::time::Duration::from_secs(secs), clock);
+    println!("  {:<40} {HEADER}", "");
+    println!("{}", row("gap between consecutive clock reads", &j.gaps));
+    let lost = 100.0 * j.lost_ns as f64 / j.elapsed_ns.max(1) as f64;
+    let per_s = |n: u64| n as f64 * 1e9 / j.elapsed_ns.max(1) as f64;
+    println!(
+        "    interruptions per second: {:.0} over 1 µs, {:.0} over 10 µs, {:.1} over 100 µs; CPU time lost: {lost:.3}%",
+        per_s(j.over_1us),
+        per_s(j.over_10us),
+        per_s(j.over_100us)
+    );
+}
+
+/// Section 4: aggregator queries on another thread, with the writer idle and busy.
+fn reader(o: &Opts, clock: &quanta::Clock) {
+    for (label, busy) in [
+        ("writer idle", false),
+        ("writer busy: a message every 10 µs", true),
+    ] {
+        section(&format!(
+            "4. Reader: aggregator queries on another thread, {label}"
+        ));
+        let t = Instant::now();
+        let r = scenario::reader(o.n(1_000_000), busy, 10_000, o.rt, clock);
+        reader_report(&r, t);
     }
 }
 
@@ -284,8 +316,8 @@ fn feed_report(kind: Kind, r: &FeedResult, started: Instant) {
                     "line {} ({} B): mean {} (without the worst), max {}",
                     c.line,
                     c.bytes,
-                    ob_bench::stats::human(c.mean_ns),
-                    ob_bench::stats::human(c.max_ns)
+                    human(c.mean_ns),
+                    human(c.max_ns)
                 )
             })
             .collect();
