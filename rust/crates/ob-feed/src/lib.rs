@@ -9,7 +9,7 @@
 //! * [`backoff`]: reconnect delays with jitter, and the shared monotonic clock.
 //! * [`log`]: binary log records over an SPSC queue, so the feed thread never formats.
 //! * [`probe`]: per-message stage timings (rdtsc) and latency histograms; free when off.
-//! * [`record`]: a recording format, and replay through the same feed code.
+//! * [`recording`]: a recording format, and replay through the same feed code.
 #![forbid(unsafe_code)]
 
 pub mod backoff;
@@ -18,7 +18,7 @@ pub mod feed;
 pub mod full_depth;
 pub mod log;
 pub mod probe;
-pub mod record;
+pub mod recording;
 pub mod venue;
 pub mod venues;
 

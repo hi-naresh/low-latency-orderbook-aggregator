@@ -47,7 +47,7 @@ use ob_core::InstrumentSpec;
 use ob_feed::driver::{self, Tapped};
 use ob_feed::log::{LogReader, log_channel};
 use ob_feed::probe::{NoProbe, Probe, StageProbe, WallClock};
-use ob_feed::record::{Frame, Kind, RecordReader, RecordWriter, Replay, ReplayFeed};
+use ob_feed::recording::{Frame, Kind, RecordReader, RecordWriter, Replay, ReplayFeed};
 use ob_feed::{Binance, BinanceFullDepth, Bybit, Feed, FeedConfig, FeedStats, Venue, mono_ns};
 use ob_sync::{BookReader, Snapshot, book_channel};
 

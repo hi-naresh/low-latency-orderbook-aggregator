@@ -5,7 +5,7 @@
 use std::io::Cursor;
 
 use ob_core::InstrumentSpec;
-use ob_feed::record::{Frame, Kind, RecordReader, RecordWriter, Replay, ReplayFeed};
+use ob_feed::recording::{Frame, Kind, RecordReader, RecordWriter, Replay, ReplayFeed};
 use ob_feed::{Binance, Bybit, Commands, Feed, FeedConfig, Venue};
 use ob_sync::{BookReader, Snapshot, book_channel};
 

@@ -23,7 +23,7 @@ use ob_core::{InstrumentSpec, Px};
 use ob_feed::driver;
 use ob_feed::log::{LogEvent, log_channel};
 use ob_feed::probe::{NoProbe, Probe, StageProbe, WallClock};
-use ob_feed::record::{Frame, Kind, RecordReader, RecordWriter};
+use ob_feed::recording::{Frame, Kind, RecordReader, RecordWriter};
 use ob_feed::{Binance, Bybit, Commands, Feed, FeedConfig, FeedEvent, Venue};
 use ob_net::ws::{Opcode, encode_server_frame, handshake};
 use ob_net::{ConnConfig, tls};
