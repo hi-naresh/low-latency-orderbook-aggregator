@@ -1,0 +1,117 @@
+aggregator/refresh/nothing_changed                                     [2.7215 ns 2.7399 ns 2.7710 ns]
+aggregator/refresh/both_changed (publish+copy 20x20 & 50x50)           [137.00 ns 140.02 ns 145.15 ns]
+aggregator/best_bids+best_asks                                         [21.939 ns 22.069 ns 22.270 ns]
+aggregator/bid_volume (top level only)                                 [15.299 ns 15.348 ns 15.427 ns]
+aggregator/bid_volume ($10 deep)                                       [41.909 ns 42.126 ns 42.619 ns]
+execution/optimal_execution buy 1 BTC                                  [40.511 ns 41.218 ns 42.112 ns]
+execution/optimal_execution buy 10 BTC                                 [249.72 ns 253.17 ns 259.03 ns]
+execution/optimal_execution buy 60 BTC                                 [794.06 ns 796.66 ns 800.96 ns]
+execution/ask_price_for_volume 1 BTC (no fees)                         [40.376 ns 40.713 ns 41.165 ns]
+apply/sorted_arrays/top-heavy                                          [4.2327 ms 4.2371 ms 4.2420 ms]
+apply/sorted_arrays/top-heavy                                          [−6.7021% −3.3943% −0.8644%] (p = 0.01 < 0.05)
+apply/btreemap/top-heavy                                               [6.8877 ms 7.0151 ms 7.1698 ms]
+apply/btreemap/top-heavy                                               [−0.0387% +2.2980% +4.7133%] (p = 0.06 > 0.05)
+apply/sorted_arrays/uniform-40                                         [4.6720 ms 4.7330 ms 4.8173 ms]
+apply/sorted_arrays/uniform-40                                         [−4.6781% −1.3835% +1.6115%] (p = 0.43 > 0.05)
+apply/btreemap/uniform-40                                              [8.3303 ms 8.4666 ms 8.6347 ms]
+apply/btreemap/uniform-40                                              [−1.1880% +1.0114% +3.5802%] (p = 0.41 > 0.05)
+snapshot/20x20/replace                                                 [41.653 ns 42.999 ns 44.812 ns]
+Found 8 outliers among 50 measurements (16.00%)                        [−2.6919% +0.5260% +4.4445%] (p = 0.78 > 0.05)
+snapshot/20x20/clear+apply_each                                        [642.41 ns 650.46 ns 663.04 ns]
+snapshot/20x20/clear+apply_each                                        [−4.5242% −0.7959% +2.5156%] (p = 0.70 > 0.05)
+snapshot/20x20/btreemap_rebuild                                        [592.06 ns 607.24 ns 626.67 ns]
+snapshot/20x20/btreemap_rebuild                                        [−0.1248% +2.8039% +5.8741%] (p = 0.07 > 0.05)
+read_top/seqlock                                                       [1.7883 ns 1.8001 ns 1.8226 ns]
+read_top/mutex                                                         [6.7134 ns 6.8056 ns 6.9638 ns]
+read_top/rwlock                                                        [11.924 ns 12.090 ns 12.349 ns]
+read_full/20x20/seqlock                                                [14.644 ns 14.796 ns 15.056 ns]
+read_full/20x20/mutex                                                  [24.556 ns 24.716 ns 25.000 ns]
+publish/20x20/seqlock                                                  [19.606 ns 19.851 ns 20.238 ns]
+publish/20x20/mutex                                                    [31.599 ns 31.841 ns 32.205 ns]
+read_full/50x50/seqlock                                                [40.305 ns 40.653 ns 41.156 ns]
+read_full/50x50/mutex                                                  [55.230 ns 55.568 ns 56.102 ns]
+publish/50x50/seqlock                                                  [44.712 ns 44.958 ns 45.349 ns]
+publish/50x50/mutex                                                    [31.629 ns 32.058 ns 32.676 ns]
+contended/read_top/seqlock                                             [1.7725 ns 1.8070 ns 1.8503 ns]
+contended/read_top/mutex                                               [19.418 ns 19.671 ns 19.975 ns]
+contended/read_full_20x20/seqlock                                      [15.689 ns 15.796 ns 15.927 ns]
+contended/read_full_20x20/mutex                                        [47.069 ns 47.688 ns 48.571 ns]
+queue/same_thread/spsc                                                 [7.3016 ns 7.4168 ns 7.6087 ns]
+queue/same_thread/std_mpsc_sync_channel                                [18.268 ns 18.633 ns 19.194 ns]
+queue/cross_thread_push/spsc                                           [19.753 ns 20.634 ns 21.781 ns]
+queue/cross_thread_push/std_mpsc_sync_channel                          [21.447 ns 22.202 ns 23.123 ns]
+binance_depth20/serde_value                                            [387.38 µs 390.45 µs 394.94 µs]
+binance_depth20/serde_value                                            [−24.660% −11.077% −0.8283%] (p = 0.15 > 0.05)
+binance_depth20/serde_typed                                            [156.44 µs 158.40 µs 161.33 µs]
+binance_depth20/serde_typed                                            [−6.1401% −1.8065% +1.8565%] (p = 0.46 > 0.05)
+binance_depth20/ob_parse                                               [55.687 µs 56.518 µs 57.726 µs]
+binance_depth20/ob_parse                                               [−2.5094% +0.4897% +3.2014%] (p = 0.76 > 0.05)
+binance_depth20/ob_parse+book                                          [57.298 µs 58.320 µs 59.905 µs]
+binance_depth20/ob_parse+book                                          [−1.1426% +1.5731% +4.3884%] (p = 0.29 > 0.05)
+bybit/snapshot_50x50/serde_typed                                       [5.3564 µs 5.4044 µs 5.4836 µs]
+bybit/snapshot_50x50/serde_typed                                       [−5.5902% −2.1782% +0.6364%] (p = 0.21 > 0.05)
+bybit/snapshot_50x50/ob_parse                                          [2.1103 µs 2.1480 µs 2.2037 µs]
+bybit/snapshot_50x50/ob_parse                                          [−2.1451% +0.3856% +3.2225%] (p = 0.79 > 0.05)
+bybit/deltas/serde_typed                                               [36.690 µs 37.076 µs 37.549 µs]
+bybit/deltas/serde_typed                                               [−2.9548% −0.6933% +1.5496%] (p = 0.58 > 0.05)
+bybit/deltas/ob_parse                                                  [14.099 µs 14.171 µs 14.295 µs]
+Found 1 outliers among 50 measurements (2.00%)                         [−5.3754% −1.2885% +2.2869%] (p = 0.56 > 0.05)
+bybit/full_path/ob_parse+sequence+book                                 [20.397 µs 20.568 µs 20.843 µs]
+bybit/full_path/ob_parse+sequence+book                                 [−3.5181% +0.1102% +3.5289%] (p = 0.95 > 0.05)
+decimal/mixed/reference                                                [659.82 µs 665.07 µs 673.38 µs]
+== 17:36:03    ob-parse/decimal                                        [−6.7505% −3.7632% −0.9223%] (p = 0.01 < 0.05)
+decimal/mixed/ob_parse                                                 [502.99 µs 510.71 µs 521.22 µs]
+Found 9 outliers among 50 measurements (18.00%)                        [−3.9195% −1.3508% +1.5129%] (p = 0.34 > 0.05)
+decimal/mixed/f64_baseline                                             [975.76 µs 985.57 µs 1.0025 ms]
+decimal/mixed/f64_baseline                                             [−3.5838% −1.2105% +1.5672%] (p = 0.36 > 0.05)
+decimal/binance/reference                                              [599.10 µs 610.59 µs 624.24 µs]
+decimal/binance/reference                                              [−3.2542% −0.7644% +1.6852%] (p = 0.57 > 0.05)
+decimal/binance/ob_parse                                               [450.68 µs 456.44 µs 463.91 µs]
+decimal/binance/ob_parse                                               [−9.2053% −3.7405% +0.9222%] (p = 0.19 > 0.05)
+decimal/binance/f64_baseline                                           [960.98 µs 969.30 µs 981.62 µs]
+decimal/binance/f64_baseline                                           [−9.1119% −3.0482% +1.8057%] (p = 0.39 > 0.05)
+validated/spec_reference                                               [564.96 µs 569.70 µs 577.83 µs]
+validated/spec_reference                                               [−2.0331% −0.0745% +1.7524%] (p = 0.94 > 0.05)
+validated/ob_parse                                                     [453.15 µs 458.36 µs 468.47 µs]
+Found 11 outliers among 50 measurements (22.00%)                       [−1.6196% +1.4664% +5.4333%] (p = 0.46 > 0.05)
+full_depth_apply/sorted arrays (OrderBook<1024>)                       [165.16 µs 166.55 µs 168.48 µs]
+full_depth_apply/sorted arrays (OrderBook<1024>)                       [−3.0675% +0.8975% +4.5278%] (p = 0.66 > 0.05)
+full_depth_apply/price-indexed (TickBook<1024>)                        [32.700 µs 33.584 µs 34.745 µs]
+full_depth_apply/price-indexed (TickBook<1024>)                        [−2.0763% +0.9098% +4.2002%] (p = 0.59 > 0.05)
+full_depth_read/sorted arrays (OrderBook<1024>)                        [241.75 ns 244.88 ns 249.41 ns]
+full_depth_read/price-indexed (TickBook<1024>)                         [683.02 ns 687.38 ns 693.58 ns]
+log_one_event/binary_record                                            [11.490 ns 13.887 ns 15.762 ns]
+log_one_event/format_only                                              [132.94 ns 135.14 ns 137.97 ns]
+log_one_event/format_and_write                                         [992.25 ns 1.0220 µs 1.0599 µs]
+pipeline/binance_depth20                                               [58.327 µs 58.603 µs 59.052 µs]
+pipeline/binance_depth20                                               [−7.0762% −3.9749% −1.1472%] (p = 0.01 < 0.05)
+pipeline/bybit_orderbook50                                             [23.147 µs 23.457 µs 23.999 µs]
+pipeline/bybit_orderbook50                                             [−1.8400% +0.0566% +2.4497%] (p = 0.96 > 0.05)
+pipeline/binance_depth20+bookTicker                                    [210.47 µs 213.82 µs 218.30 µs]
+pipeline/binance_depth20+bookTicker                                    [−8.9819% −4.2868% +0.4514%] (p = 0.08 > 0.05)
+pipeline/bybit_orderbook50+1                                           [80.944 µs 81.591 µs 82.640 µs]
+pipeline/bybit_orderbook50+1                                           [−3.2159% −0.8499% +1.5267%] (p = 0.54 > 0.05)
+pipeline/binance_full_depth                                            [345.51 µs 349.28 µs 354.94 µs]
+pipeline/binance_full_depth                                            [−31.232% −26.395% −22.007%] (p = 0.00 < 0.05)
+feed_on_text_binance/no_probe                                          [57.949 µs 59.741 µs 62.118 µs]
+feed_on_text_binance/no_probe                                          [−2.4486% −0.1426% +2.4887%] (p = 0.92 > 0.05)
+feed_on_text_binance/stage_probe_fixed_wall_clock                      [58.943 µs 59.111 µs 59.335 µs]
+feed_on_text_binance/stage_probe_fixed_wall_clock                      [−3.8362% −1.4680% +0.7109%] (p = 0.23 > 0.05)
+feed_on_text_binance/stage_probe_system_wall_clock                     [60.474 µs 60.883 µs 61.427 µs]
+feed_on_text_binance/stage_probe_system_wall_clock                     [−4.6391% −1.6288% +1.0059%] (p = 0.30 > 0.05)
+ws_decode/binance/ob_net (no utf8 check)                               [446.11 ns 456.64 ns 471.54 ns]
+ws_decode/binance/ob_net (no utf8 check)                               [−6.7259% −3.9919% −1.0867%] (p = 0.01 < 0.05)
+ws_decode/binance/ob_net (utf8 checked)                                [1.8126 µs 1.8402 µs 1.8796 µs]
+ws_decode/binance/ob_net (utf8 checked)                                [−4.8329% −1.8485% +1.2975%] (p = 0.27 > 0.05)
+ws_decode/binance/(harness: stream clone only)                         [1.0927 µs 1.1018 µs 1.1151 µs]
+ws_decode/binance/(harness: stream clone only)                         [−17.990% −9.5141% −3.3144%] (p = 0.02 < 0.05)
+ws_decode/binance/tungstenite                                          [9.0085 µs 9.0618 µs 9.1381 µs]
+ws_decode/binance/tungstenite                                          [−3.6830% −1.4853% +0.5043%] (p = 0.18 > 0.05)
+ws_decode/bybit/ob_net (no utf8 check)                                 [443.26 ns 448.35 ns 452.74 ns]
+ws_decode/bybit/ob_net (no utf8 check)                                 [−5.6153% −4.0867% −2.5255%] (p = 0.00 < 0.05)
+ws_decode/bybit/ob_net (utf8 checked)                                  [1.0673 µs 1.0836 µs 1.1069 µs]
+ws_decode/bybit/ob_net (utf8 checked)                                  [−4.4189% −1.6972% +0.8458%] (p = 0.24 > 0.05)
+ws_decode/bybit/(harness: stream clone only)                           [406.01 ns 441.91 ns 483.45 ns]
+ws_decode/bybit/(harness: stream clone only)                           [−18.044% −7.9344% +4.3330%] (p = 0.18 > 0.05)
+ws_decode/bybit/tungstenite                                            [3.4063 µs 3.4734 µs 3.5878 µs]
+ws_decode/bybit/tungstenite                                            [−13.665% −10.091% −6.6063%] (p = 0.00 < 0.05)
