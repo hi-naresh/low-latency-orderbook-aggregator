@@ -1,0 +1,508 @@
+binance: real-time priority: Ok(Hint("macOS QoS class user-interactive"))
+bybit: real-time priority: Ok(Hint("macOS QoS class user-interactive"))
+   0.910s bybit    Connected
+   0.993s binance  Connected
+   1.139s bybit    Live
+── t=   1s ──────────────────────────────────────────────────────────────
+binance  out: Syncing   bid -  ask -  age   218 ms    1 upd/s
+bybit    Live           bid   59556.1 × 1.709    ask   59556.2 × 1.272    age    70 ms   27 upd/s
+best bid 59556.1 × 1.709 (bybit)   best ask 59556.2 × 1.272 (bybit)
+buy   1 BTC: avg 59556.2, incl. fees 59589  via bybit 1
+sell  1 BTC: avg 59556.1, incl. fees 59523.3  via bybit 1
+buy  25 BTC: avg 59562, incl. fees 59594.8  via bybit 25
+sell 25 BTC: avg 59548.3, incl. fees 59515.5  via bybit 24.681  (PARTIAL: not enough visible depth)
+   1.272s binance  FetchingSnapshot
+   1.797s binance  Live
+── t=   2s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59555 × 3.578    ask   59555.1 × 20.382   age   174 ms  672 upd/s
+bybit    Live           bid   59540.6 × 1.182    ask   59540.7 × 3.414    age     5 ms  103 upd/s
+best bid 59555 × 3.578 (binance)   best ask 59540.7 × 3.414 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59540.7, incl. fees 59573.5  via bybit 1
+sell  1 BTC: avg 59555, incl. fees 59525.2  via binance 1
+buy  25 BTC: avg 59547.3, incl. fees 59580  via bybit 25
+sell 25 BTC: avg 59550, incl. fees 59520.2  via binance 25
+── t=   3s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59535.1 × 0.003    ask   59538.7 × 5.735    age     1 ms  1873 upd/s
+bybit    Live           bid   59537.3 × 0.203    ask   59537.4 × 14.932   age     3 ms  105 upd/s
+best bid 59537.3 × 0.203 (bybit)   best ask 59537.4 × 14.932 (bybit)
+buy   1 BTC: avg 59538.7, incl. fees 59568.5  via binance 1
+sell  1 BTC: avg 59535, incl. fees 59505.2  via binance 1
+buy  25 BTC: avg 59538.3, incl. fees 59570.3  via binance 5.735 + bybit 19.265
+sell 25 BTC: avg 59530, incl. fees 59500  via binance 23.394 + bybit 1.606
+   3.368s binance  Resync(Unparseable(Malformed))
+   3.411s binance  FetchingSnapshot
+   3.676s binance  Live
+── t=   4s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59546 × 11.142   ask   59546.1 × 1.334    age   155 ms  1131 upd/s
+bybit    Live           bid   59541.2 × 0.708    ask   59541.3 × 4.965    age     0 ms  116 upd/s
+best bid 59546 × 11.142 (binance)   best ask 59541.3 × 4.965 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59541.3, incl. fees 59574.1  via bybit 1
+sell  1 BTC: avg 59546, incl. fees 59516.2  via binance 1
+buy  25 BTC: avg 59545.4, incl. fees 59577.6  via binance 5.31 + bybit 19.69
+sell 25 BTC: avg 59543.7, incl. fees 59513.8  via binance 24.142 + bybit 0.858
+── t=   5s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59546 × 7.917    ask   59546.1 × 1.668    age     0 ms  900 upd/s
+bybit    Live           bid   59541.2 × 3.033    ask   59541.3 × 1.237    age     2 ms   83 upd/s
+best bid 59546 × 7.917 (binance)   best ask 59541.3 × 1.237 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59541.3, incl. fees 59574.1  via bybit 1
+sell  1 BTC: avg 59546, incl. fees 59516.2  via binance 1
+buy  25 BTC: avg 59546.9, incl. fees 59579  via binance 5.449 + bybit 19.551
+sell 25 BTC: avg 59541.3, incl. fees 59511.2  via binance 21.96 + bybit 3.04
+── t=   6s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59546 × 1.895    ask   59546.1 × 2.071    age     0 ms  569 upd/s
+bybit    Live           bid   59534.9 × 3.23     ask     59535 × 0.011    age     8 ms   86 upd/s
+best bid 59546 × 1.895 (binance)   best ask 59535 × 0.011 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59540.8, incl. fees 59573.6  via bybit 1
+sell  1 BTC: avg 59546, incl. fees 59516.2  via binance 1
+buy  25 BTC: avg 59544.9, incl. fees 59577.3  via binance 3.506 + bybit 21.494
+sell 25 BTC: avg 59536.4, incl. fees 59506.6  via binance 25
+── t=   7s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59538.6 × 2.696    ask   59538.7 × 2.278    age     1 ms  1036 upd/s
+bybit    Live           bid   59534.9 × 0.068    ask     59535 × 3.579    age     8 ms   94 upd/s
+best bid 59538.6 × 2.696 (binance)   best ask 59535 × 3.579 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59535, incl. fees 59567.8  via bybit 1
+sell  1 BTC: avg 59538.6, incl. fees 59508.8  via binance 1
+buy  25 BTC: avg 59539.8, incl. fees 59571.9  via binance 6.003 + bybit 18.997
+sell 25 BTC: avg 59532.2, incl. fees 59502.4  via binance 24.563 + bybit 0.437
+── t=   8s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59535 × 0.888    ask   59535.1 × 16.469   age     0 ms  898 upd/s
+bybit    Live           bid     59525 × 0.048    ask   59525.1 × 6.442    age     8 ms  103 upd/s
+best bid 59535 × 0.888 (binance)   best ask 59525.1 × 6.442 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59525.1, incl. fees 59557.9  via bybit 1
+sell  1 BTC: avg 59534.9, incl. fees 59505.1  via binance 1
+buy  25 BTC: avg 59531.2, incl. fees 59562.4  via binance 12.728 + bybit 12.272
+sell 25 BTC: avg 59521.3, incl. fees 59491.2  via binance 21.568 + bybit 3.432
+── t=   9s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59535 × 0.733    ask   59535.1 × 10.542   age     4 ms  532 upd/s
+bybit    Live           bid     59521 × 3.435    ask   59521.1 × 0.287    age     4 ms  110 upd/s
+best bid 59535 × 0.733 (binance)   best ask 59521.1 × 0.287 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59524, incl. fees 59556.8  via bybit 1
+sell  1 BTC: avg 59534.4, incl. fees 59504.7  via binance 1
+buy  25 BTC: avg 59531.5, incl. fees 59563.2  via binance 9.032 + bybit 15.968
+sell 25 BTC: avg 59522.2, incl. fees 59492.1  via binance 21.564 + bybit 3.436
+── t=  10s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59524.8 × 8.443    ask   59524.9 × 2.751    age     0 ms  2433 upd/s
+bybit    Live           bid   59517.8 × 2.269    ask   59517.9 × 0.983    age     0 ms  116 upd/s
+best bid 59524.8 × 8.443 (binance)   best ask 59517.9 × 0.983 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59518, incl. fees 59550.7  via bybit 1
+sell  1 BTC: avg 59524.8, incl. fees 59495  via binance 1
+buy  25 BTC: avg 59525.8, incl. fees 59557.1  via binance 12.159 + bybit 12.841
+sell 25 BTC: avg 59519.3, incl. fees 59489.2  via binance 22.656 + bybit 2.344
+── t=  11s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59537.1 × 5.867    ask   59537.2 × 2.169    age    57 ms  1601 upd/s
+bybit    Live           bid     59531 × 2.147    ask   59531.1 × 1.103    age    61 ms  117 upd/s
+best bid 59537.1 × 5.867 (binance)   best ask 59531.1 × 1.103 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59531.1, incl. fees 59563.9  via bybit 1
+sell  1 BTC: avg 59537.1, incl. fees 59507.3  via binance 1
+buy  25 BTC: avg 59538.9, incl. fees 59570.3  via binance 10.852 + bybit 14.148
+sell 25 BTC: avg 59531.6, incl. fees 59501.5  via binance 22.686 + bybit 2.314
+── t=  12s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59537.6 × 2.497    ask   59537.7 × 3.554    age    11 ms  882 upd/s
+bybit    Live           bid     59531 × 3.956    ask   59531.1 × 1.263    age    23 ms  110 upd/s
+best bid 59537.6 × 2.497 (binance)   best ask 59531.1 × 1.263 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59531.1, incl. fees 59563.9  via bybit 1
+sell  1 BTC: avg 59537.6, incl. fees 59507.8  via binance 1
+buy  25 BTC: avg 59538.6, incl. fees 59570.5  via binance 7.406 + bybit 17.594
+sell 25 BTC: avg 59531.4, incl. fees 59501.1  via binance 20.072 + bybit 4.928
+── t=  13s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59546.5 × 9.141    ask   59546.6 × 2.141    age     2 ms  2546 upd/s
+bybit    Live           bid   59541.3 × 5.299    ask   59541.4 × 1.236    age    11 ms  109 upd/s
+best bid 59546.5 × 9.141 (binance)   best ask 59541.4 × 1.236 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59541.4, incl. fees 59574.2  via bybit 1
+sell  1 BTC: avg 59546.5, incl. fees 59516.7  via binance 1
+buy  25 BTC: avg 59548.8, incl. fees 59580.9  via binance 5.765 + bybit 19.235
+sell 25 BTC: avg 59542.6, incl. fees 59512.1  via binance 19.242 + bybit 5.758
+── t=  14s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59546.5 × 7.235    ask   59546.6 × 2.389    age     2 ms  587 upd/s
+bybit    Live           bid   59541.3 × 1.614    ask   59541.4 × 1.408    age     4 ms  100 upd/s
+best bid 59546.5 × 7.235 (binance)   best ask 59541.4 × 1.408 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59541.4, incl. fees 59574.2  via bybit 1
+sell  1 BTC: avg 59546.5, incl. fees 59516.7  via binance 1
+buy  25 BTC: avg 59548.6, incl. fees 59580.6  via binance 6.161 + bybit 18.839
+sell 25 BTC: avg 59540.9, incl. fees 59510.8  via binance 22.368 + bybit 2.632
+── t=  15s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59556.4 × 2.684    ask   59556.5 × 2.876    age    14 ms  1869 upd/s
+bybit    Live           bid   59550.5 × 0.857    ask   59550.6 × 3.327    age     4 ms  103 upd/s
+best bid 59556.4 × 2.684 (binance)   best ask 59550.6 × 3.327 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59550.6, incl. fees 59583.4  via bybit 1
+sell  1 BTC: avg 59556.4, incl. fees 59526.6  via binance 1
+buy  25 BTC: avg 59557.2, incl. fees 59588.5  via binance 11.951 + bybit 13.049
+sell 25 BTC: avg 59546, incl. fees 59516  via binance 23.417 + bybit 1.583
+── t=  16s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59553 × 2.557    ask   59553.1 × 6.593    age     7 ms  982 upd/s
+bybit    Live           bid   59544.2 × 2.552    ask   59544.3 × 3.262    age     7 ms   94 upd/s
+best bid 59553 × 2.557 (binance)   best ask 59544.3 × 3.262 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59544.3, incl. fees 59577.1  via bybit 1
+sell  1 BTC: avg 59553, incl. fees 59523.2  via binance 1
+buy  25 BTC: avg 59550.8, incl. fees 59582.5  via binance 8.583 + bybit 16.417
+sell 25 BTC: avg 59543.9, incl. fees 59513.6  via binance 21.252 + bybit 3.748
+── t=  17s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59549.1 × 3.015    ask   59549.2 × 2.993    age    10 ms  825 upd/s
+bybit    Live           bid   59544.2 × 1.085    ask   59544.3 × 3.538    age     6 ms   80 upd/s
+best bid 59549.1 × 3.015 (binance)   best ask 59544.3 × 3.538 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59544.3, incl. fees 59577.1  via bybit 1
+sell  1 BTC: avg 59549.1, incl. fees 59519.3  via binance 1
+buy  25 BTC: avg 59549.9, incl. fees 59581.5  via binance 10.004 + bybit 14.996
+sell 25 BTC: avg 59541.6, incl. fees 59511.6  via binance 23.146 + bybit 1.854
+── t=  18s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59543.8 × 0.154    ask   59543.9 × 8.732    age     4 ms  1149 upd/s
+bybit    Live           bid   59536.1 × 0.061    ask   59536.2 × 8.988    age     6 ms   87 upd/s
+best bid 59543.8 × 0.154 (binance)   best ask 59536.2 × 8.988 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59536.2, incl. fees 59569  via bybit 1
+sell  1 BTC: avg 59539.4, incl. fees 59509.6  via binance 1
+buy  25 BTC: avg 59540, incl. fees 59571.7  via binance 8.841 + bybit 16.159
+sell 25 BTC: avg 59531.4, incl. fees 59501.3  via binance 22.384 + bybit 2.616
+── t=  19s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59555.2 × 6.079    ask   59555.3 × 2.045    age     0 ms  4538 upd/s
+bybit    Live           bid   59550.1 × 3        ask   59550.2 × 1.255    age     9 ms  112 upd/s
+best bid 59555.2 × 6.079 (binance)   best ask 59550.2 × 1.255 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59550.2, incl. fees 59583  via bybit 1
+sell  1 BTC: avg 59555.2, incl. fees 59525.4  via binance 1
+buy  25 BTC: avg 59557.3, incl. fees 59587.7  via binance 19.388 + bybit 5.612
+sell 25 BTC: avg 59549.9, incl. fees 59519.2  via binance 17.163 + bybit 7.837
+── t=  20s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59542.3 × 23.516   ask   59542.4 × 0.001    age     1 ms  3262 upd/s
+bybit    Live           bid   59535.3 × 3.078    ask   59535.4 × 0.001    age     1 ms  123 upd/s
+best bid 59542.3 × 23.516 (binance)   best ask 59535.4 × 0.001 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59542.5, incl. fees 59572.7  via binance 0.881 + bybit 0.119
+sell  1 BTC: avg 59542.3, incl. fees 59512.5  via binance 1
+buy  25 BTC: avg 59543.8, incl. fees 59575.2  via binance 11.546 + bybit 13.454
+sell 25 BTC: avg 59542.1, incl. fees 59512.4  via binance 25
+── t=  21s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59547 × 3.849    ask   59547.1 × 2.484    age     6 ms  1262 upd/s
+bybit    Live           bid   59540.2 × 3.349    ask   59540.3 × 0.573    age     8 ms   85 upd/s
+best bid 59547 × 3.849 (binance)   best ask 59540.3 × 0.573 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59541.7, incl. fees 59574.5  via bybit 1
+sell  1 BTC: avg 59547, incl. fees 59517.2  via binance 1
+buy  25 BTC: avg 59547.1, incl. fees 59579.4  via binance 3.69 + bybit 21.31
+sell 25 BTC: avg 59540.5, incl. fees 59510.5  via binance 23.347 + bybit 1.653
+── t=  22s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59549.5 × 2.423    ask   59549.6 × 3.027    age    56 ms  1240 upd/s
+bybit    Live           bid   59544.3 × 0.279    ask   59544.4 × 3.256    age    66 ms   71 upd/s
+best bid 59549.5 × 2.423 (binance)   best ask 59544.4 × 3.256 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59544.4, incl. fees 59577.2  via bybit 1
+sell  1 BTC: avg 59549.5, incl. fees 59519.7  via binance 1
+buy  25 BTC: avg 59550.1, incl. fees 59581.9  via binance 7.956 + bybit 17.044
+sell 25 BTC: avg 59541.7, incl. fees 59511.9  via binance 24.678 + bybit 0.322
+── t=  23s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59552.1 × 8.829    ask   59552.2 × 0.276    age    11 ms  1038 upd/s
+bybit    Live           bid   59548.1 × 1.97     ask   59548.2 × 0.847    age     9 ms   93 upd/s
+best bid 59552.1 × 8.829 (binance)   best ask 59548.2 × 0.847 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59548.8, incl. fees 59581.2  via binance 0.149 + bybit 0.851
+sell  1 BTC: avg 59552.1, incl. fees 59522.3  via binance 1
+buy  25 BTC: avg 59554.3, incl. fees 59586.9  via binance 1.501 + bybit 23.499
+sell 25 BTC: avg 59548.9, incl. fees 59518.9  via binance 22.64 + bybit 2.36
+── t=  24s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59541.1 × 3.334    ask   59541.2 × 4.519    age     0 ms  2160 upd/s
+bybit    Live           bid   59536.1 × 0.757    ask   59536.2 × 6.079    age     7 ms   86 upd/s
+best bid 59541.1 × 3.334 (binance)   best ask 59536.2 × 6.079 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59536.2, incl. fees 59569  via bybit 1
+sell  1 BTC: avg 59541.1, incl. fees 59511.3  via binance 1
+buy  25 BTC: avg 59540.4, incl. fees 59572.3  via binance 6.945 + bybit 18.055
+sell 25 BTC: avg 59533.1, incl. fees 59503.2  via binance 23.768 + bybit 1.232
+── t=  25s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59543.3 × 4.177    ask   59543.4 × 0.795    age     1 ms  1282 upd/s
+bybit    Live           bid   59538.5 × 1.325    ask   59538.6 × 1.816    age     1 ms  100 upd/s
+best bid 59543.3 × 4.177 (binance)   best ask 59538.6 × 1.816 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59538.6, incl. fees 59571.4  via bybit 1
+sell  1 BTC: avg 59543.3, incl. fees 59513.5  via binance 1
+buy  25 BTC: avg 59545.2, incl. fees 59576.8  via binance 10.308 + bybit 14.692
+sell 25 BTC: avg 59536.4, incl. fees 59506.4  via binance 22.837 + bybit 2.163
+── t=  26s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59544.9 × 5.495    ask     59545 × 0.833    age     0 ms  1067 upd/s
+bybit    Live           bid   59538.7 × 3.7      ask   59538.8 × 0.135    age    11 ms   93 upd/s
+best bid 59544.9 × 5.495 (binance)   best ask 59538.8 × 0.135 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59544.1, incl. fees 59574.4  via binance 0.82 + bybit 0.18
+sell  1 BTC: avg 59544.9, incl. fees 59515.1  via binance 1
+buy  25 BTC: avg 59547.7, incl. fees 59579.5  via binance 7.643 + bybit 17.357
+sell 25 BTC: avg 59540.3, incl. fees 59510.1  via binance 21.362 + bybit 3.638
+── t=  27s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59552.1 × 7.374    ask   59552.2 × 0.404    age     7 ms  2042 upd/s
+bybit    Live           bid     59549 × 4.473    ask   59549.1 × 1.669    age     1 ms  108 upd/s
+best bid 59552.1 × 7.374 (binance)   best ask 59549.1 × 1.669 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59549.1, incl. fees 59581.9  via bybit 1
+sell  1 BTC: avg 59552.1, incl. fees 59522.3  via binance 1
+buy  25 BTC: avg 59554.7, incl. fees 59586.8  via binance 5.518 + bybit 19.482
+sell 25 BTC: avg 59548.5, incl. fees 59518.1  via binance 19.964 + bybit 5.036
+── t=  28s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59547.2 × 10.525   ask   59547.3 × 0.544    age    45 ms  2390 upd/s
+bybit    Live           bid   59541.8 × 1.969    ask   59541.9 × 0.416    age     8 ms  113 upd/s
+best bid 59547.2 × 10.525 (binance)   best ask 59541.9 × 0.416 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59545, incl. fees 59576.1  via binance 0.568 + bybit 0.432
+sell  1 BTC: avg 59547.2, incl. fees 59517.4  via binance 1
+buy  25 BTC: avg 59551, incl. fees 59582.7  via binance 9.472 + bybit 15.528
+sell 25 BTC: avg 59544.6, incl. fees 59514.7  via binance 23.409 + bybit 1.591
+── t=  29s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59547.2 × 6.633    ask   59547.3 × 0.142    age     3 ms  743 upd/s
+bybit    Live           bid   59543.9 × 4.884    ask     59544 × 0.209    age     1 ms   80 upd/s
+best bid 59547.2 × 6.633 (binance)   best ask 59544 × 0.209 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59548, incl. fees 59578.5  via binance 0.747 + bybit 0.253
+sell  1 BTC: avg 59547.2, incl. fees 59517.4  via binance 1
+buy  25 BTC: avg 59551.4, incl. fees 59583.4  via binance 6.157 + bybit 18.843
+sell 25 BTC: avg 59544.4, incl. fees 59514  via binance 19.115 + bybit 5.885
+── t=  30s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59557.5 × 2.212    ask   59557.6 × 2.513    age     9 ms  1495 upd/s
+bybit    Live           bid   59551.7 × 1.519    ask   59551.8 × 8.275    age    11 ms  110 upd/s
+best bid 59557.5 × 2.212 (binance)   best ask 59551.8 × 8.275 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59551.8, incl. fees 59584.6  via bybit 1
+sell  1 BTC: avg 59557.5, incl. fees 59527.7  via binance 1
+buy  25 BTC: avg 59556.8, incl. fees 59588.7  via binance 6.672 + bybit 18.328
+sell 25 BTC: avg 59549.6, incl. fees 59519.4  via binance 21.858 + bybit 3.142
+── t=  31s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59557.9 × 7.585    ask     59558 × 2.529    age     4 ms  792 upd/s
+bybit    Live           bid   59551.7 × 2        ask   59551.8 × 8.33     age     2 ms   77 upd/s
+best bid 59557.9 × 7.585 (binance)   best ask 59551.8 × 8.33 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59551.8, incl. fees 59584.6  via bybit 1
+sell  1 BTC: avg 59557.9, incl. fees 59528.1  via binance 1
+buy  25 BTC: avg 59556.7, incl. fees 59588.7  via binance 6.845 + bybit 18.155
+sell 25 BTC: avg 59552.7, incl. fees 59522.6  via binance 22.769 + bybit 2.231
+── t=  32s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59568.2 × 3.026    ask   59568.3 × 2.028    age     2 ms  1951 upd/s
+bybit    Live           bid   59563.7 × 1.765    ask   59563.8 × 2.806    age     2 ms  102 upd/s
+best bid 59568.2 × 3.026 (binance)   best ask 59563.8 × 2.806 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59563.8, incl. fees 59596.6  via bybit 1
+sell  1 BTC: avg 59568.2, incl. fees 59538.4  via binance 1
+buy  25 BTC: avg 59568.8, incl. fees 59600.7  via binance 7.032 + bybit 17.968
+sell 25 BTC: avg 59560, incl. fees 59529.8  via binance 21.122 + bybit 3.878
+── t=  33s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59570.6 × 11.836   ask   59570.7 × 0.183    age    47 ms  1519 upd/s
+bybit    Live           bid   59564.8 × 8.235    ask   59564.9 × 0.068    age    49 ms   65 upd/s
+best bid 59570.6 × 11.836 (binance)   best ask 59564.9 × 0.068 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59571.1, incl. fees 59601.4  via binance 0.821 + bybit 0.179
+sell  1 BTC: avg 59570.6, incl. fees 59540.8  via binance 1
+buy  25 BTC: avg 59575.1, incl. fees 59606.2  via binance 14.565 + bybit 10.435
+sell 25 BTC: avg 59569.7, incl. fees 59539.9  via binance 25
+── t=  34s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59577.8 × 7.22     ask   59577.9 × 2.243    age     5 ms  2071 upd/s
+bybit    Live           bid   59572.3 × 2.464    ask   59572.4 × 0.978    age     1 ms  101 upd/s
+best bid 59577.8 × 7.22 (binance)   best ask 59572.4 × 0.978 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59572.5, incl. fees 59605.3  via binance 0.008 + bybit 0.992
+sell  1 BTC: avg 59577.8, incl. fees 59548  via binance 1
+buy  25 BTC: avg 59579.5, incl. fees 59611.1  via binance 9.747 + bybit 15.253
+sell 25 BTC: avg 59572.9, incl. fees 59542.8  via binance 22.534 + bybit 2.466
+── t=  35s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59577.8 × 3.254    ask   59577.9 × 1.076    age     1 ms  689 upd/s
+bybit    Live           bid   59572.3 × 0.919    ask   59572.4 × 2.084    age     5 ms   88 upd/s
+best bid 59577.8 × 3.254 (binance)   best ask 59572.4 × 2.084 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59572.4, incl. fees 59605.2  via bybit 1
+sell  1 BTC: avg 59577.8, incl. fees 59548  via binance 1
+buy  25 BTC: avg 59579.5, incl. fees 59611  via binance 11.02 + bybit 13.98
+sell 25 BTC: avg 59570.7, incl. fees 59540.8  via binance 24.062 + bybit 0.938
+── t=  36s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59579.9 × 2.078    ask     59580 × 2.32     age     5 ms  648 upd/s
+bybit    Live           bid   59572.3 × 2.109    ask   59572.4 × 1.754    age     7 ms   80 upd/s
+best bid 59579.9 × 2.078 (binance)   best ask 59572.4 × 1.754 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59572.4, incl. fees 59605.2  via bybit 1
+sell  1 BTC: avg 59579.9, incl. fees 59550.1  via binance 1
+buy  25 BTC: avg 59579.3, incl. fees 59611.3  via binance 6.839 + bybit 18.161
+sell 25 BTC: avg 59571.5, incl. fees 59541.5  via binance 22.88 + bybit 2.12
+── t=  37s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59579.5 × 9.224    ask   59579.6 × 0.297    age     1 ms  1015 upd/s
+bybit    Live           bid   59572.3 × 4.053    ask   59572.4 × 0.096    age     1 ms   76 upd/s
+best bid 59579.5 × 9.224 (binance)   best ask 59572.4 × 0.096 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59578.3, incl. fees 59609.8  via binance 0.434 + bybit 0.566
+sell  1 BTC: avg 59579.5, incl. fees 59549.7  via binance 1
+buy  25 BTC: avg 59583.6, incl. fees 59614.6  via binance 15.451 + bybit 9.549
+sell 25 BTC: avg 59575.8, incl. fees 59545.7  via binance 22.181 + bybit 2.819
+── t=  38s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59584 × 2.155    ask   59584.1 × 1.962    age     0 ms  1605 upd/s
+bybit    Live           bid   59580.2 × 0.419    ask   59580.3 × 3.931    age     0 ms   99 upd/s
+best bid 59584 × 2.155 (binance)   best ask 59580.3 × 3.931 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59580.3, incl. fees 59613.1  via bybit 1
+sell  1 BTC: avg 59584, incl. fees 59554.2  via binance 1
+buy  25 BTC: avg 59585.8, incl. fees 59617.5  via binance 8.585 + bybit 16.415
+sell 25 BTC: avg 59577, incl. fees 59547.1  via binance 24.38 + bybit 0.62
+── t=  39s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59579.1 × 2.698    ask   59579.2 × 8.72     age     1 ms  1823 upd/s
+bybit    Live           bid   59572.3 × 0.434    ask   59572.4 × 4.117    age     1 ms   97 upd/s
+best bid 59579.1 × 2.698 (binance)   best ask 59572.4 × 4.117 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59572.4, incl. fees 59605.2  via bybit 1
+sell  1 BTC: avg 59579.1, incl. fees 59549.3  via binance 1
+buy  25 BTC: avg 59577.7, incl. fees 59609.1  via binance 11.352 + bybit 13.648
+sell 25 BTC: avg 59570.7, incl. fees 59540.8  via binance 23.904 + bybit 1.096
+── t=  40s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59579.1 × 7.431    ask   59579.2 × 5.069    age     1 ms  509 upd/s
+bybit    Live           bid   59572.3 × 3.114    ask   59572.4 × 0.585    age     3 ms   76 upd/s
+best bid 59579.1 × 7.431 (binance)   best ask 59572.4 × 0.585 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59573.2, incl. fees 59605.9  via bybit 1
+sell  1 BTC: avg 59579.1, incl. fees 59549.3  via binance 1
+buy  25 BTC: avg 59580.5, incl. fees 59611.5  via binance 14.784 + bybit 10.216
+sell 25 BTC: avg 59573.7, incl. fees 59543.4  via binance 21.211 + bybit 3.789
+── t=  41s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59579.1 × 3.783    ask   59579.2 × 5.051    age     5 ms  488 upd/s
+bybit    Live           bid   59572.3 × 2.571    ask   59572.4 × 0.775    age     5 ms   66 upd/s
+best bid 59579.1 × 3.783 (binance)   best ask 59572.4 × 0.775 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59572.8, incl. fees 59605.6  via binance 0.008 + bybit 0.992
+sell  1 BTC: avg 59579.1, incl. fees 59549.3  via binance 1
+buy  25 BTC: avg 59580.4, incl. fees 59611.5  via binance 13.905 + bybit 11.095
+sell 25 BTC: avg 59572.2, incl. fees 59542.1  via binance 21.751 + bybit 3.249
+── t=  42s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59586 × 5.529    ask   59586.1 × 3.46     age     2 ms  1864 upd/s
+bybit    Live           bid   59580.2 × 4.928    ask   59580.3 × 0.297    age    11 ms   89 upd/s
+best bid 59586 × 5.529 (binance)   best ask 59580.3 × 0.297 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59584.3, incl. fees 59615.1  via binance 0.665 + bybit 0.335
+sell  1 BTC: avg 59586, incl. fees 59556.2  via binance 1
+buy  25 BTC: avg 59587.2, incl. fees 59618.9  via binance 8.908 + bybit 16.092
+sell 25 BTC: avg 59580.7, incl. fees 59550.3  via binance 19.795 + bybit 5.205
+── t=  43s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59586.7 × 2.764    ask   59586.8 × 5.144    age    93 ms  911 upd/s
+bybit    Live           bid   59581.2 × 1.604    ask   59581.3 × 2.471    age    82 ms   72 upd/s
+best bid 59586.7 × 2.764 (binance)   best ask 59581.3 × 2.471 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59581.3, incl. fees 59614.1  via bybit 1
+sell  1 BTC: avg 59586.7, incl. fees 59556.9  via binance 1
+buy  25 BTC: avg 59586.7, incl. fees 59618.5  via binance 7.837 + bybit 17.163
+sell 25 BTC: avg 59578.6, incl. fees 59548.6  via binance 23.187 + bybit 1.813
+── t=  44s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59590 × 6.943    ask   59590.1 × 1.086    age    32 ms  1423 upd/s
+bybit    Live           bid   59584.1 × 6.123    ask   59584.2 × 0.776    age    30 ms   90 upd/s
+best bid 59590 × 6.943 (binance)   best ask 59584.2 × 0.776 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59585.5, incl. fees 59617.7  via binance 0.211 + bybit 0.789
+sell  1 BTC: avg 59590, incl. fees 59560.2  via binance 1
+buy  25 BTC: avg 59593.4, incl. fees 59624.8  via binance 12.107 + bybit 12.893
+sell 25 BTC: avg 59585.8, incl. fees 59555.5  via binance 21.019 + bybit 3.981
+── t=  45s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59591.1 × 2.349    ask   59591.2 × 2.826    age     0 ms  1119 upd/s
+bybit    Live           bid   59585.5 × 3.049    ask   59585.6 × 2.004    age     4 ms   77 upd/s
+best bid 59591.1 × 2.349 (binance)   best ask 59585.6 × 2.004 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59585.6, incl. fees 59618.4  via bybit 1
+sell  1 BTC: avg 59591.1, incl. fees 59561.3  via binance 1
+buy  25 BTC: avg 59593, incl. fees 59624.4  via binance 11.189 + bybit 13.811
+sell 25 BTC: avg 59584.7, incl. fees 59554.6  via binance 21.941 + bybit 3.059
+── t=  46s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59591.5 × 3.679    ask   59591.6 × 3.174    age     5 ms  887 upd/s
+bybit    Live           bid   59585.5 × 4.935    ask   59585.6 × 0.379    age     5 ms   74 upd/s
+best bid 59591.5 × 3.679 (binance)   best ask 59585.6 × 0.379 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59589.3, incl. fees 59620.3  via binance 0.605 + bybit 0.395
+sell  1 BTC: avg 59591.5, incl. fees 59561.7  via binance 1
+buy  25 BTC: avg 59593.2, incl. fees 59625.3  via binance 6.115 + bybit 18.885
+sell 25 BTC: avg 59586.2, incl. fees 59555.8  via binance 20.064 + bybit 4.936
+── t=  47s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59594.1 × 12.15    ask   59594.2 × 0.204    age     0 ms  1160 upd/s
+bybit    Live           bid   59587.2 × 7.395    ask   59587.3 × 0.002    age     5 ms   71 upd/s
+best bid 59594.1 × 12.15 (binance)   best ask 59587.3 × 0.002 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59593.3, incl. fees 59625.1  via binance 0.314 + bybit 0.686
+sell  1 BTC: avg 59594.1, incl. fees 59564.3  via binance 1
+buy  25 BTC: avg 59598.4, incl. fees 59629.3  via binance 15.24 + bybit 9.76
+sell 25 BTC: avg 59590.9, incl. fees 59560.9  via binance 23.648 + bybit 1.352
+── t=  48s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59597.9 × 2.228    ask     59598 × 3.348    age     2 ms  1529 upd/s
+bybit    Live           bid   59591.5 × 3.35     ask   59591.6 × 1.06     age     7 ms   90 upd/s
+best bid 59597.9 × 2.228 (binance)   best ask 59591.6 × 1.06 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59591.6, incl. fees 59624.4  via bybit 1
+sell  1 BTC: avg 59597.9, incl. fees 59568.1  via binance 1
+buy  25 BTC: avg 59599, incl. fees 59630.4  via binance 11.682 + bybit 13.318
+sell 25 BTC: avg 59590.8, incl. fees 59560.6  via binance 21.643 + bybit 3.357
+── t=  49s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59599.9 × 2.864    ask     59600 × 2.628    age    11 ms  1343 upd/s
+bybit    Live           bid   59592.7 × 6.797    ask   59592.8 × 0.474    age     3 ms   86 upd/s
+best bid 59599.9 × 2.864 (binance)   best ask 59592.8 × 0.474 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59595.3, incl. fees 59627.7  via binance 0.125 + bybit 0.875
+sell  1 BTC: avg 59599.9, incl. fees 59570.1  via binance 1
+buy  25 BTC: avg 59599.6, incl. fees 59631.5  via binance 7.416 + bybit 17.584
+sell 25 BTC: avg 59592.4, incl. fees 59561.8  via binance 18.183 + bybit 6.817
+── t=  50s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59601.7 × 11.62    ask   59601.8 × 0.77     age     1 ms  1159 upd/s
+bybit    Live           bid     59598 × 1.727    ask   59598.1 × 1.621    age     5 ms   85 upd/s
+best bid 59601.7 × 11.62 (binance)   best ask 59598.1 × 1.621 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59598.1, incl. fees 59630.9  via bybit 1
+sell  1 BTC: avg 59601.7, incl. fees 59571.8  via binance 1
+buy  25 BTC: avg 59604.1, incl. fees 59636.1  via binance 6.995 + bybit 18.005
+sell 25 BTC: avg 59598.7, incl. fees 59568.7  via binance 23.267 + bybit 1.733
+── t=  51s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59614.6 × 8.201    ask   59614.7 × 0.599    age     1 ms  2264 upd/s
+bybit    Live           bid   59607.5 × 5.242    ask   59607.6 × 0.001    age     4 ms   99 upd/s
+best bid 59614.6 × 8.201 (binance)   best ask 59607.6 × 0.001 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59614.3, incl. fees 59644.5  via binance 0.866 + bybit 0.134
+sell  1 BTC: avg 59614.6, incl. fees 59584.7  via binance 1
+buy  25 BTC: avg 59617, incl. fees 59648  via binance 14.806 + bybit 10.194
+sell 25 BTC: avg 59610.9, incl. fees 59580.7  via binance 21.733 + bybit 3.267
+── t=  52s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59614.6 × 3.755    ask   59614.7 × 2.993    age     3 ms  461 upd/s
+bybit    Live           bid   59610.6 × 1.868    ask   59610.7 × 7.13     age    41 ms   94 upd/s
+best bid 59614.6 × 3.755 (binance)   best ask 59610.7 × 7.13 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59610.7, incl. fees 59643.5  via bybit 1
+sell  1 BTC: avg 59614.6, incl. fees 59584.7  via binance 1
+buy  25 BTC: avg 59614.4, incl. fees 59646.6  via binance 5.507 + bybit 19.493
+sell 25 BTC: avg 59608, incl. fees 59577.9  via binance 23.109 + bybit 1.891
+── t=  53s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59602.7 × 1.457    ask   59602.8 × 14.414   age     0 ms  1622 upd/s
+bybit    Live           bid   59596.3 × 0.032    ask   59596.4 × 8.084    age     6 ms   72 upd/s
+best bid 59602.7 × 1.457 (binance)   best ask 59596.4 × 8.084 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59596.4, incl. fees 59629.2  via bybit 1
+sell  1 BTC: avg 59602.7, incl. fees 59572.8  via binance 1
+buy  25 BTC: avg 59599.9, incl. fees 59631.2  via binance 12.505 + bybit 12.495
+sell 25 BTC: avg 59589.6, incl. fees 59559.5  via binance 21.867 + bybit 3.133
+── t=  54s ──────────────────────────────────────────────────────────────
+binance  Live           bid     59601 × 9.967    ask   59601.1 × 0.405    age    70 ms  1103 upd/s
+bybit    Live           bid   59593.9 × 7.628    ask     59594 × 0.004    age    78 ms   83 upd/s
+best bid 59601 × 9.967 (binance)   best ask 59594 × 0.004 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59601.1, incl. fees 59631  via binance 0.979 + bybit 0.021
+sell  1 BTC: avg 59601, incl. fees 59571.1  via binance 1
+buy  25 BTC: avg 59600.3, incl. fees 59632.8  via binance 2.64 + bybit 22.36
+sell 25 BTC: avg 59596.4, incl. fees 59565.7  via binance 17.372 + bybit 7.628
+── t=  55s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59605.4 × 3.03     ask   59605.5 × 5.285    age    27 ms  992 upd/s
+bybit    Live           bid   59597.7 × 1.49     ask   59597.8 × 2.7      age    51 ms   92 upd/s
+best bid 59605.4 × 3.03 (binance)   best ask 59597.8 × 2.7 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59597.8, incl. fees 59630.6  via bybit 1
+sell  1 BTC: avg 59605.4, incl. fees 59575.5  via binance 1
+buy  25 BTC: avg 59603.2, incl. fees 59634.8  via binance 9.547 + bybit 15.453
+sell 25 BTC: avg 59596.6, incl. fees 59566.6  via binance 23.341 + bybit 1.659
+── t=  56s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59596.6 × 5.945    ask   59596.7 × 0.137    age     0 ms  1994 upd/s
+bybit    Live           bid   59594.5 × 1.083    ask   59594.6 × 1.558    age     4 ms  120 upd/s
+best bid 59596.6 × 5.945 (binance)   best ask 59594.6 × 1.558 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59594.9, incl. fees 59627.3  via binance 0.142 + bybit 0.858
+sell  1 BTC: avg 59596.6, incl. fees 59566.8  via binance 1
+buy  25 BTC: avg 59600.5, incl. fees 59632.5  via binance 6.117 + bybit 18.883
+sell 25 BTC: avg 59591.7, incl. fees 59561.7  via binance 23.452 + bybit 1.548
+── t=  57s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59600.9 × 5.062    ask     59601 × 3.259    age    22 ms  1281 upd/s
+bybit    Live           bid   59596.2 × 1.669    ask   59596.3 × 2.064    age    30 ms   88 upd/s
+best bid 59600.9 × 5.062 (binance)   best ask 59596.3 × 2.064 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59596.3, incl. fees 59629.1  via bybit 1
+sell  1 BTC: avg 59600.9, incl. fees 59571  via binance 1
+buy  25 BTC: avg 59601.4, incl. fees 59633.5  via binance 5.434 + bybit 19.566
+sell 25 BTC: avg 59594.2, incl. fees 59564.2  via binance 23.311 + bybit 1.689
+── t=  58s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59601.2 × 0.215    ask   59601.3 × 19.321   age     0 ms  2625 upd/s
+bybit    Live           bid   59592.1 × 0.014    ask   59592.2 × 7.865    age     2 ms   89 upd/s
+best bid 59601.2 × 0.215 (binance)   best ask 59592.2 × 7.865 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59592.2, incl. fees 59625  via bybit 1
+sell  1 BTC: avg 59595.7, incl. fees 59565.9  via binance 1
+buy  25 BTC: avg 59597.7, incl. fees 59629  via binance 13.036 + bybit 11.964
+sell 25 BTC: avg 59587.7, incl. fees 59557.4  via binance 20.565 + bybit 4.435
+── t=  59s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59591.1 × 2.143    ask   59591.2 × 3.401    age     3 ms  1841 upd/s
+bybit    Live           bid     59586 × 1.514    ask   59586.1 × 3.029    age     3 ms   84 upd/s
+best bid 59591.1 × 2.143 (binance)   best ask 59586.1 × 3.029 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59586.1, incl. fees 59618.9  via bybit 1
+sell  1 BTC: avg 59591.1, incl. fees 59561.3  via binance 1
+buy  25 BTC: avg 59591.2, incl. fees 59622.9  via binance 8.464 + bybit 16.536
+sell 25 BTC: avg 59583.6, incl. fees 59553.6  via binance 23.212 + bybit 1.788
+── t=  60s ──────────────────────────────────────────────────────────────
+binance  Live           bid   59591.1 × 2.746    ask   59591.2 × 3.005    age    74 ms  773 upd/s
+bybit    Live           bid   59584.5 × 3.065    ask   59584.6 × 1.628    age     1 ms   89 upd/s
+best bid 59591.1 × 2.746 (binance)   best ask 59584.6 × 1.628 (bybit)   ← the venues cross (fees exceed the gap)
+buy   1 BTC: avg 59584.6, incl. fees 59617.4  via bybit 1
+sell  1 BTC: avg 59591.1, incl. fees 59561.3  via binance 1
+buy  25 BTC: avg 59590, incl. fees 59621.9  via binance 7.624 + bybit 17.376
+sell 25 BTC: avg 59581.9, incl. fees 59551.5  via binance 20.096 + bybit 4.904
+binance  messages 83216 applied 82464 (top of book 81892) gaps 0 rejected 0 resyncs 1 reconnects 0 disconnects 0 | log drops 0
+bybit    messages 5506 applied 5487 (top of book 2754) gaps 0 rejected 0 resyncs 0 reconnects 0 disconnects 0 | log drops 0
+
+binance
+stage (ns)                     count       p50       p90       p99     p99.9        max
+read (socket+TLS+WS)           83216        41     15879     28095     70847     409087
+handle (parse+apply)           82464       166       291      2000     14007      58399
+publish (seqlock)              82464       958      1000      1333      2791     147583
+total                          82464      1166     17263     31583     76479  525336575
+exchange → us                  82464    119807    197375    353279    435967     502527   (µs; includes clock skew; 0 negative)
+
+bybit
+stage (ns)                     count       p50       p90       p99     p99.9        max
+read (socket+TLS+WS)            5506     17135     28223     65727    129599    2027519
+handle (parse+apply)            5487       916      2417      6083      9127      17167
+publish (seqlock)               5487       208       375       833      5375       6083
+total                           5487     18383     30431     69823    130559    2038783
+exchange → us                   5487    113791    151295    199039    474111     572927   (µs; includes clock skew; 0 negative)
